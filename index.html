@@ -474,6 +474,30 @@
   .photoFloat:nth-child(1){ width: 120px; height: 120px; }
 }
 
+    .soundFab{
+  position: fixed;
+  right: 14px;
+  bottom: 16px;
+  z-index: 50;
+  display:none;
+  align-items:center;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.42);
+  border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(12px);
+  color: rgba(255,255,255,.92);
+  font-weight: 800;
+  box-shadow: 0 18px 50px rgba(0,0,0,.45);
+}
+.soundFab.show{display:flex}
+.soundFab .dot{
+  width:10px;height:10px;border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--sky) 55%, rgba(110,203,255,.25));
+  box-shadow: 0 0 16px rgba(110,203,255,.9);
+}
+
   </style>
 </head>
 
@@ -513,15 +537,15 @@
           </div>
 
           <!-- Spotify (autoplay attempt via embed) -->
-          <div class="spotifyWrap">
-            <iframe
-              id="spotify"
-              style="border:0; width:100%; height:152px;"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-              src="https://open.spotify.com/embed/track/141BRsztXiNnpVaWuatcCL?utm_source=generator&theme=0&autoplay=1">
-            </iframe>
-          </div>
+        <div class="spotifyWrap">
+          <iframe
+            id="yt"
+            style="border:0; width:100%; height:152px;"
+            loading="lazy"
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            src="https://www.youtube.com/embed/oT7oezgP9rI?autoplay=1&mute=1&playsinline=1&loop=1&playlist=oT7oezgP9rI&controls=1&rel=0&modestbranding=1"
+          ></iframe>
+        </div>
 
           <p class="hint" style="margin-top:12px;">
             Tip: click/tap bất kỳ chỗ nào để thả <b>tim</b> 💗 • di chuột để thấy sao lấp lánh ✨
@@ -577,6 +601,11 @@
     <span class="chip"></span>
     <div id="toastText">...</div>
   </div>
+  
+<div class="soundFab" id="soundFab" role="button" aria-label="Bật nhạc">
+  <span class="dot"></span>
+  <span>🔊 Bật nhạc</span>
+</div>
 
   <script>
     /***********************
@@ -915,7 +944,57 @@
      * Start typing        *
      ***********************/
     typeText(baseLines);
+
+    // ===== YouTube mobile-optimized autoplay/unmute helper =====
+const yt = document.getElementById("yt");
+const soundFab = document.getElementById("soundFab");
+let triedUnmute = false;
+
+function setYT(mute){
+  if(!yt) return;
+  const base = "https://www.youtube.com/embed/oT7oezgP9rI";
+  const qs = new URLSearchParams({
+    autoplay: "1",
+    mute: mute ? "1" : "0",
+    playsinline: "1",
+    loop: "1",
+    playlist: "oT7oezgP9rI",
+    controls: "1",
+    rel: "0",
+    modestbranding: "1"
+  });
+  yt.src = `${base}?${qs.toString()}`;
+}
+
+function tryUnmute(){
+  if(triedUnmute) return;
+  triedUnmute = true;
+
+  // Attempt unmute after a user gesture
+  setYT(false);
+
+  // On iOS it may still be blocked; show a fallback button
+  setTimeout(() => {
+    // show button so user can tap explicitly if needed
+    soundFab?.classList.add("show");
+  }, 600);
+}
+
+// Tap anywhere -> try unmute
+window.addEventListener("pointerdown", tryUnmute, { once: true });
+window.addEventListener("touchstart", tryUnmute, { once: true });
+window.addEventListener("keydown", tryUnmute, { once: true });
+
+// Explicit button tap -> force unmute again and hide button
+soundFab?.addEventListener("click", () => {
+  setYT(false);
+  soundFab.classList.remove("show");
+});
+
+// Start with muted autoplay (most reliable)
+setYT(true);
   </script>
 </body>
 </html>
+
 
