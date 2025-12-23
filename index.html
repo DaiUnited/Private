@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎄 Merry Christmas • For You</title>
+
+  <style>
+    :root{
+      --bg1:#120018;
+      --bg2:#2a0b3d;
+      --bg3:#4b1270;
+      --violet:#9b5cff;
+      --violet2:#c084ff;
+      --pink:#ff4fd8;
+      --ice:#e9ddff;
+      --glass: rgba(255,255,255,.10);
+      --glass2: rgba(255,255,255,.16);
+      --shadow: 0 30px 80px rgba(0,0,0,.55);
+      --sky:#6ecbff;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:#f7f2ff;
+      overflow:hidden;
+      background:
+        radial-gradient(1200px 600px at 20% 15%, rgba(155,92,255,.28), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(255,79,216,.20), transparent 55%),
+        radial-gradient(1000px 700px at 50% 85%, rgba(192,132,255,.18), transparent 55%),
+        linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
+    }
+
+    /* Canvas layers */
+    canvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+    }
+    #sparkles{mix-blend-mode:screen; opacity:.9}
+    #snow{opacity:.9}
+
+    /* Layout */
+    .wrap{
+      position:relative;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      z-index:2;
+    }
+
+    .card{
+      width:min(980px, 96vw);
+      min-height:min(620px, 86vh);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .glow{
+      position:absolute;
+      inset:-40px;
+      background:
+        radial-gradient(600px 240px at 15% 18%, rgba(155,92,255,.28), transparent 65%),
+        radial-gradient(560px 220px at 85% 22%, rgba(255,79,216,.22), transparent 60%),
+        radial-gradient(700px 300px at 50% 105%, rgba(192,132,255,.22), transparent 70%);
+      filter: blur(22px);
+      z-index:0;
+    }
+
+    .content{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 22px;
+      padding: 28px;
+      height:100%;
+    }
+
+    /* Responsive: phone */
+    @media (max-width: 900px){
+      body{overflow:auto}
+      .wrap{height:auto; padding:16px}
+      .card{min-height:auto}
+      .content{grid-template-columns:1fr; padding:18px}
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(155,92,255,.18);
+      border: 1px solid rgba(155,92,255,.28);
+      width:max-content;
+      box-shadow: 0 12px 35px rgba(155,92,255,.16);
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--violet) 45%, rgba(155,92,255,.3));
+      box-shadow: 0 0 18px rgba(155,92,255,.9);
+    }
+    .badge b{letter-spacing:.2px}
+
+    h3{
+      margin:14px 0 10px;
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height:1.25;
+      text-shadow: 0 10px 40px rgba(0,0,0,.35);
+    }
+
+    /* Typebox: fixed height + scroll (no overflow) */
+    .typebox{
+      margin-top: 14px;
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.14);
+      height: 260px;              /* fixed */
+      overflow-y: auto;           /* scroll */
+      overflow-x: hidden;
+      scrollbar-color: rgba(192,132,255,.55) rgba(255,255,255,.06);
+      scrollbar-width: thin;
+    }
+    @media (max-width: 900px){
+      .typebox{height: 220px;}
+    }
+
+    .typed{
+      font-size: clamp(15px, 1.75vw, 20px);
+      line-height:1.7;
+      color: rgba(255,255,255,.92);
+      white-space: pre-wrap;
+    }
+    .cursor{
+      display:inline-block;
+      width: 10px;
+      margin-left: 3px;
+      background: rgba(255,255,255,.85);
+      animation: blink .9s infinite;
+      transform: translateY(2px);
+      height: 1.1em;
+      border-radius: 2px;
+      vertical-align: baseline;
+    }
+    @keyframes blink{
+      0%,49%{opacity:1}
+      50%,100%{opacity:0}
+    }
+
+    /* Right panel */
+    .right{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      justify-content:space-between;
+    }
+
+    .scene{
+      position:relative;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(155,92,255,.18), rgba(0,0,0,.22));
+      border: 1px solid rgba(255,255,255,.16);
+      overflow:hidden;
+      min-height: 340px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+    @media (max-width: 900px){
+      .scene{min-height: 320px;}
+    }
+
+    .scene .topshine{
+      position:absolute;
+      inset:-60px -80px auto -80px;
+      height: 220px;
+      background: radial-gradient(closest-side, rgba(255,255,255,.22), transparent 70%);
+      filter: blur(10px);
+      transform: rotate(-12deg);
+      opacity:.9;
+    }
+
+    /* Big heart */
+    .heart{
+      position:absolute;
+      left:50%;
+      top:54%;
+      transform: translate(-50%,-50%) scale(1);
+      width: 190px;
+      height: 170px;
+      filter: drop-shadow(0 26px 40px rgba(0,0,0,.35));
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{transform: translate(-50%,-50%) scale(1)}
+      50%{transform: translate(-50%,-50%) scale(1.06)}
+    }
+    .heart:before, .heart:after{
+      content:"";
+      position:absolute;
+      width: 110px; height: 170px;
+      background: linear-gradient(180deg, var(--pink), var(--violet));
+      border-radius: 110px 110px 0 0;
+      top:0;
+    }
+    .heart:before{left:80px; transform: rotate(45deg); transform-origin: 0 100%}
+    .heart:after{left:0; transform: rotate(-45deg); transform-origin: 100% 100%}
+    .heartGlow{
+      position:absolute;
+      left:50%; top:54%;
+      transform: translate(-50%,-50%);
+      width: 320px; height: 320px;
+      background: radial-gradient(circle at 50% 50%, rgba(255,79,216,.22), rgba(155,92,255,.14), transparent 62%);
+      filter: blur(2px);
+      animation: breathe 2.8s ease-in-out infinite;
+    }
+    @keyframes breathe{
+      0%,100%{opacity:.75; transform: translate(-50%,-50%) scale(1)}
+      50%{opacity:1; transform: translate(-50%,-50%) scale(1.07)}
+    }
+
+    /* Tree */
+    .tree{
+      position:absolute;
+      left: 14%;
+      bottom: 10%;
+      width: 150px;
+      height: 230px;
+      transform: rotate(-2deg);
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,.35));
+      opacity:.95;
+    }
+    .tree .layer{
+      position:absolute;
+      left:50%;
+      transform: translateX(-50%);
+      width:0; height:0;
+      border-left: 75px solid transparent;
+      border-right: 75px solid transparent;
+      border-bottom: 70px solid rgba(192,132,255,.33);
+      filter: blur(.2px);
+    }
+    .tree .l1{top:40px; border-bottom-color: rgba(155,92,255,.34)}
+    .tree .l2{top:78px; border-left-width: 88px; border-right-width:88px; border-bottom-width: 80px; border-bottom-color: rgba(255,79,216,.18)}
+    .tree .l3{top:120px; border-left-width: 102px; border-right-width:102px; border-bottom-width: 92px; border-bottom-color: rgba(155,92,255,.24)}
+    .tree .trunk{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform: translateX(-50%);
+      width: 34px; height: 46px;
+      background: rgba(0,0,0,.30);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+    }
+    .star{
+      position:absolute;
+      left:50%;
+      top:20px;
+      transform: translateX(-50%);
+      width: 22px; height: 22px;
+      background: radial-gradient(circle, #fff, var(--violet2) 60%, rgba(192,132,255,.1));
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      filter: drop-shadow(0 0 18px rgba(192,132,255,.95));
+      animation: twinkle 1.4s ease-in-out infinite;
+    }
+    @keyframes twinkle{0%,100%{opacity:.75; transform: translateX(-50%) scale(1)} 50%{opacity:1; transform: translateX(-50%) scale(1.12)}}
+
+    /* Buttons */
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top: 10px;
+    }
+    button{
+      cursor:pointer;
+      border:0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      letter-spacing:.2px;
+      color:#140018;
+      background: linear-gradient(135deg, var(--violet2), var(--pink));
+      box-shadow: 0 18px 45px rgba(255,79,216,.18);
+      transition: transform .15s ease, filter .15s ease;
+      user-select:none;
+    }
+    button:hover{transform: translateY(-1px); filter: brightness(1.06)}
+    button:active{transform: translateY(0px) scale(.99)}
+    .ghost{
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow:none;
+    }
+
+    .hint{
+      font-size: 13px;
+      color: rgba(247,242,255,.72);
+      line-height:1.5;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.42);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.45);
+      backdrop-filter: blur(12px);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .22s ease, transform .22s ease;
+      z-index: 5;
+      max-width: min(92vw, 680px);
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-6px);
+    }
+    .chip{
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--pink) 50%, rgba(255,79,216,.2));
+      box-shadow: 0 0 16px rgba(255,79,216,.9);
+      flex:0 0 auto;
+    }
+
+    /* Little footer */
+    .sig{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      color: rgba(247,242,255,.72);
+      font-size: 13px;
+    }
+    .sig a{color: rgba(192,132,255,.95); text-decoration:none}
+    .sig a:hover{text-decoration:underline}
+
+    /* Floating hearts (JS creates) */
+    .float-heart{
+      position:fixed;
+      left:0; top:0;
+      width: 18px; height: 18px;
+      transform: translate(-50%,-50%) rotate(45deg);
+      pointer-events:none;
+      z-index:4;
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,.35));
+      animation: rise 1.6s ease-out forwards;
+      opacity:.95;
+    }
+    .float-heart::before,.float-heart::after{
+      content:"";
+      position:absolute;
+      width: 12px; height: 18px;
+      background: linear-gradient(180deg, var(--pink), var(--violet));
+      border-radius: 12px 12px 0 0;
+      top:0;
+    }
+    .float-heart::before{left:6px; transform: rotate(45deg); transform-origin: 0 100%}
+    .float-heart::after{left:0; transform: rotate(-45deg); transform-origin: 100% 100%}
+    @keyframes rise{
+      0%{transform: translate(-50%,-50%) rotate(45deg) scale(.9); opacity:.0}
+      15%{opacity:.95}
+      100%{transform: translate(-50%,-160px) rotate(45deg) scale(1.15); opacity:0}
+    }
+
+    /* Confetti */
+    .confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:6;
+    }
+
+    /* Spotify */
+    .spotifyWrap{
+      margin-top: 10px;
+      border-radius: 16px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      box-shadow: 0 18px 45px rgba(0,0,0,.25);
+    }
+    .spotifyNote{
+      margin-top:8px;
+      font-size:12px;
+      color: rgba(247,242,255,.68);
+      line-height:1.4;
+    }
+
+/* Floating photo cluster inside .scene */
+.photoCluster{
+  position:absolute;
+  right:50px;
+  bottom:105px;
+  width:min(340px, 68%);
+  height:180px;
+  pointer-events:none;
+}
+
+.photoFloat{
+  position:absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 18px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 18px 55px rgba(0,0,0,.35);
+  background: rgba(0,0,0,.15);
+  backdrop-filter: blur(8px);
+  transform: translateZ(0);
+  animation: floatY 3.6s ease-in-out infinite;
+}
+
+.photoFloat:nth-child(1){
+  right: 0px;
+  bottom: 0px;
+  width: 130px;
+  height: 130px;
+  animation-duration: 3.8s;
+}
+
+.photoFloat:nth-child(2){
+  right: 110px;
+  bottom: 26px;
+  width: 115px;
+  height: 115px;
+  animation-duration: 3.2s;
+  animation-delay: .25s;
+  filter: saturate(1.05);
+}
+
+.photoFloat:nth-child(3){
+  right: 48px;
+  bottom: 92px;
+  width: 105px;
+  height: 105px;
+  animation-duration: 3.4s;
+  animation-delay: .5s;
+  opacity: .96;
+}
+
+@keyframes floatY{
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50%     { transform: translateY(-10px) rotate(1deg); }
+}
+
+/* Mobile tweak */
+@media (max-width: 900px){
+  .photoCluster{ width: min(320px, 78%); height: 170px; }
+  .photoFloat:nth-child(1){ width: 120px; height: 120px; }
+}
+
+  </style>
+</head>
+
+<body>
+  <canvas id="snow"></canvas>
+  <canvas id="sparkles"></canvas>
+  <canvas id="confetti" class="confetti"></canvas>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="glow"></div>
+
+      <div class="content">
+        <!-- LEFT -->
+        <section>
+          <div class="badge">
+            <span class="dot"></span>
+            <b>🎄 Merry Christmas 🎄</b>
+          </div>
+
+          <h3>
+            Gửi
+            <span style="color: var(--violet2); text-shadow:0 0 24px rgba(192,132,255,.35)">Xuân Nguyệt</span>
+            —<br/>
+            A.K.A
+            <span style="color:var(--sky); text-shadow:0 0 18px rgba(110,203,255,.8)">Người Tình Mùa Đông</span>.
+          </h3>
+
+          <!-- Fixed height + scroll -->
+          <div class="typebox" id="typebox">
+            <div class="typed" id="typed"></div><span class="cursor"></span>
+          </div>
+
+          <div class="actions">
+            <button id="btnYes">💜 Em đồng ý làm người yêu anh chứ?</button>
+            <button class="ghost" id="btnMore">✨ Thêm một câu nữa</button>
+          </div>
+
+          <!-- Spotify (autoplay attempt via embed) -->
+          <div class="spotifyWrap">
+            <iframe
+              id="spotify"
+              style="border:0; width:100%; height:152px;"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              src="https://open.spotify.com/embed/track/141BRsztXiNnpVaWuatcCL?utm_source=generator&theme=0&autoplay=1">
+            </iframe>
+          </div>
+
+          <p class="hint" style="margin-top:12px;">
+            Tip: click/tap bất kỳ chỗ nào để thả <b>tim</b> 💗 • di chuột để thấy sao lấp lánh ✨
+          </p>
+
+          <div class="sig">
+            <span>Made with 💜 & snow</span>
+            <span>From the bottom of the heart to <a href="#" onclick="return false;">Xuân Nguyệt</a></span>
+          </div>
+        </section>
+
+        <!-- RIGHT -->
+        <aside class="right">
+          <div class="scene" id="scene">
+            <div class="topshine"></div>
+
+            <div class="heartGlow"></div>
+            <div class="heart" aria-hidden="true"></div>
+
+            <div class="tree" aria-hidden="true">
+              <div class="star"></div>
+              <div class="layer l1"></div>
+              <div class="layer l2"></div>
+              <div class="layer l3"></div>
+              <div class="trunk"></div>
+            </div>
+
+<div class="photoCluster" aria-hidden="true">
+  <img
+    class="photoFloat"
+    src="https://cdn.save.moe/b/50PoOo.jpg"
+    alt=""
+  />
+  <img
+    class="photoFloat"
+    src="https://cdn.save.moe/b/2HLgVkT.jpg"
+    alt=""
+  />
+  <img
+    class="photoFloat"
+    src="https://cdn.save.moe/b/Xo4KtX.jpg"
+    alt=""
+  />
+</div>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="ghost" id="btnSnow">❄️ Tăng tuyết</button>
+            <button class="ghost" id="btnSparkle">✨ Tăng lấp lánh</button>
+            <button class="ghost" id="btnCalm">🌙 Dịu lại</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="chip"></span>
+    <div id="toastText">...</div>
+  </div>
+
+  <script>
+    /***********************
+     * Customizable values *
+     ***********************/
+    const girlName = "Xuân Nguyệt";
+    const yourName = "Anh";
+    let snowIntensity = 160;
+    let sparkleIntensity = 120;
+
+    /***********************
+     * Typewriter messages *
+     ***********************/
+    const baseLines = [
+      `Chúc mừng Giáng Sinh, ${girlName} 🎄`,
+      `Biết là ấn tượng để lại ban đầu không tốt,`,
+      `Khi anh bảo là em redflag... 🚩.`,
+      ``,
+      `Nhưng đã từ rất lâu rồi mới có một cô gái chịu "nói nhiều" với anh như em`,
+      `Em chủ động nói chuyện với anh, voice cho anh, call cho anh...`,
+      `Có thể em thấy những việc đó nhỏ`,
+      `nhưng đối với một người có cuộc sống tẻ nhạt như anh thì nó rất đáng trân trọng.`,
+      ``,
+      `Anh thích em — không phải kiểu “thích cho vui”…`,
+      `mà là kiểu muốn đi cùng em qua những ngày thường nhất.`
+    ];
+
+    const extraLines = [
+      `Love U 😘.`,
+      `Love U 😘.`,
+      `Love U 😘.`,
+      `Love U 😘.`,
+      `Love U 😘.`
+    ];
+
+    /***********************
+     * Typewriter logic    *
+     ***********************/
+    const typedEl = document.getElementById("typed");
+    const typeboxEl = document.getElementById("typebox");
+    let typing = false, stopTyping = false;
+
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+    function scrollTypeboxToBottom(){
+      typeboxEl.scrollTop = typeboxEl.scrollHeight;
+    }
+
+    async function typeText(lines){
+      if(typing) return;
+      typing = true;
+      stopTyping = false;
+      typedEl.textContent = "";
+
+      for(const line of lines){
+        if(stopTyping) break;
+        for(const ch of line){
+          if(stopTyping) break;
+          typedEl.textContent += ch;
+          scrollTypeboxToBottom();
+          await sleep(18 + Math.random()*28);
+        }
+        typedEl.textContent += "\n";
+        scrollTypeboxToBottom();
+        await sleep(220);
+      }
+      typing = false;
+    }
+
+    /***********************
+     * Toast helper        *
+     ***********************/
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+    let toastTimer = null;
+
+    function showToast(msg){
+      toastText.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toast.classList.remove("show"), 2200);
+    }
+
+    /***********************
+     * Floating hearts     *
+     ***********************/
+    function spawnHeart(x, y){
+      const el = document.createElement("div");
+      el.className = "float-heart";
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      el.style.opacity = 0.9 + Math.random()*0.1;
+      el.style.transform = `translate(-50%,-50%) rotate(45deg) scale(${0.85+Math.random()*0.6})`;
+      document.body.appendChild(el);
+      setTimeout(()=> el.remove(), 1700);
+    }
+
+    // Tap/click for hearts + helps Spotify autoplay (interaction)
+    window.addEventListener("pointerdown", (e)=>{
+      for(let i=0;i<3;i++){
+        setTimeout(()=> spawnHeart(e.clientX + (Math.random()*24-12), e.clientY + (Math.random()*24-12)), i*60);
+      }
+    });
+
+    /***********************
+     * Snow canvas         *
+     ***********************/
+    const snowCanvas = document.getElementById("snow");
+    const sctx = snowCanvas.getContext("2d");
+    let snow = [];
+
+    function resizeCanvas(c){
+      c.width = window.innerWidth * devicePixelRatio;
+      c.height = window.innerHeight * devicePixelRatio;
+      c.style.width = window.innerWidth + "px";
+      c.style.height = window.innerHeight + "px";
+    }
+    resizeCanvas(snowCanvas);
+
+    function initSnow(){
+      snow = [];
+      const w = snowCanvas.width, h = snowCanvas.height;
+      for(let i=0;i<snowIntensity;i++){
+        snow.push({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: (Math.random()*2.2+0.6)*devicePixelRatio,
+          vy: (Math.random()*1.2+0.4)*devicePixelRatio,
+          vx: (Math.random()*0.7-0.35)*devicePixelRatio,
+          a: Math.random()*Math.PI*2
+        });
+      }
+    }
+    initSnow();
+
+    function drawSnow(){
+      const w = snowCanvas.width, h = snowCanvas.height;
+      sctx.clearRect(0,0,w,h);
+
+      for(const flake of snow){
+        flake.a += 0.01;
+        flake.x += flake.vx + Math.sin(flake.a)*0.35*devicePixelRatio;
+        flake.y += flake.vy;
+
+        if(flake.y > h + 10) { flake.y = -10; flake.x = Math.random()*w; }
+        if(flake.x < -10) flake.x = w + 10;
+        if(flake.x > w + 10) flake.x = -10;
+
+        sctx.beginPath();
+        sctx.fillStyle = "rgba(233,221,255,0.85)";
+        sctx.arc(flake.x, flake.y, flake.r, 0, Math.PI*2);
+        sctx.fill();
+      }
+      requestAnimationFrame(drawSnow);
+    }
+    drawSnow();
+
+    /***********************
+     * Sparkles canvas     *
+     ***********************/
+    const sparkleCanvas = document.getElementById("sparkles");
+    const pctx = sparkleCanvas.getContext("2d");
+    resizeCanvas(sparkleCanvas);
+
+    let sparkles = [];
+    let mouse = {x: -9999, y: -9999};
+
+    function initSparkles(){
+      sparkles = [];
+      const w = sparkleCanvas.width, h = sparkleCanvas.height;
+      for(let i=0;i<sparkleIntensity;i++){
+        sparkles.push({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: (Math.random()*1.8+0.6)*devicePixelRatio,
+          o: Math.random()*0.8+0.2,
+          tw: Math.random()*0.04+0.01,
+          phase: Math.random()*Math.PI*2
+        });
+      }
+    }
+    initSparkles();
+
+    function drawSparkles(){
+      const w = sparkleCanvas.width, h = sparkleCanvas.height;
+      pctx.clearRect(0,0,w,h);
+
+      for(const sp of sparkles){
+        sp.phase += sp.tw;
+        const glow = (0.55 + Math.sin(sp.phase)*0.45) * sp.o;
+
+        const dx = mouse.x*devicePixelRatio - sp.x;
+        const dy = mouse.y*devicePixelRatio - sp.y;
+        const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+
+        if(dist < 240*devicePixelRatio){
+          sp.x += dx/dist * 0.18*devicePixelRatio;
+          sp.y += dy/dist * 0.18*devicePixelRatio;
+        }else{
+          sp.x += (Math.random()*0.4-0.2)*devicePixelRatio;
+          sp.y += (Math.random()*0.4-0.2)*devicePixelRatio;
+        }
+
+        if(sp.x < -10) sp.x = w+10;
+        if(sp.x > w+10) sp.x = -10;
+        if(sp.y < -10) sp.y = h+10;
+        if(sp.y > h+10) sp.y = -10;
+
+        pctx.beginPath();
+        pctx.fillStyle = `rgba(192,132,255,${0.25*glow})`;
+        pctx.arc(sp.x, sp.y, sp.r*3.2, 0, Math.PI*2);
+        pctx.fill();
+
+        pctx.beginPath();
+        pctx.fillStyle = `rgba(255,255,255,${0.55*glow})`;
+        pctx.arc(sp.x, sp.y, sp.r, 0, Math.PI*2);
+        pctx.fill();
+      }
+
+      requestAnimationFrame(drawSparkles);
+    }
+    drawSparkles();
+
+    window.addEventListener("pointermove", (e)=>{
+      mouse.x = e.clientX; mouse.y = e.clientY;
+    });
+
+    /***********************
+     * Confetti canvas     *
+     ***********************/
+    const confettiCanvas = document.getElementById("confetti");
+    const cctx = confettiCanvas.getContext("2d");
+    resizeCanvas(confettiCanvas);
+
+    let confetti = [];
+    function fireConfetti(){
+      confetti = [];
+      const w = confettiCanvas.width, h = confettiCanvas.height;
+      const count = 240;
+
+      for(let i=0;i<count;i++){
+        confetti.push({
+          x: w/2 + (Math.random()*120-60)*devicePixelRatio,
+          y: h*0.25,
+          vx: (Math.random()*10-5)*devicePixelRatio,
+          vy: (Math.random()*-8-6)*devicePixelRatio,
+          g: (0.22+Math.random()*0.12)*devicePixelRatio,
+          s: (Math.random()*6+4)*devicePixelRatio,
+          r: Math.random()*Math.PI*2,
+          vr: (Math.random()*0.25-0.125)
+        });
+      }
+
+      let t = 0;
+      function tick(){
+        t++;
+        cctx.clearRect(0,0,w,h);
+
+        for(const p of confetti){
+          p.vy += p.g;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.r += p.vr;
+
+          cctx.save();
+          cctx.translate(p.x, p.y);
+          cctx.rotate(p.r);
+
+          const pick = Math.random();
+          let col = "rgba(192,132,255,0.85)";
+          if(pick < 0.33) col = "rgba(255,79,216,0.85)";
+          else if(pick < 0.66) col = "rgba(155,92,255,0.85)";
+          else col = "rgba(255,255,255,0.80)";
+
+          cctx.fillStyle = col;
+          cctx.fillRect(-p.s/2, -p.s/3, p.s, p.s/1.5);
+          cctx.restore();
+        }
+
+        confetti = confetti.filter(p => p.y < h + 60*devicePixelRatio);
+        if(t < 220 && confetti.length) requestAnimationFrame(tick);
+        else cctx.clearRect(0,0,w,h);
+      }
+      tick();
+    }
+
+    /***********************
+     * Buttons behavior    *
+     ***********************/
+    document.getElementById("btnYes").addEventListener("click", ()=>{
+      fireConfetti();
+      showToast(`✨ Đồng ý rồi là sau này phải đón nhận hết tất cả mọi thứ tui tặng đó nha 😏💜`);
+      const cx = window.innerWidth/2, cy = window.innerHeight/2;
+      for(let i=0;i<18;i++){
+        setTimeout(()=> spawnHeart(cx + (Math.random()*220-110), cy + (Math.random()*140-70)), i*35);
+      }
+    });
+
+    document.getElementById("btnMore").addEventListener("click", ()=>{
+      const line = extraLines[Math.floor(Math.random()*extraLines.length)];
+      showToast("💜 " + line);
+      typedEl.textContent += "\n" + line + "\n";
+      scrollTypeboxToBottom();
+    });
+
+    document.getElementById("btnSnow").addEventListener("click", ()=>{
+      snowIntensity = Math.min(360, snowIntensity + 60);
+      initSnow();
+      showToast("❄️ Tuyết nhiều hơn rồi!");
+    });
+
+    document.getElementById("btnSparkle").addEventListener("click", ()=>{
+      sparkleIntensity = Math.min(260, sparkleIntensity + 50);
+      initSparkles();
+      showToast("✨ Lấp lánh tăng cấp!");
+    });
+
+    document.getElementById("btnCalm").addEventListener("click", ()=>{
+      snowIntensity = 140;
+      sparkleIntensity = 110;
+      initSnow(); initSparkles();
+      showToast("🌙 Dịu lại cho êm hơn…");
+    });
+
+    /***********************
+     * Resize handler      *
+     ***********************/
+    window.addEventListener("resize", ()=>{
+      resizeCanvas(snowCanvas);
+      resizeCanvas(sparkleCanvas);
+      resizeCanvas(confettiCanvas);
+      initSnow();
+      initSparkles();
+    });
+
+    /***********************
+     * Start typing        *
+     ***********************/
+    typeText(baseLines);
+  </script>
+</body>
+</html>
