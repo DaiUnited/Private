@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎄 Merry Christmas • For You</title>
+  <title>Merge Blossom • Web Game</title>
 
   <style>
     :root{
@@ -18,6 +18,10 @@
       --glass2: rgba(255,255,255,.16);
       --shadow: 0 30px 80px rgba(0,0,0,.55);
       --sky:#6ecbff;
+      --mint:#7bf4d1;
+      --gold:#ffd86b;
+      --danger:#ff7a9b;
+      --safe:#80ffcf;
     }
 
     *{box-sizing:border-box}
@@ -35,7 +39,6 @@
         linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
     }
 
-    /* Canvas layers */
     canvas{
       position:fixed;
       inset:0;
@@ -46,7 +49,6 @@
     #sparkles{mix-blend-mode:screen; opacity:.9}
     #snow{opacity:.9}
 
-    /* Layout */
     .wrap{
       position:relative;
       height:100%;
@@ -89,7 +91,6 @@
       height:100%;
     }
 
-    /* Responsive: phone */
     @media (max-width: 900px){
       body{overflow:auto}
       .wrap{height:auto; padding:16px}
@@ -122,15 +123,14 @@
       text-shadow: 0 10px 40px rgba(0,0,0,.35);
     }
 
-    /* Typebox: fixed height + scroll (no overflow) */
     .typebox{
       margin-top: 14px;
       padding: 16px 16px 14px;
       border-radius: 18px;
       background: rgba(0,0,0,.22);
       border: 1px solid rgba(255,255,255,.14);
-      height: 260px;              /* fixed */
-      overflow-y: auto;           /* scroll */
+      height: 260px;
+      overflow-y: auto;
       overflow-x: hidden;
       scrollbar-color: rgba(192,132,255,.55) rgba(255,255,255,.06);
       scrollbar-width: thin;
@@ -140,28 +140,12 @@
     }
 
     .typed{
-      font-size: clamp(15px, 1.75vw, 20px);
+      font-size: clamp(15px, 1.75vw, 18px);
       line-height:1.7;
       color: rgba(255,255,255,.92);
       white-space: pre-wrap;
     }
-    .cursor{
-      display:inline-block;
-      width: 10px;
-      margin-left: 3px;
-      background: rgba(255,255,255,.85);
-      animation: blink .9s infinite;
-      transform: translateY(2px);
-      height: 1.1em;
-      border-radius: 2px;
-      vertical-align: baseline;
-    }
-    @keyframes blink{
-      0%,49%{opacity:1}
-      50%,100%{opacity:0}
-    }
 
-    /* Right panel */
     .right{
       display:flex;
       flex-direction:column;
@@ -177,108 +161,181 @@
       overflow:hidden;
       min-height: 340px;
       box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      touch-action:none;
+      user-select:none;
     }
     @media (max-width: 900px){
-      .scene{min-height: 320px;}
+      .scene{min-height: 420px;}
     }
 
     .scene .topshine{
       position:absolute;
       inset:-60px -80px auto -80px;
       height: 220px;
-      background: radial-gradient(closest-side, rgba(255,255,255,.22), transparent 70%);
+      background: radial-gradient(closest-side, rgba(255,255,255,.18), transparent 70%);
       filter: blur(10px);
       transform: rotate(-12deg);
       opacity:.9;
+      z-index:0;
     }
 
-    /* Big heart */
-    .heart{
+    .gameHud{
       position:absolute;
-      left:50%;
-      top:54%;
-      transform: translate(-50%,-50%) scale(1);
-      width: 190px;
-      height: 170px;
-      filter: drop-shadow(0 26px 40px rgba(0,0,0,.35));
-      animation: pulse 1.8s ease-in-out infinite;
+      inset:14px 14px auto 14px;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      z-index:4;
+      pointer-events:none;
     }
-    @keyframes pulse{
-      0%,100%{transform: translate(-50%,-50%) scale(1)}
-      50%{transform: translate(-50%,-50%) scale(1.06)}
+
+    .hudGroup{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
     }
-    .heart:before, .heart:after{
-      content:"";
+
+    .hudCard{
+      padding:10px 12px;
+      border-radius:16px;
+      background: rgba(10,8,22,.42);
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.24);
+      min-width:84px;
+    }
+
+    .hudCard .label{
+      font-size:11px;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      opacity:.7;
+      margin-bottom:4px;
+    }
+
+    .hudCard .value{
+      font-size:18px;
+      font-weight:800;
+      line-height:1;
+    }
+
+    .boardWrap{
       position:absolute;
-      width: 110px; height: 170px;
-      background: linear-gradient(180deg, var(--pink), var(--violet));
-      border-radius: 110px 110px 0 0;
+      inset:74px 16px 16px 16px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)),
+        linear-gradient(180deg, rgba(91,41,136,.24), rgba(18,8,38,.34));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), inset 0 -50px 120px rgba(0,0,0,.18);
+      overflow:hidden;
+      z-index:1;
+    }
+
+    .boardGrid{
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: calc(100% / 6) calc(100% / 10);
+      opacity:.22;
+    }
+
+    .safeLine{
+      position:absolute;
+      left:0; right:0;
+      top:15%;
+      height:2px;
+      background: linear-gradient(90deg, transparent, rgba(128,255,207,.85), transparent);
+      box-shadow: 0 0 14px rgba(128,255,207,.6);
+      opacity:.92;
+    }
+
+    .safeLabel{
+      position:absolute;
+      right:10px;
+      top:calc(15% - 16px);
+      font-size:11px;
+      font-weight:700;
+      color:var(--safe);
+      padding:2px 8px;
+      border-radius:999px;
+      background: rgba(8,25,22,.55);
+      border:1px solid rgba(128,255,207,.25);
+    }
+
+    #gameCanvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:auto;
+      z-index:2;
+    }
+
+    .aimLine{
+      position:absolute;
       top:0;
-    }
-    .heart:before{left:80px; transform: rotate(45deg); transform-origin: 0 100%}
-    .heart:after{left:0; transform: rotate(-45deg); transform-origin: 100% 100%}
-    .heartGlow{
-      position:absolute;
-      left:50%; top:54%;
-      transform: translate(-50%,-50%);
-      width: 320px; height: 320px;
-      background: radial-gradient(circle at 50% 50%, rgba(255,79,216,.22), rgba(155,92,255,.14), transparent 62%);
-      filter: blur(2px);
-      animation: breathe 2.8s ease-in-out infinite;
-    }
-    @keyframes breathe{
-      0%,100%{opacity:.75; transform: translate(-50%,-50%) scale(1)}
-      50%{opacity:1; transform: translate(-50%,-50%) scale(1.07)}
-    }
-
-    /* Tree */
-    .tree{
-      position:absolute;
-      left: 14%;
-      bottom: 10%;
-      width: 150px;
-      height: 230px;
-      transform: rotate(-2deg);
-      filter: drop-shadow(0 20px 30px rgba(0,0,0,.35));
-      opacity:.95;
-    }
-    .tree .layer{
-      position:absolute;
-      left:50%;
-      transform: translateX(-50%);
-      width:0; height:0;
-      border-left: 75px solid transparent;
-      border-right: 75px solid transparent;
-      border-bottom: 70px solid rgba(192,132,255,.33);
-      filter: blur(.2px);
-    }
-    .tree .l1{top:40px; border-bottom-color: rgba(155,92,255,.34)}
-    .tree .l2{top:78px; border-left-width: 88px; border-right-width:88px; border-bottom-width: 80px; border-bottom-color: rgba(255,79,216,.18)}
-    .tree .l3{top:120px; border-left-width: 102px; border-right-width:102px; border-bottom-width: 92px; border-bottom-color: rgba(155,92,255,.24)}
-    .tree .trunk{
-      position:absolute;
-      left:50%;
       bottom:0;
+      width:2px;
+      background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.12));
+      filter: drop-shadow(0 0 10px rgba(255,255,255,.38));
+      opacity:.78;
       transform: translateX(-50%);
-      width: 34px; height: 46px;
-      background: rgba(0,0,0,.30);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 10px;
+      z-index:3;
+      pointer-events:none;
     }
-    .star{
-      position:absolute;
-      left:50%;
-      top:20px;
-      transform: translateX(-50%);
-      width: 22px; height: 22px;
-      background: radial-gradient(circle, #fff, var(--violet2) 60%, rgba(192,132,255,.1));
-      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-      filter: drop-shadow(0 0 18px rgba(192,132,255,.95));
-      animation: twinkle 1.4s ease-in-out infinite;
-    }
-    @keyframes twinkle{0%,100%{opacity:.75; transform: translateX(-50%) scale(1)} 50%{opacity:1; transform: translateX(-50%) scale(1.12)}}
 
-    /* Buttons */
+    .nextBubble{
+      position:absolute;
+      right:14px;
+      bottom:14px;
+      width:92px;
+      height:92px;
+      border-radius:24px;
+      background: rgba(10,8,22,.48);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow: 0 18px 40px rgba(0,0,0,.26);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      z-index:4;
+      pointer-events:none;
+      backdrop-filter: blur(10px);
+    }
+
+    .nextBubble small{
+      font-size:11px;
+      opacity:.75;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.7px;
+    }
+
+    .nextIcon{
+      font-size:32px;
+      line-height:1;
+      filter: drop-shadow(0 0 14px rgba(255,255,255,.24));
+    }
+
+    .floatingScore{
+      position:absolute;
+      color:#fff7ff;
+      font-weight:900;
+      font-size:18px;
+      text-shadow: 0 8px 24px rgba(0,0,0,.45);
+      pointer-events:none;
+      animation: floatScore .9s ease-out forwards;
+      z-index:5;
+    }
+    @keyframes floatScore{
+      0%{transform:translate(-50%,0) scale(.8); opacity:0}
+      15%{opacity:1}
+      100%{transform:translate(-50%,-48px) scale(1.08); opacity:0}
+    }
+
     .actions{
       display:flex;
       flex-wrap:wrap;
@@ -295,7 +352,7 @@
       color:#140018;
       background: linear-gradient(135deg, var(--violet2), var(--pink));
       box-shadow: 0 18px 45px rgba(255,79,216,.18);
-      transition: transform .15s ease, filter .15s ease;
+      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
       user-select:none;
     }
     button:hover{transform: translateY(-1px); filter: brightness(1.06)}
@@ -310,10 +367,9 @@
     .hint{
       font-size: 13px;
       color: rgba(247,242,255,.72);
-      line-height:1.5;
+      line-height:1.6;
     }
 
-    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
@@ -331,7 +387,7 @@
       opacity:0;
       pointer-events:none;
       transition: opacity .22s ease, transform .22s ease;
-      z-index: 5;
+      z-index: 10;
       max-width: min(92vw, 680px);
     }
     .toast.show{
@@ -345,7 +401,6 @@
       flex:0 0 auto;
     }
 
-    /* Little footer */
     .sig{
       display:flex;
       justify-content:space-between;
@@ -356,17 +411,14 @@
       color: rgba(247,242,255,.72);
       font-size: 13px;
     }
-    .sig a{color: rgba(192,132,255,.95); text-decoration:none}
-    .sig a:hover{text-decoration:underline}
 
-    /* Floating hearts (JS creates) */
     .float-heart{
       position:fixed;
       left:0; top:0;
       width: 18px; height: 18px;
       transform: translate(-50%,-50%) rotate(45deg);
       pointer-events:none;
-      z-index:4;
+      z-index:8;
       filter: drop-shadow(0 12px 18px rgba(0,0,0,.35));
       animation: rise 1.6s ease-out forwards;
       opacity:.95;
@@ -387,117 +439,73 @@
       100%{transform: translate(-50%,-160px) rotate(45deg) scale(1.15); opacity:0}
     }
 
-    /* Confetti */
     .confetti{
       position:fixed;
       inset:0;
       pointer-events:none;
-      z-index:6;
+      z-index:9;
     }
 
-    /* Spotify */
-    .spotifyWrap{
-      margin-top: 10px;
-      border-radius: 16px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.22);
-      box-shadow: 0 18px 45px rgba(0,0,0,.25);
+    .gameOverOverlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background: rgba(11,8,20,.52);
+      backdrop-filter: blur(8px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .2s ease;
+      z-index:7;
     }
-    .spotifyNote{
-      margin-top:8px;
-      font-size:12px;
-      color: rgba(247,242,255,.68);
-      line-height:1.4;
+    .gameOverOverlay.show{opacity:1; pointer-events:auto;}
+
+    .gameOverCard{
+      width:min(92%, 320px);
+      padding:18px;
+      border-radius:24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.07));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: var(--shadow);
+      text-align:center;
     }
 
-/* Floating photo cluster inside .scene */
-.photoCluster{
-  position:absolute;
-  right:50px;
-  bottom:105px;
-  width:min(340px, 68%);
-  height:180px;
-  pointer-events:none;
-}
+    .gameOverCard h4{
+      margin:0 0 10px;
+      font-size:26px;
+    }
 
-.photoFloat{
-  position:absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 18px;
-  object-fit: cover;
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow: 0 18px 55px rgba(0,0,0,.35);
-  background: rgba(0,0,0,.15);
-  backdrop-filter: blur(8px);
-  transform: translateZ(0);
-  animation: floatY 3.6s ease-in-out infinite;
-}
-
-.photoFloat:nth-child(1){
-  right: 0px;
-  bottom: 0px;
-  width: 130px;
-  height: 130px;
-  animation-duration: 3.8s;
-}
-
-.photoFloat:nth-child(2){
-  right: 110px;
-  bottom: 26px;
-  width: 115px;
-  height: 115px;
-  animation-duration: 3.2s;
-  animation-delay: .25s;
-  filter: saturate(1.05);
-}
-
-.photoFloat:nth-child(3){
-  right: 48px;
-  bottom: 92px;
-  width: 105px;
-  height: 105px;
-  animation-duration: 3.4s;
-  animation-delay: .5s;
-  opacity: .96;
-}
-
-@keyframes floatY{
-  0%,100% { transform: translateY(0) rotate(-1deg); }
-  50%     { transform: translateY(-10px) rotate(1deg); }
-}
-
-/* Mobile tweak */
-@media (max-width: 900px){
-  .photoCluster{ width: min(320px, 78%); height: 170px; }
-  .photoFloat:nth-child(1){ width: 120px; height: 120px; }
-}
+    .gameOverCard p{
+      margin:8px 0;
+      color: rgba(247,242,255,.82);
+      line-height:1.55;
+    }
 
     .soundFab{
-  position: fixed;
-  right: 14px;
-  bottom: 16px;
-  z-index: 50;
-  display:none;
-  align-items:center;
-  gap:10px;
-  padding: 10px 12px;
-  border-radius: 999px;
-  background: rgba(0,0,0,.42);
-  border: 1px solid rgba(255,255,255,.18);
-  backdrop-filter: blur(12px);
-  color: rgba(255,255,255,.92);
-  font-weight: 800;
-  box-shadow: 0 18px 50px rgba(0,0,0,.45);
-}
-.soundFab.show{display:flex}
-.soundFab .dot{
-  width:10px;height:10px;border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #fff, var(--sky) 55%, rgba(110,203,255,.25));
-  box-shadow: 0 0 16px rgba(110,203,255,.9);
-}
-
+      position: fixed;
+      right: 14px;
+      bottom: 16px;
+      z-index: 50;
+      display:none;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.42);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(12px);
+      color: rgba(255,255,255,.92);
+      font-weight: 800;
+      box-shadow: 0 18px 50px rgba(0,0,0,.45);
+    }
+    .soundFab.show{display:flex}
+    .soundFab .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--sky) 55%, rgba(110,203,255,.25));
+      box-shadow: 0 0 16px rgba(110,203,255,.9);
+    }
   </style>
 </head>
 
@@ -511,79 +519,91 @@
       <div class="glow"></div>
 
       <div class="content">
-        <!-- LEFT -->
         <section>
           <div class="badge">
             <span class="dot"></span>
-            <b>🎄 Merry Christmas 🎄</b>
+            <b>✨ Merge Blossom ✨</b>
           </div>
 
           <h3>
-            Gửi
-            <span style="color: var(--violet2); text-shadow:0 0 24px rgba(192,132,255,.35)">Xuân Nguyệt</span>
-            —<br/>
-            A.K.A
-            <span style="color:var(--sky); text-shadow:0 0 18px rgba(110,203,255,.8)">Người Tình Mùa Đông</span>.
+            Khu vườn mảnh ghép<br/>
+            <span style="color: var(--violet2); text-shadow:0 0 24px rgba(192,132,255,.35)">2 hình giống nhau</span>
+            sẽ hóa thành<br/>
+            <span style="color:var(--sky); text-shadow:0 0 18px rgba(110,203,255,.8)">1 hình lớn hơn, đẹp hơn</span>
           </h3>
 
-          <!-- Fixed height + scroll -->
           <div class="typebox" id="typebox">
-            <div class="typed" id="typed"></div><span class="cursor"></span>
+            <div class="typed" id="typed"></div>
           </div>
 
           <div class="actions">
-            <button id="btnYes">💜 Em làm người yêu anh chứ?</button>
-            <button class="ghost" id="btnMore">✨ Thêm một câu nữa</button>
+            <button id="btnStart">🎮 Chơi mới</button>
+            <button class="ghost" id="btnSkill">✨ Kích nổ ánh sao</button>
           </div>
 
-        <div class="spotifyWrap">
-          <iframe
-            id="yt"
-            style="border:0; width:100%; height:152px;"
-            loading="lazy"
-            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-            src="https://www.youtube.com/embed/oT7oezgP9rI?autoplay=1&mute=1&playsinline=1&loop=1&playlist=oT7oezgP9rI&controls=1&rel=0&modestbranding=1"
-          ></iframe>
-        </div>
-
           <p class="hint" style="margin-top:12px;">
-            Tip: click/tap bất kỳ chỗ nào để thả <b>tim</b> 💗 • di chuột để thấy sao lấp lánh ✨
+            Chạm vào bảng bên phải để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi. Ghép tới <b>cấp 6</b> rồi tiếp tục ghép đôi để chúng <b>biến mất</b> và nhận điểm thưởng cực lớn.
+            <br/><br/>
+            Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️</b>
+            <br/>
+            Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao nổ điểm càng lớn.
           </p>
+
+          <div class="sig">
+            <span>Thiết kế giữ layout cũ • gameplay mới hoàn toàn</span>
+            <span>Best: <b id="bestScoreText">0</b></span>
+          </div>
         </section>
 
-        <!-- RIGHT -->
         <aside class="right">
           <div class="scene" id="scene">
             <div class="topshine"></div>
 
-            <div class="heartGlow"></div>
-            <div class="heart" aria-hidden="true"></div>
-
-            <div class="tree" aria-hidden="true">
-              <div class="star"></div>
-              <div class="layer l1"></div>
-              <div class="layer l2"></div>
-              <div class="layer l3"></div>
-              <div class="trunk"></div>
+            <div class="gameHud">
+              <div class="hudGroup">
+                <div class="hudCard">
+                  <div class="label">Điểm</div>
+                  <div class="value" id="scoreText">0</div>
+                </div>
+                <div class="hudCard">
+                  <div class="label">Combo</div>
+                  <div class="value" id="comboText">x1</div>
+                </div>
+                <div class="hudCard">
+                  <div class="label">Cao nhất</div>
+                  <div class="value" id="levelText">0</div>
+                </div>
+              </div>
+              <div class="hudGroup">
+                <div class="hudCard">
+                  <div class="label">Kỹ năng</div>
+                  <div class="value" id="skillText">1</div>
+                </div>
+              </div>
             </div>
 
-<div class="photoCluster" aria-hidden="true">
-  <img
-    class="photoFloat"
-    src="https://cdn.save.moe/b/50PoOo.jpg"
-    alt=""
-  />
-  <img
-    class="photoFloat"
-    src="https://cdn.save.moe/b/2HLgVkT.jpg"
-    alt=""
-  />
-  <img
-    class="photoFloat"
-    src="https://cdn.save.moe/b/Xo4KtX.jpg"
-    alt=""
-  />
-</div>
+            <div class="boardWrap" id="boardWrap">
+              <div class="boardGrid"></div>
+              <div class="safeLine"></div>
+              <div class="safeLabel">Vạch an toàn</div>
+              <div class="aimLine" id="aimLine"></div>
+              <canvas id="gameCanvas"></canvas>
+
+              <div class="nextBubble">
+                <small>Tiếp theo</small>
+                <div class="nextIcon" id="nextIcon">💗</div>
+              </div>
+
+              <div class="gameOverOverlay" id="gameOver">
+                <div class="gameOverCard">
+                  <h4>Game Over</h4>
+                  <p id="gameOverText">Bạn đã để khu vườn vượt vạch an toàn.</p>
+                  <div class="actions" style="justify-content:center; margin-top:14px;">
+                    <button id="btnRestart">Chơi lại</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div style="display:flex; gap:12px; flex-wrap:wrap;">
@@ -600,129 +620,98 @@
     <span class="chip"></span>
     <div id="toastText">...</div>
   </div>
-  
-<div class="soundFab" id="soundFab" role="button" aria-label="Bật nhạc">
-  <span class="dot"></span>
-  <span>🔊 Bật nhạc</span>
-</div>
+
+  <div class="soundFab" id="soundFab" role="button" aria-label="Bật nhạc ambience">
+    <span class="dot"></span>
+    <span>🔊 Bật ambience</span>
+  </div>
 
   <script>
-    /***********************
-     * Customizable values *
-     ***********************/
-    const girlName = "Xuân Nguyệt";
-    const yourName = "Anh";
-    let snowIntensity = 160;
-    let sparkleIntensity = 120;
-
-    /***********************
-     * Typewriter messages *
-     ***********************/
-    const baseLines = [
-      `Chúc mừng Giáng Sinh, ${girlName} 🎄`,
-      `Biết là ấn tượng để lại ban đầu không tốt,`,
-      `Khi anh bảo em là Red Flag... 🚩.`,
-      ``,
-      `Nhưng đã từ rất lâu rồi mới có một người chịu "nói nhiều" với anh.`,
-      `Em chủ động bắt chuyện với anh, voice cho anh, call với anh...`,
-      `Có thể em thấy những việc đó nhỏ`,
-      `nhưng đối với một người có cuộc sống tẻ nhạt như anh thì nó rất đáng trân trọng.`,
-      ``,
-      `Anh thích em — không phải kiểu “thích cho vui”…`,
-      `mà là kiểu muốn đi cùng em qua những ngày thường nhất.`,
-      `Anh sẽ đồng hành cùng em, tiếp sức cho em để vượt qua năm lớp 12 này.`
+    const storyLines = [
+      "Chào mừng đến với Merge Blossom.",
+      "Mỗi lượt, bạn nhận một mảnh ghép nhỏ.",
+      "Thả đúng chỗ để 2 hình giống nhau chạm nhau và hợp nhất.",
+      "Mỗi lần ghép thành công, cấp độ tăng lên và điểm cũng bùng nổ hơn.",
+      "Khi 2 biểu tượng cấp 6 gặp nhau, chúng sẽ bốc hơi thành ánh sáng và giải phóng diện tích.",
+      "Combo càng dài, điểm càng cao.",
+      "Bạn có 1 kỹ năng 'Kích nổ ánh sao' để xóa một mảnh cấp thấp ngẫu nhiên khi bí chỗ.",
+      "Đừng để chồng mảnh vượt qua vạch an toàn quá lâu... nếu không khu vườn sẽ quá tải."
     ];
 
-    const extraLines = [
-      `Love U 😘.`,
-      `Love U 😘.`,
-      `Love U 😘.`,
-      `Love U 😘.`,
-      `Love U 😘.`
-    ];
-
-    /***********************
-     * Typewriter logic    *
-     ***********************/
-    const typedEl = document.getElementById("typed");
-    const typeboxEl = document.getElementById("typebox");
-    let typing = false, stopTyping = false;
+    const typedEl = document.getElementById('typed');
+    const typeboxEl = document.getElementById('typebox');
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toastText');
+    const scene = document.getElementById('scene');
+    const boardWrap = document.getElementById('boardWrap');
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const aimLine = document.getElementById('aimLine');
+    const nextIconEl = document.getElementById('nextIcon');
+    const scoreText = document.getElementById('scoreText');
+    const comboText = document.getElementById('comboText');
+    const levelText = document.getElementById('levelText');
+    const skillText = document.getElementById('skillText');
+    const bestScoreText = document.getElementById('bestScoreText');
+    const gameOverOverlay = document.getElementById('gameOver');
+    const gameOverText = document.getElementById('gameOverText');
 
     function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-    function scrollTypeboxToBottom(){
-      typeboxEl.scrollTop = typeboxEl.scrollHeight;
-    }
+    function scrollTypeboxToBottom(){ typeboxEl.scrollTop = typeboxEl.scrollHeight; }
 
     async function typeText(lines){
-      if(typing) return;
-      typing = true;
-      stopTyping = false;
-      typedEl.textContent = "";
-
+      typedEl.textContent = '';
       for(const line of lines){
-        if(stopTyping) break;
         for(const ch of line){
-          if(stopTyping) break;
           typedEl.textContent += ch;
           scrollTypeboxToBottom();
-          await sleep(18 + Math.random()*28);
+          await sleep(12 + Math.random()*16);
         }
-        typedEl.textContent += "\n";
+        typedEl.textContent += '\n\n';
         scrollTypeboxToBottom();
-        await sleep(220);
+        await sleep(120);
       }
-      typing = false;
     }
+    typeText(storyLines);
 
-    /***********************
-     * Toast helper        *
-     ***********************/
-    const toast = document.getElementById("toast");
-    const toastText = document.getElementById("toastText");
     let toastTimer = null;
-
     function showToast(msg){
       toastText.textContent = msg;
-      toast.classList.add("show");
+      toast.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=> toast.classList.remove("show"), 2200);
+      toastTimer = setTimeout(()=> toast.classList.remove('show'), 2200);
     }
 
-    /***********************
-     * Floating hearts     *
-     ***********************/
     function spawnHeart(x, y){
-      const el = document.createElement("div");
-      el.className = "float-heart";
-      el.style.left = x + "px";
-      el.style.top = y + "px";
+      const el = document.createElement('div');
+      el.className = 'float-heart';
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
       el.style.opacity = 0.9 + Math.random()*0.1;
       el.style.transform = `translate(-50%,-50%) rotate(45deg) scale(${0.85+Math.random()*0.6})`;
       document.body.appendChild(el);
       setTimeout(()=> el.remove(), 1700);
     }
 
-    // Tap/click for hearts + helps Spotify autoplay (interaction)
-    window.addEventListener("pointerdown", (e)=>{
-      for(let i=0;i<3;i++){
-        setTimeout(()=> spawnHeart(e.clientX + (Math.random()*24-12), e.clientY + (Math.random()*24-12)), i*60);
-      }
-    });
+    const snowCanvas = document.getElementById('snow');
+    const sctx = snowCanvas.getContext('2d');
+    const sparkleCanvas = document.getElementById('sparkles');
+    const pctx = sparkleCanvas.getContext('2d');
+    const confettiCanvas = document.getElementById('confetti');
+    const cctx = confettiCanvas.getContext('2d');
 
-    /***********************
-     * Snow canvas         *
-     ***********************/
-    const snowCanvas = document.getElementById("snow");
-    const sctx = snowCanvas.getContext("2d");
+    let snowIntensity = 160;
+    let sparkleIntensity = 120;
     let snow = [];
+    let sparkles = [];
+    let mouse = {x:-9999, y:-9999};
 
     function resizeCanvas(c){
       c.width = window.innerWidth * devicePixelRatio;
       c.height = window.innerHeight * devicePixelRatio;
-      c.style.width = window.innerWidth + "px";
-      c.style.height = window.innerHeight + "px";
+      c.style.width = window.innerWidth + 'px';
+      c.style.height = window.innerHeight + 'px';
     }
-    resizeCanvas(snowCanvas);
 
     function initSnow(){
       snow = [];
@@ -738,39 +727,24 @@
         });
       }
     }
-    initSnow();
 
     function drawSnow(){
       const w = snowCanvas.width, h = snowCanvas.height;
       sctx.clearRect(0,0,w,h);
-
       for(const flake of snow){
         flake.a += 0.01;
         flake.x += flake.vx + Math.sin(flake.a)*0.35*devicePixelRatio;
         flake.y += flake.vy;
-
-        if(flake.y > h + 10) { flake.y = -10; flake.x = Math.random()*w; }
+        if(flake.y > h + 10){ flake.y = -10; flake.x = Math.random()*w; }
         if(flake.x < -10) flake.x = w + 10;
         if(flake.x > w + 10) flake.x = -10;
-
         sctx.beginPath();
-        sctx.fillStyle = "rgba(233,221,255,0.85)";
+        sctx.fillStyle = 'rgba(233,221,255,0.85)';
         sctx.arc(flake.x, flake.y, flake.r, 0, Math.PI*2);
         sctx.fill();
       }
       requestAnimationFrame(drawSnow);
     }
-    drawSnow();
-
-    /***********************
-     * Sparkles canvas     *
-     ***********************/
-    const sparkleCanvas = document.getElementById("sparkles");
-    const pctx = sparkleCanvas.getContext("2d");
-    resizeCanvas(sparkleCanvas);
-
-    let sparkles = [];
-    let mouse = {x: -9999, y: -9999};
 
     function initSparkles(){
       sparkles = [];
@@ -786,20 +760,16 @@
         });
       }
     }
-    initSparkles();
 
     function drawSparkles(){
       const w = sparkleCanvas.width, h = sparkleCanvas.height;
       pctx.clearRect(0,0,w,h);
-
       for(const sp of sparkles){
         sp.phase += sp.tw;
         const glow = (0.55 + Math.sin(sp.phase)*0.45) * sp.o;
-
         const dx = mouse.x*devicePixelRatio - sp.x;
         const dy = mouse.y*devicePixelRatio - sp.y;
         const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-
         if(dist < 240*devicePixelRatio){
           sp.x += dx/dist * 0.18*devicePixelRatio;
           sp.y += dy/dist * 0.18*devicePixelRatio;
@@ -807,48 +777,30 @@
           sp.x += (Math.random()*0.4-0.2)*devicePixelRatio;
           sp.y += (Math.random()*0.4-0.2)*devicePixelRatio;
         }
-
         if(sp.x < -10) sp.x = w+10;
         if(sp.x > w+10) sp.x = -10;
         if(sp.y < -10) sp.y = h+10;
         if(sp.y > h+10) sp.y = -10;
-
         pctx.beginPath();
         pctx.fillStyle = `rgba(192,132,255,${0.25*glow})`;
         pctx.arc(sp.x, sp.y, sp.r*3.2, 0, Math.PI*2);
         pctx.fill();
-
         pctx.beginPath();
         pctx.fillStyle = `rgba(255,255,255,${0.55*glow})`;
         pctx.arc(sp.x, sp.y, sp.r, 0, Math.PI*2);
         pctx.fill();
       }
-
       requestAnimationFrame(drawSparkles);
     }
-    drawSparkles();
-
-    window.addEventListener("pointermove", (e)=>{
-      mouse.x = e.clientX; mouse.y = e.clientY;
-    });
-
-    /***********************
-     * Confetti canvas     *
-     ***********************/
-    const confettiCanvas = document.getElementById("confetti");
-    const cctx = confettiCanvas.getContext("2d");
-    resizeCanvas(confettiCanvas);
 
     let confetti = [];
-    function fireConfetti(){
+    function fireConfetti(centerX = window.innerWidth/2, centerY = window.innerHeight*0.28, count = 220){
       confetti = [];
       const w = confettiCanvas.width, h = confettiCanvas.height;
-      const count = 240;
-
       for(let i=0;i<count;i++){
         confetti.push({
-          x: w/2 + (Math.random()*120-60)*devicePixelRatio,
-          y: h*0.25,
+          x: centerX*devicePixelRatio + (Math.random()*120-60)*devicePixelRatio,
+          y: centerY*devicePixelRatio,
           vx: (Math.random()*10-5)*devicePixelRatio,
           vy: (Math.random()*-8-6)*devicePixelRatio,
           g: (0.22+Math.random()*0.12)*devicePixelRatio,
@@ -857,33 +809,27 @@
           vr: (Math.random()*0.25-0.125)
         });
       }
-
       let t = 0;
       function tick(){
         t++;
         cctx.clearRect(0,0,w,h);
-
         for(const p of confetti){
           p.vy += p.g;
           p.x += p.vx;
           p.y += p.vy;
           p.r += p.vr;
-
           cctx.save();
           cctx.translate(p.x, p.y);
           cctx.rotate(p.r);
-
           const pick = Math.random();
-          let col = "rgba(192,132,255,0.85)";
-          if(pick < 0.33) col = "rgba(255,79,216,0.85)";
-          else if(pick < 0.66) col = "rgba(155,92,255,0.85)";
-          else col = "rgba(255,255,255,0.80)";
-
+          let col = 'rgba(192,132,255,0.85)';
+          if(pick < 0.33) col = 'rgba(255,79,216,0.85)';
+          else if(pick < 0.66) col = 'rgba(155,92,255,0.85)';
+          else col = 'rgba(255,255,255,0.80)';
           cctx.fillStyle = col;
           cctx.fillRect(-p.s/2, -p.s/3, p.s, p.s/1.5);
           cctx.restore();
         }
-
         confetti = confetti.filter(p => p.y < h + 60*devicePixelRatio);
         if(t < 220 && confetti.length) requestAnimationFrame(tick);
         else cctx.clearRect(0,0,w,h);
@@ -891,113 +837,417 @@
       tick();
     }
 
-    /***********************
-     * Buttons behavior    *
-     ***********************/
-    document.getElementById("btnYes").addEventListener("click", ()=>{
-      fireConfetti();
-      showToast(`✨ Đồng ý rồi là sau này phải đón nhận hết tất cả mọi thứ tui tặng đó nha 😏💜`);
-      const cx = window.innerWidth/2, cy = window.innerHeight/2;
-      for(let i=0;i<18;i++){
-        setTimeout(()=> spawnHeart(cx + (Math.random()*220-110), cy + (Math.random()*140-70)), i*35);
+    resizeCanvas(snowCanvas);
+    resizeCanvas(sparkleCanvas);
+    resizeCanvas(confettiCanvas);
+    initSnow();
+    initSparkles();
+    drawSnow();
+    drawSparkles();
+
+    window.addEventListener('pointermove', (e)=>{
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    const SHAPES = [
+      { emoji:'💗', name:'Tim non', color1:'#ff76cf', color2:'#ff4fd8', score:12, radius:20 },
+      { emoji:'⭐', name:'Sao mộng', color1:'#ffe17d', color2:'#ffc94d', score:28, radius:26 },
+      { emoji:'❄️', name:'Tuyết pha lê', color1:'#baf4ff', color2:'#7ddfff', score:62, radius:33 },
+      { emoji:'🌙', name:'Trăng mịn', color1:'#a4b8ff', color2:'#8e70ff', score:120, radius:40 },
+      { emoji:'🌈', name:'Cầu vồng', color1:'#9effdd', color2:'#77b4ff', score:260, radius:49 },
+      { emoji:'☀️', name:'Mặt trời nở', color1:'#ffe28a', color2:'#ff9a5c', score:520, radius:58 }
+    ];
+    const MAX_LEVEL = SHAPES.length - 1;
+
+    const state = {
+      width: 0,
+      height: 0,
+      items: [],
+      dropX: 0,
+      nextLevel: 0,
+      score: 0,
+      best: Number(localStorage.getItem('merge-blossom-best') || 0),
+      highest: 0,
+      combo: 1,
+      comboDecayAt: 0,
+      skills: 1,
+      gameOver: false,
+      blockedUntil: 0,
+      lineExceededAt: null
+    };
+
+    const gravity = 0.28;
+    const damping = 0.985;
+    const bounce = 0.22;
+    const safeLineRatio = 0.15;
+
+    function randLevel(){
+      const r = Math.random();
+      if(r < 0.62) return 0;
+      if(r < 0.87) return 1;
+      if(r < 0.97) return 2;
+      return 0;
+    }
+
+    function resizeGame(){
+      const rect = boardWrap.getBoundingClientRect();
+      state.width = rect.width;
+      state.height = rect.height;
+      canvas.width = Math.floor(rect.width * devicePixelRatio);
+      canvas.height = Math.floor(rect.height * devicePixelRatio);
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+      state.dropX = clamp(state.dropX || rect.width / 2, 28, rect.width - 28);
+      aimLine.style.left = state.dropX + 'px';
+    }
+
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+    function now(){ return performance.now(); }
+
+    function makeItem(level, x, y){
+      const s = SHAPES[level];
+      return {
+        id: Math.random().toString(36).slice(2),
+        level,
+        x,
+        y,
+        vx: 0,
+        vy: 0,
+        r: s.radius,
+        merged: false,
+        born: now(),
+        glow: 1
+      };
+    }
+
+    function updateHud(){
+      scoreText.textContent = Math.floor(state.score).toLocaleString('vi-VN');
+      comboText.textContent = 'x' + state.combo;
+      levelText.textContent = SHAPES[state.highest] ? SHAPES[state.highest].emoji : '0';
+      skillText.textContent = state.skills;
+      bestScoreText.textContent = Math.floor(state.best).toLocaleString('vi-VN');
+      nextIconEl.textContent = SHAPES[state.nextLevel].emoji;
+    }
+
+    function resetGame(){
+      state.items = [];
+      state.score = 0;
+      state.highest = 0;
+      state.combo = 1;
+      state.skills = 1;
+      state.gameOver = false;
+      state.lineExceededAt = null;
+      state.nextLevel = randLevel();
+      state.blockedUntil = 0;
+      state.dropX = state.width / 2;
+      aimLine.style.left = state.dropX + 'px';
+      gameOverOverlay.classList.remove('show');
+      updateHud();
+      showToast('🌸 Vườn ghép đã sẵn sàng!');
+    }
+
+    function addFloatingScore(x, y, value, text = null){
+      const el = document.createElement('div');
+      el.className = 'floatingScore';
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.textContent = text || ('+' + Math.floor(value));
+      boardWrap.appendChild(el);
+      setTimeout(()=> el.remove(), 920);
+    }
+
+    function awardScore(x, y, base, message){
+      const points = Math.floor(base * state.combo);
+      state.score += points;
+      if(state.score > state.best){
+        state.best = state.score;
+        localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
       }
+      state.combo = Math.min(9, state.combo + 1);
+      state.comboDecayAt = now() + 2100;
+      addFloatingScore(x, y, points, message || ('+' + points));
+      updateHud();
+    }
+
+    function burstParticles(x, y, amount = 10){
+      for(let i=0;i<Math.min(amount,16);i++){
+        setTimeout(()=> spawnHeart(boardWrap.getBoundingClientRect().left + x + (Math.random()*28-14), boardWrap.getBoundingClientRect().top + y + (Math.random()*28-14)), i*30);
+      }
+    }
+
+    function dropPiece(){
+      if(state.gameOver) return;
+      if(now() < state.blockedUntil) return;
+      const level = state.nextLevel;
+      const r = SHAPES[level].radius;
+      const item = makeItem(level, clamp(state.dropX, r + 4, state.width - r - 4), r + 8);
+      state.items.push(item);
+      state.nextLevel = randLevel();
+      state.blockedUntil = now() + 220;
+      updateHud();
+    }
+
+    function mergePair(a, b){
+      if(a.merged || b.merged) return;
+      a.merged = b.merged = true;
+      const mx = (a.x + b.x) / 2;
+      const my = (a.y + b.y) / 2;
+      const level = a.level;
+      state.highest = Math.max(state.highest, level + 1 > MAX_LEVEL ? MAX_LEVEL : level + 1);
+      if(level >= MAX_LEVEL){
+        const boom = SHAPES[level].score * 4.2;
+        awardScore(mx, my, boom, 'MEGA +' + Math.floor(boom * state.combo));
+        burstParticles(mx, my, 18);
+        fireConfetti(boardWrap.getBoundingClientRect().left + mx, boardWrap.getBoundingClientRect().top + my, 90);
+        if(Math.random() < 0.35 && state.skills < 3) state.skills += 1;
+        showToast('☀️ Hai mặt trời va chạm! Khu vực được giải phóng và bạn nhận siêu điểm.');
+        return null;
+      }
+      const newLevel = level + 1;
+      const next = makeItem(newLevel, mx, my);
+      next.vx = (a.vx + b.vx) * 0.16;
+      next.vy = -2.6;
+      awardScore(mx, my, SHAPES[newLevel].score, SHAPES[newLevel].emoji + ' +' + Math.floor(SHAPES[newLevel].score * state.combo));
+      burstParticles(mx, my, 10 + newLevel * 2);
+      if(newLevel >= 4 && Math.random() < 0.22 && state.skills < 3) state.skills += 1;
+      return next;
+    }
+
+    function useSkill(){
+      if(state.gameOver) return;
+      if(state.skills <= 0){
+        showToast('Không còn kỹ năng. Hãy ghép cấp cao để kiếm lại.');
+        return;
+      }
+      const lowTargets = state.items.filter(it => it.level <= 2);
+      if(!lowTargets.length){
+        showToast('Không có mảnh cấp thấp nào để kích nổ.');
+        return;
+      }
+      const target = lowTargets.sort((a,b)=> b.y - a.y)[0];
+      state.skills -= 1;
+      state.items = state.items.filter(it => it.id !== target.id);
+      awardScore(target.x, target.y, 48, 'STAR BURST');
+      burstParticles(target.x, target.y, 12);
+      fireConfetti(boardWrap.getBoundingClientRect().left + target.x, boardWrap.getBoundingClientRect().top + target.y, 50);
+      updateHud();
+      showToast('✨ Kích nổ ánh sao! Một mảnh cấp thấp đã bị xóa.');
+    }
+
+    function updatePhysics(){
+      const items = state.items;
+      for(const it of items){
+        it.vy += gravity;
+        it.x += it.vx;
+        it.y += it.vy;
+        it.vx *= damping;
+        it.vy *= damping;
+
+        if(it.x - it.r < 0){
+          it.x = it.r;
+          it.vx *= -0.45;
+        }
+        if(it.x + it.r > state.width){
+          it.x = state.width - it.r;
+          it.vx *= -0.45;
+        }
+        if(it.y + it.r > state.height){
+          it.y = state.height - it.r;
+          if(Math.abs(it.vy) < 1.2) it.vy = 0;
+          else it.vy *= -bounce;
+        }
+      }
+
+      const spawned = [];
+      for(let i=0;i<items.length;i++){
+        for(let j=i+1;j<items.length;j++){
+          const a = items[i], b = items[j];
+          if(a.merged || b.merged) continue;
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const dist = Math.hypot(dx, dy) || 0.0001;
+          const minDist = a.r + b.r;
+          if(dist < minDist){
+            const overlap = minDist - dist;
+            const nx = dx / dist;
+            const ny = dy / dist;
+            const push = overlap * 0.5;
+            a.x -= nx * push;
+            a.y -= ny * push;
+            b.x += nx * push;
+            b.y += ny * push;
+
+            const rvx = b.vx - a.vx;
+            const rvy = b.vy - a.vy;
+            const impulse = (rvx * nx + rvy * ny) * 0.4;
+            a.vx += impulse * nx * -1;
+            a.vy += impulse * ny * -1;
+            b.vx += impulse * nx;
+            b.vy += impulse * ny;
+
+            if(a.level === b.level && Math.abs(a.vy - b.vy) < 3.8 && Math.abs(a.vx - b.vx) < 3.8){
+              const created = mergePair(a, b);
+              if(created) spawned.push(created);
+            }
+          }
+        }
+      }
+
+      if(spawned.length){
+        state.items = state.items.filter(it => !it.merged).concat(spawned);
+        updateHud();
+      }else{
+        state.items = state.items.filter(it => !it.merged);
+      }
+
+      if(state.combo > 1 && now() > state.comboDecayAt){
+        state.combo = 1;
+        updateHud();
+      }
+
+      const safeY = state.height * safeLineRatio;
+      const danger = state.items.some(it => it.y - it.r < safeY);
+      if(danger){
+        if(state.lineExceededAt == null) state.lineExceededAt = now();
+        if(now() - state.lineExceededAt > 1800){
+          endGame();
+        }
+      }else{
+        state.lineExceededAt = null;
+      }
+    }
+
+    function drawPiece(it){
+      const shape = SHAPES[it.level];
+      const gradient = ctx.createRadialGradient(it.x - it.r*0.35, it.y - it.r*0.4, it.r*0.2, it.x, it.y, it.r*1.2);
+      gradient.addColorStop(0, 'rgba(255,255,255,.95)');
+      gradient.addColorStop(0.18, shape.color1);
+      gradient.addColorStop(1, shape.color2);
+      ctx.save();
+      ctx.beginPath();
+      ctx.fillStyle = gradient;
+      ctx.arc(it.x, it.y, it.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(255,255,255,.36)';
+      ctx.stroke();
+      ctx.shadowColor = shape.color1;
+      ctx.shadowBlur = 20;
+      ctx.font = `${Math.floor(it.r*1.05)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,.98)';
+      ctx.fillText(shape.emoji, it.x, it.y + 1);
+      ctx.restore();
+    }
+
+    function drawGhostNext(){
+      const shape = SHAPES[state.nextLevel];
+      const r = shape.radius;
+      const x = clamp(state.dropX, r + 4, state.width - r - 4);
+      const y = r + 10;
+      ctx.save();
+      ctx.globalAlpha = 0.28;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,255,255,.14)';
+      ctx.arc(x, y, r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.font = `${Math.floor(r*1.02)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,.95)';
+      ctx.fillText(shape.emoji, x, y+1);
+      ctx.restore();
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,state.width,state.height);
+      drawGhostNext();
+      const ordered = [...state.items].sort((a,b)=> a.r - b.r || a.y - b.y);
+      for(const it of ordered) drawPiece(it);
+    }
+
+    function loop(){
+      updatePhysics();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    function endGame(){
+      if(state.gameOver) return;
+      state.gameOver = true;
+      gameOverOverlay.classList.add('show');
+      gameOverText.textContent = `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất đạt được: ${SHAPES[state.highest]?.emoji || '💗'}`;
+      fireConfetti(window.innerWidth/2, window.innerHeight*0.25, 140);
+      showToast('💥 Khu vườn đã quá đầy. Hãy thử thêm một ván nữa!');
+      updateHud();
+    }
+
+    function setAimFromClientX(clientX){
+      const rect = boardWrap.getBoundingClientRect();
+      state.dropX = clamp(clientX - rect.left, 24, rect.width - 24);
+      aimLine.style.left = state.dropX + 'px';
+    }
+
+    boardWrap.addEventListener('pointermove', (e)=> setAimFromClientX(e.clientX));
+    boardWrap.addEventListener('pointerdown', (e)=>{
+      setAimFromClientX(e.clientX);
+      dropPiece();
+      spawnHeart(e.clientX, e.clientY);
     });
 
-    document.getElementById("btnMore").addEventListener("click", ()=>{
-      const line = extraLines[Math.floor(Math.random()*extraLines.length)];
-      showToast("💜 " + line);
-      typedEl.textContent += "\n" + line + "\n";
-      scrollTypeboxToBottom();
-    });
+    document.getElementById('btnStart').addEventListener('click', resetGame);
+    document.getElementById('btnRestart').addEventListener('click', resetGame);
+    document.getElementById('btnSkill').addEventListener('click', useSkill);
 
-    document.getElementById("btnSnow").addEventListener("click", ()=>{
+    document.getElementById('btnSnow').addEventListener('click', ()=>{
       snowIntensity = Math.min(360, snowIntensity + 60);
       initSnow();
-      showToast("❄️ Tuyết nhiều hơn rồi!");
+      showToast('❄️ Tuyết nhiều hơn rồi!');
     });
-
-    document.getElementById("btnSparkle").addEventListener("click", ()=>{
+    document.getElementById('btnSparkle').addEventListener('click', ()=>{
       sparkleIntensity = Math.min(260, sparkleIntensity + 50);
       initSparkles();
-      showToast("✨ Lấp lánh tăng cấp!");
+      showToast('✨ Lấp lánh tăng cấp!');
     });
-
-    document.getElementById("btnCalm").addEventListener("click", ()=>{
+    document.getElementById('btnCalm').addEventListener('click', ()=>{
       snowIntensity = 140;
       sparkleIntensity = 110;
       initSnow(); initSparkles();
-      showToast("🌙 Dịu lại cho êm hơn…");
+      showToast('🌙 Dịu lại cho dễ tập trung chơi hơn.');
     });
 
-    /***********************
-     * Resize handler      *
-     ***********************/
-    window.addEventListener("resize", ()=>{
+    window.addEventListener('resize', ()=>{
       resizeCanvas(snowCanvas);
       resizeCanvas(sparkleCanvas);
       resizeCanvas(confettiCanvas);
       initSnow();
       initSparkles();
+      resizeGame();
     });
 
-    /***********************
-     * Start typing        *
-     ***********************/
-    typeText(baseLines);
+    const soundFab = document.getElementById('soundFab');
+    const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/11/17/audio_c2320af613.mp3?filename=calm-background-for-video-121519.mp3');
+    audio.loop = true;
+    audio.volume = 0.28;
 
-    // ===== YouTube mobile-optimized autoplay/unmute helper =====
-const yt = document.getElementById("yt");
-const soundFab = document.getElementById("soundFab");
-let triedUnmute = false;
+    let triedAudio = false;
+    function tryPlayAudio(){
+      if(triedAudio) return;
+      triedAudio = true;
+      audio.play().catch(()=> soundFab.classList.add('show'));
+    }
+    window.addEventListener('pointerdown', tryPlayAudio, { once:true });
+    soundFab.addEventListener('click', ()=>{
+      audio.play().then(()=> soundFab.classList.remove('show')).catch(()=>{});
+    });
 
-function setYT(mute){
-  if(!yt) return;
-  const base = "https://www.youtube.com/embed/oT7oezgP9rI";
-  const qs = new URLSearchParams({
-    autoplay: "1",
-    mute: mute ? "1" : "0",
-    playsinline: "1",
-    loop: "1",
-    playlist: "oT7oezgP9rI",
-    controls: "1",
-    rel: "0",
-    modestbranding: "1"
-  });
-  yt.src = `${base}?${qs.toString()}`;
-}
-
-function tryUnmute(){
-  if(triedUnmute) return;
-  triedUnmute = true;
-
-  // Attempt unmute after a user gesture
-  setYT(false);
-
-  // On iOS it may still be blocked; show a fallback button
-  setTimeout(() => {
-    // show button so user can tap explicitly if needed
-    soundFab?.classList.add("show");
-  }, 600);
-}
-
-// Tap anywhere -> try unmute
-window.addEventListener("pointerdown", tryUnmute, { once: true });
-window.addEventListener("touchstart", tryUnmute, { once: true });
-window.addEventListener("keydown", tryUnmute, { once: true });
-
-// Explicit button tap -> force unmute again and hide button
-soundFab?.addEventListener("click", () => {
-  setYT(false);
-  soundFab.classList.remove("show");
-});
-
-// Start with muted autoplay (most reliable)
-setYT(true);
+    bestScoreText.textContent = state.best.toLocaleString('vi-VN');
+    resizeGame();
+    resetGame();
+    loop();
   </script>
 </body>
 </html>
-
-
-
-
-
