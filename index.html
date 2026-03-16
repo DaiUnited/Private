@@ -692,6 +692,10 @@
                   <div class="label">Kỹ năng</div>
                   <div class="value" id="skillText">1</div>
                 </div>
+                <div class="hudCard">
+                  <div class="label">Đếm giây</div>
+                  <div class="value" id="timerText">∞</div>
+                </div>
               </div>
             </div>
 
@@ -763,6 +767,7 @@
     const comboText = document.getElementById('comboText');
     const levelText = document.getElementById('levelText');
     const skillText = document.getElementById('skillText');
+    const timerText = document.getElementById('timerText');
     const bestScoreText = document.getElementById('bestScoreText');
     const gameOverOverlay = document.getElementById('gameOver');
     const gameOverText = document.getElementById('gameOverText');
@@ -990,7 +995,10 @@
       { emoji:'❄️', name:'Tuyết pha lê', color1:'#baf4ff', color2:'#7ddfff', score:62, radius:isMobile?30:33 },
       { emoji:'🌙', name:'Trăng mịn', color1:'#a4b8ff', color2:'#8e70ff', score:120, radius:isMobile?36:40 },
       { emoji:'🌈', name:'Cầu vồng', color1:'#9effdd', color2:'#77b4ff', score:260, radius:isMobile?44:49 },
-      { emoji:'☀️', name:'Mặt trời nở', color1:'#ffe28a', color2:'#ff9a5c', score:520, radius:isMobile?52:58 }
+      { emoji:'☀️', name:'Mặt trời nở', color1:'#ffe28a', color2:'#ff9a5c', score:520, radius:isMobile?52:58 },
+      { emoji:'🪐', name:'Hành tinh mộng', color1:'#9ed0ff', color2:'#6f7dff', score:980, radius:isMobile?60:67 },
+      { emoji:'🌌', name:'Ngân hà nở', color1:'#b78bff', color2:'#5c2eff', score:1680, radius:isMobile?68:76 },
+      { emoji:'👑', name:'Vương miện tinh tú', color1:'#fff2a8', color2:'#ffb84d', score:2800, radius:isMobile?76:85 }
     ];
     const MAX_LEVEL = SHAPES.length - 1;
 
@@ -1009,21 +1017,32 @@
       gameOver: false,
       blockedUntil: 0,
       lineExceededAt: null,
-      lastTick: performance.now()
+      lastTick: performance.now(),
+      turnDeadlineAt: null,
+      extremeMode: false,
+      dangerPulse: 0
     };
 
-    const gravity = isMobile ? 0.24 : 0.22;
-    const damping = 0.992;
-    const airDrag = 0.998;
-    const bounce = 0.06;
+    const gravity = isMobile ? 0.34 : 0.3;
+    const damping = 0.989;
+    const airDrag = 0.996;
+    const bounce = 0.045;
     const safeLineRatio = 0.15;
     const collisionPasses = isMobile ? 2 : 3;
 
     function randLevel(){
       const r = Math.random();
-      if(r < 0.62) return 0;
-      if(r < 0.87) return 1;
-      if(r < 0.97) return 2;
+      if(state && state.extremeMode){
+        if(r < 0.28) return 1;
+        if(r < 0.56) return 2;
+        if(r < 0.78) return 3;
+        if(r < 0.92) return 4;
+        return 0;
+      }
+      if(r < 0.54) return 0;
+      if(r < 0.82) return 1;
+      if(r < 0.94) return 2;
+      if(r < 0.99) return 3;
       return 0;
     }
 
@@ -1066,6 +1085,19 @@
       skillText.textContent = '✨ ' + state.skills;
       bestScoreText.textContent = Math.floor(state.best).toLocaleString('vi-VN');
       nextIconEl.textContent = SHAPES[state.nextLevel].emoji;
+
+      if(state.score >= 1000 && !state.gameOver){
+        if(state.turnDeadlineAt){
+          const remain = Math.max(0, (state.turnDeadlineAt - now()) / 1000);
+          timerText.textContent = remain.toFixed(remain < 1 ? 1 : 0) + 's';
+          timerText.parentElement.style.borderColor = remain <= 1.5 ? 'rgba(255,122,155,.55)' : 'rgba(255,255,255,.16)';
+        } else {
+          timerText.textContent = '5.0s';
+        }
+      } else {
+        timerText.textContent = '∞';
+        timerText.parentElement.style.borderColor = 'rgba(255,255,255,.16)';
+      }
     }
 
     function resetGame(){
@@ -1076,6 +1108,9 @@
       state.skills = 1;
       state.gameOver = false;
       state.lineExceededAt = null;
+      state.extremeMode = false;
+      state.dangerPulse = 0;
+      state.turnDeadlineAt = null;
       state.nextLevel = randLevel();
       state.blockedUntil = 0;
       state.dropX = state.width / 2;
@@ -1083,7 +1118,7 @@
       aimLine.style.left = state.dropX + 'px';
       gameOverOverlay.classList.remove('show');
       updateHud();
-      showToast('🌸 Vườn ghép đã sẵn sàng!');
+      showToast('🌸 Vườn ghép đã sẵn sàng! Chế độ khó mới đã bật.');
     }
 
     function addFloatingScore(x, y, value, text = null){
@@ -1119,13 +1154,15 @@
     function dropPiece(){
       if(state.gameOver) return;
       if(now() < state.blockedUntil) return;
-      if(state.items.length > (isMobile ? 34 : 48)) return;
+      if(state.items.length > (isMobile ? 36 : 52)) return;
       const level = state.nextLevel;
       const r = SHAPES[level].radius;
       const item = makeItem(level, clamp(state.dropX, r + 4, state.width - r - 4), r + 8);
+      item.vy = state.extremeMode ? 1.2 : 0.6;
       state.items.push(item);
       state.nextLevel = randLevel();
-      state.blockedUntil = now() + (isMobile ? 260 : 220);
+      state.blockedUntil = now() + (isMobile ? 220 : 180);
+      if(state.score >= 1000) state.turnDeadlineAt = now() + 5000;
       updateHud();
     }
 
@@ -1145,21 +1182,21 @@
       const level = a.level;
       state.highest = Math.max(state.highest, level + 1 > MAX_LEVEL ? MAX_LEVEL : level + 1);
       if(level >= MAX_LEVEL){
-        const boom = SHAPES[level].score * 4.2;
-        awardScore(mx, my, boom, 'MEGA +' + Math.floor(boom * state.combo));
-        burstParticles(mx, my, 18);
-        fireConfetti(boardWrap.getBoundingClientRect().left + mx, boardWrap.getBoundingClientRect().top + my, isMobile ? 42 : 90);
-        if(Math.random() < 0.35 && state.skills < 3) state.skills += 1;
-        showToast('☀️ Hai mặt trời va chạm!');
+        const boom = SHAPES[level].score * (state.extremeMode ? 3.2 : 4.2);
+        awardScore(mx, my, boom, 'COSMIC +' + Math.floor(boom * state.combo));
+        burstParticles(mx, my, 20);
+        fireConfetti(boardWrap.getBoundingClientRect().left + mx, boardWrap.getBoundingClientRect().top + my, isMobile ? 54 : 100);
+        if(Math.random() < 0.28 && state.skills < 3) state.skills += 1;
+        showToast('👑 Cấp tối thượng nổ tung và giải phóng không gian!');
         return null;
       }
       const newLevel = level + 1;
       const next = makeItem(newLevel, mx, my);
-      next.vx = (a.vx + b.vx) * 0.16;
-      next.vy = -2.6;
+      next.vx = (a.vx + b.vx) * 0.2;
+      next.vy = state.extremeMode ? -3.4 : -2.9;
       awardScore(mx, my, SHAPES[newLevel].score, SHAPES[newLevel].emoji + ' +' + Math.floor(SHAPES[newLevel].score * state.combo));
       burstParticles(mx, my, 10 + newLevel * 2);
-      if(newLevel >= 4 && Math.random() < 0.22 && state.skills < 3) state.skills += 1;
+      if(newLevel >= 5 && Math.random() < 0.2 && state.skills < 3) state.skills += 1;
       return next;
     }
 
@@ -1169,54 +1206,69 @@
         showToast('Không còn kỹ năng.');
         return;
       }
-      const lowTargets = state.items.filter(it => it.level <= 2);
+      const maxTargetLevel = state.extremeMode ? 3 : 2;
+      const lowTargets = state.items.filter(it => it.level <= maxTargetLevel);
       if(!lowTargets.length){
-        showToast('Không có mảnh cấp thấp để nổ.');
+        showToast('Không có mảnh phù hợp để nổ.');
         return;
       }
       const target = lowTargets.sort((a,b)=> b.y - a.y)[0];
       state.skills -= 1;
       state.items = state.items.filter(it => it.id !== target.id);
-      awardScore(target.x, target.y, 48, 'STAR BURST');
+      awardScore(target.x, target.y, state.extremeMode ? 36 : 48, 'STAR BURST');
       burstParticles(target.x, target.y, 12);
-      fireConfetti(boardWrap.getBoundingClientRect().left + target.x, boardWrap.getBoundingClientRect().top + target.y, isMobile ? 28 : 50);
+      fireConfetti(boardWrap.getBoundingClientRect().left + target.x, boardWrap.getBoundingClientRect().top + target.y, isMobile ? 24 : 50);
+      if(state.score >= 1000) state.turnDeadlineAt = now() + 5000;
       updateHud();
-      showToast('✨ Kích nổ ánh sao!');
+      showToast(state.extremeMode ? '✨ Phá hủy khẩn cấp!' : '✨ Kích nổ ánh sao!');
     }
 
     function updatePhysics(step = 1){
       const items = state.items;
 
+      if(state.score >= 5000 && !state.extremeMode){
+        state.extremeMode = true;
+        showToast('🔥 CỰC HẠN: mảnh lớn xuất hiện nhiều hơn, timer gắt hơn, bảng rung mạnh hơn.');
+      }
+
+      if(state.score >= 1000 && !state.gameOver){
+        if(!state.turnDeadlineAt) state.turnDeadlineAt = now() + 5000;
+        if(now() >= state.turnDeadlineAt){
+          gameOverText.textContent = 'Bạn đã chần chừ quá 5 giây trước lượt thả tiếp theo.';
+          return endGame();
+        }
+      }
+
       for(const it of items){
         it.settled = false;
-        it.vy += gravity * step;
+        it.vy += (state.extremeMode ? gravity * 1.18 : gravity) * step;
         it.x += it.vx * step;
         it.y += it.vy * step;
-        it.vx *= airDrag;
-        it.vy *= damping;
+        it.vx *= state.extremeMode ? 0.992 : airDrag;
+        it.vy *= state.extremeMode ? 0.985 : damping;
 
         if(it.x - it.r < 0){
           it.x = it.r;
-          it.vx = Math.abs(it.vx) * 0.18;
+          it.vx = Math.abs(it.vx) * 0.22;
         }
         if(it.x + it.r > state.width){
           it.x = state.width - it.r;
-          it.vx = -Math.abs(it.vx) * 0.18;
+          it.vx = -Math.abs(it.vx) * 0.22;
         }
         if(it.y + it.r > state.height){
           it.y = state.height - it.r;
-          if(Math.abs(it.vy) < 1.1){
+          if(Math.abs(it.vy) < (state.extremeMode ? 1.4 : 1.1)){
             it.vy = 0;
             it.settled = true;
           }else{
             it.vy *= -bounce;
           }
-          it.vx *= 0.92;
+          it.vx *= state.extremeMode ? 0.88 : 0.9;
         }
       }
 
       const spawned = [];
-      for(let pass=0; pass<collisionPasses; pass++){
+      for(let pass=0; pass<(state.extremeMode ? collisionPasses + 1 : collisionPasses); pass++){
         for(let i=0;i<items.length;i++){
           for(let j=i+1;j<items.length;j++){
             const a = items[i], b = items[j];
@@ -1254,8 +1306,8 @@
                 b.vx += nx * 0.08;
               }
 
-              a.vx *= 0.985;
-              b.vx *= 0.985;
+              a.vx *= state.extremeMode ? 0.978 : 0.985;
+              b.vx *= state.extremeMode ? 0.978 : 0.985;
 
               if(canMerge(a, b)){
                 const created = mergePair(a, b);
@@ -1279,11 +1331,13 @@
       }
 
       if(state.combo > 1 && now() > state.comboDecayAt){
+        if(state.extremeMode) state.combo = Math.max(1, state.combo - 1);
+        else
         state.combo = 1;
         updateHud();
       }
 
-      const safeY = state.height * safeLineRatio;
+      const safeY = state.height * (state.extremeMode ? 0.18 : safeLineRatio);
       const danger = state.items.some(it => it.y - it.r < safeY);
       if(danger){
         if(state.lineExceededAt == null) state.lineExceededAt = now();
@@ -1341,12 +1395,23 @@
     function draw(){
       ctx.clearRect(0,0,state.width,state.height);
       drawGhostNext();
+
+      if(state.extremeMode){
+        state.dangerPulse += 0.08;
+        const alpha = 0.07 + (Math.sin(state.dangerPulse) * 0.5 + 0.5) * 0.08;
+        ctx.save();
+        ctx.fillStyle = `rgba(255,80,120,${alpha})`;
+        ctx.fillRect(0, 0, state.width, state.height);
+        ctx.restore();
+      }
+
       const ordered = [...state.items].sort((a,b)=> a.r - b.r || a.y - b.y);
       for(const it of ordered) drawPiece(it);
     }
 
     function loop(ts){
-      if (visibilityPaused) return requestAnimationFrame(loop);
+      if (visibilityPaused) return updateHud();
+      requestAnimationFrame(loop);
       const delta = Math.min(32, ts - state.lastTick || 16.7);
       state.lastTick = ts;
       updatePhysics(delta / 16.7);
@@ -1358,9 +1423,11 @@
       if(state.gameOver) return;
       state.gameOver = true;
       gameOverOverlay.classList.add('show');
-      gameOverText.textContent = `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'}`;
+      if(!gameOverText.textContent || gameOverText.textContent.includes('vượt vạch')){
+        gameOverText.textContent = `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'}`;
+      }
       fireConfetti(window.innerWidth/2, window.innerHeight*0.25, isMobile ? 80 : 140);
-      showToast('💥 Khu vườn đã quá đầy.');
+      showToast(state.score >= 1000 ? '⏳ Hết thời gian quyết định hoặc khu vườn đã quá đầy.' : '💥 Khu vườn đã quá đầy.');
       updateHud();
     }
 
