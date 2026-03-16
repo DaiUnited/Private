@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Merge Blossom • Web Game</title>
 
   <style>
@@ -46,8 +46,8 @@
       height:100%;
       pointer-events:none;
     }
-    #sparkles{mix-blend-mode:screen; opacity:.9}
-    #snow{opacity:.9}
+    #sparkles{mix-blend-mode:screen; opacity:.85}
+    #snow{opacity:.88}
 
     .wrap{
       position:relative;
@@ -93,9 +93,10 @@
 
     @media (max-width: 900px){
       body{overflow:auto}
-      .wrap{height:auto; padding:16px}
-      .card{min-height:auto}
-      .content{grid-template-columns:1fr; padding:18px}
+      .wrap{height:auto; padding:12px}
+      .card{min-height:auto; border-radius:22px}
+      .content{grid-template-columns:1fr; padding:14px; gap:14px}
+      .glow{filter:blur(16px)}
     }
 
     .badge{
@@ -136,7 +137,7 @@
       scrollbar-width: thin;
     }
     @media (max-width: 900px){
-      .typebox{height: 220px;}
+      .typebox{height: 160px; margin-top:10px; padding:12px 13px}
     }
 
     .typed{
@@ -163,9 +164,10 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.35);
       touch-action:none;
       user-select:none;
+      contain: layout paint size;
     }
     @media (max-width: 900px){
-      .scene{min-height: 420px;}
+      .scene{min-height: 480px; border-radius:18px}
     }
 
     .scene .topshine{
@@ -177,6 +179,7 @@
       transform: rotate(-12deg);
       opacity:.9;
       z-index:0;
+      pointer-events:none;
     }
 
     .gameHud{
@@ -219,6 +222,8 @@
       line-height:1;
     }
 
+    .hudMiniRow{ display:none; }
+
     .boardWrap{
       position:absolute;
       inset:74px 16px 16px 16px;
@@ -239,7 +244,8 @@
         linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
       background-size: calc(100% / 6) calc(100% / 10);
-      opacity:.22;
+      opacity:.18;
+      pointer-events:none;
     }
 
     .safeLine{
@@ -250,6 +256,7 @@
       background: linear-gradient(90deg, transparent, rgba(128,255,207,.85), transparent);
       box-shadow: 0 0 14px rgba(128,255,207,.6);
       opacity:.92;
+      pointer-events:none;
     }
 
     .safeLabel{
@@ -263,6 +270,7 @@
       border-radius:999px;
       background: rgba(8,25,22,.55);
       border:1px solid rgba(128,255,207,.25);
+      pointer-events:none;
     }
 
     #gameCanvas{
@@ -281,7 +289,7 @@
       width:2px;
       background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.12));
       filter: drop-shadow(0 0 10px rgba(255,255,255,.38));
-      opacity:.78;
+      opacity:.72;
       transform: translateX(-50%);
       z-index:3;
       pointer-events:none;
@@ -329,6 +337,7 @@
       pointer-events:none;
       animation: floatScore .9s ease-out forwards;
       z-index:5;
+      will-change: transform, opacity;
     }
     @keyframes floatScore{
       0%{transform:translate(-50%,0) scale(.8); opacity:0}
@@ -354,6 +363,7 @@
       box-shadow: 0 18px 45px rgba(255,79,216,.18);
       transition: transform .15s ease, filter .15s ease, opacity .15s ease;
       user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
     button:hover{transform: translateY(-1px); filter: brightness(1.06)}
     button:active{transform: translateY(0px) scale(.99)}
@@ -420,8 +430,9 @@
       pointer-events:none;
       z-index:8;
       filter: drop-shadow(0 12px 18px rgba(0,0,0,.35));
-      animation: rise 1.6s ease-out forwards;
+      animation: rise 1.2s ease-out forwards;
       opacity:.95;
+      will-change: transform, opacity;
     }
     .float-heart::before,.float-heart::after{
       content:"";
@@ -436,7 +447,7 @@
     @keyframes rise{
       0%{transform: translate(-50%,-50%) rotate(45deg) scale(.9); opacity:.0}
       15%{opacity:.95}
-      100%{transform: translate(-50%,-160px) rotate(45deg) scale(1.15); opacity:0}
+      100%{transform: translate(-50%,-140px) rotate(45deg) scale(1.1); opacity:0}
     }
 
     .confetti{
@@ -505,6 +516,108 @@
       width:10px;height:10px;border-radius:50%;
       background: radial-gradient(circle at 30% 30%, #fff, var(--sky) 55%, rgba(110,203,255,.25));
       box-shadow: 0 0 16px rgba(110,203,255,.9);
+    }
+
+    @media (max-width: 900px){
+      #snow, #sparkles{opacity:.72}
+      #sparkles{mix-blend-mode:normal}
+
+      .gameHud{
+        inset:10px 10px auto 10px;
+        grid-template-columns: 1fr;
+        gap:8px;
+      }
+
+      .hudGroup{gap:8px}
+
+      .hudGroup:first-child .hudCard:nth-child(1),
+      .hudGroup:first-child .hudCard:nth-child(2){
+        min-width:72px;
+        padding:8px 10px;
+      }
+
+      .hudGroup:first-child .hudCard:nth-child(3),
+      .hudGroup:last-child .hudCard{
+        min-width:auto;
+        padding:6px 10px;
+        border-radius:999px;
+        background: rgba(10,8,22,.52);
+      }
+
+      .hudGroup:first-child .hudCard:nth-child(3) .label,
+      .hudGroup:last-child .hudCard .label{
+        display:none;
+      }
+
+      .hudGroup:first-child .hudCard:nth-child(3) .value,
+      .hudGroup:last-child .hudCard .value{
+        font-size:14px;
+        display:flex;
+        align-items:center;
+        gap:6px;
+      }
+
+      .hudGroup:first-child .hudCard:nth-child(1) .label,
+      .hudGroup:first-child .hudCard:nth-child(2) .label{
+        font-size:10px;
+        margin-bottom:3px;
+      }
+
+      .hudGroup:first-child .hudCard:nth-child(1) .value,
+      .hudGroup:first-child .hudCard:nth-child(2) .value{
+        font-size:16px;
+      }
+
+      .hudGroup:first-child{
+        justify-content:flex-start;
+        align-items:flex-start;
+      }
+
+      .hudGroup:last-child{
+        position:absolute;
+        right:0;
+        top:0;
+      }
+
+      .boardWrap{
+        inset:64px 10px 10px 10px;
+        border-radius:18px;
+      }
+
+      .safeLabel{
+        right:6px;
+        font-size:10px;
+        padding:2px 6px;
+      }
+
+      .nextBubble{
+        width:64px;
+        height:64px;
+        right:10px;
+        bottom:10px;
+        border-radius:18px;
+      }
+
+      .nextBubble small{
+        font-size:9px;
+        margin-bottom:4px;
+      }
+
+      .nextIcon{
+        font-size:24px;
+      }
+
+      .actions{gap:8px}
+      button{padding:11px 12px}
+      .hint{font-size:12px}
+      .sig{font-size:12px; flex-direction:column; align-items:flex-start}
+      .soundFab{right:10px; bottom:10px; font-size:13px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #snow, #sparkles, #confetti { display:none; }
+      .float-heart, .floatingScore { animation-duration: .01ms !important; }
+      button { transition:none; }
     }
   </style>
 </head>
@@ -629,18 +742,21 @@
   <script>
     const storyLines = [
       "Chào mừng Babi đến với Merge Blossom.",
-      "Gamne này được tạo ra để giúp em giảm stress sau giờ học căng thẳng.",
+      "Game này được tạo ra để giúp em giảm stress sau giờ học căng thẳng.",
       "Chúc em chơi dui dẻ.",
     ];
+
+    const isMobile = matchMedia('(max-width: 900px)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
 
     const typedEl = document.getElementById('typed');
     const typeboxEl = document.getElementById('typebox');
     const toast = document.getElementById('toast');
     const toastText = document.getElementById('toastText');
-    const scene = document.getElementById('scene');
     const boardWrap = document.getElementById('boardWrap');
     const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
     const aimLine = document.getElementById('aimLine');
     const nextIconEl = document.getElementById('nextIcon');
     const scoreText = document.getElementById('scoreText');
@@ -656,15 +772,17 @@
 
     async function typeText(lines){
       typedEl.textContent = '';
+      const speedMin = isMobile ? 8 : 12;
+      const speedVar = isMobile ? 10 : 16;
       for(const line of lines){
         for(const ch of line){
           typedEl.textContent += ch;
           scrollTypeboxToBottom();
-          await sleep(12 + Math.random()*16);
+          await sleep(speedMin + Math.random()*speedVar);
         }
         typedEl.textContent += '\n\n';
         scrollTypeboxToBottom();
-        await sleep(120);
+        await sleep(90);
       }
     }
     typeText(storyLines);
@@ -674,36 +792,40 @@
       toastText.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=> toast.classList.remove('show'), 2200);
+      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1800);
     }
 
+    let activeHearts = 0;
     function spawnHeart(x, y){
+      if (isMobile && activeHearts > 4) return;
       const el = document.createElement('div');
+      activeHearts++;
       el.className = 'float-heart';
       el.style.left = x + 'px';
       el.style.top = y + 'px';
       el.style.opacity = 0.9 + Math.random()*0.1;
-      el.style.transform = `translate(-50%,-50%) rotate(45deg) scale(${0.85+Math.random()*0.6})`;
+      el.style.transform = `translate(-50%,-50%) rotate(45deg) scale(${0.85+Math.random()*0.4})`;
       document.body.appendChild(el);
-      setTimeout(()=> el.remove(), 1700);
+      setTimeout(()=> { el.remove(); activeHearts = Math.max(0, activeHearts - 1); }, isMobile ? 1100 : 1400);
     }
 
     const snowCanvas = document.getElementById('snow');
-    const sctx = snowCanvas.getContext('2d');
+    const sctx = snowCanvas.getContext('2d', { alpha: true, desynchronized: true });
     const sparkleCanvas = document.getElementById('sparkles');
-    const pctx = sparkleCanvas.getContext('2d');
+    const pctx = sparkleCanvas.getContext('2d', { alpha: true, desynchronized: true });
     const confettiCanvas = document.getElementById('confetti');
-    const cctx = confettiCanvas.getContext('2d');
+    const cctx = confettiCanvas.getContext('2d', { alpha: true, desynchronized: true });
 
-    let snowIntensity = 160;
-    let sparkleIntensity = 120;
+    let snowIntensity = reducedMotion ? 0 : (isMobile ? 60 : 160);
+    let sparkleIntensity = reducedMotion ? 0 : (isMobile ? 40 : 120);
     let snow = [];
     let sparkles = [];
     let mouse = {x:-9999, y:-9999};
+    let visibilityPaused = false;
 
     function resizeCanvas(c){
-      c.width = window.innerWidth * devicePixelRatio;
-      c.height = window.innerHeight * devicePixelRatio;
+      c.width = Math.floor(window.innerWidth * DPR);
+      c.height = Math.floor(window.innerHeight * DPR);
       c.style.width = window.innerWidth + 'px';
       c.style.height = window.innerHeight + 'px';
     }
@@ -715,26 +837,27 @@
         snow.push({
           x: Math.random()*w,
           y: Math.random()*h,
-          r: (Math.random()*2.2+0.6)*devicePixelRatio,
-          vy: (Math.random()*1.2+0.4)*devicePixelRatio,
-          vx: (Math.random()*0.7-0.35)*devicePixelRatio,
+          r: (Math.random()*1.8+0.5)*DPR,
+          vy: (Math.random()*1.0+0.35)*DPR,
+          vx: (Math.random()*0.55-0.275)*DPR,
           a: Math.random()*Math.PI*2
         });
       }
     }
 
     function drawSnow(){
+      if (visibilityPaused) return requestAnimationFrame(drawSnow);
       const w = snowCanvas.width, h = snowCanvas.height;
       sctx.clearRect(0,0,w,h);
       for(const flake of snow){
         flake.a += 0.01;
-        flake.x += flake.vx + Math.sin(flake.a)*0.35*devicePixelRatio;
+        flake.x += flake.vx + Math.sin(flake.a)*0.22*DPR;
         flake.y += flake.vy;
         if(flake.y > h + 10){ flake.y = -10; flake.x = Math.random()*w; }
         if(flake.x < -10) flake.x = w + 10;
         if(flake.x > w + 10) flake.x = -10;
         sctx.beginPath();
-        sctx.fillStyle = 'rgba(233,221,255,0.85)';
+        sctx.fillStyle = 'rgba(233,221,255,0.8)';
         sctx.arc(flake.x, flake.y, flake.r, 0, Math.PI*2);
         sctx.fill();
       }
@@ -748,40 +871,44 @@
         sparkles.push({
           x: Math.random()*w,
           y: Math.random()*h,
-          r: (Math.random()*1.8+0.6)*devicePixelRatio,
-          o: Math.random()*0.8+0.2,
-          tw: Math.random()*0.04+0.01,
+          r: (Math.random()*1.4+0.5)*DPR,
+          o: Math.random()*0.65+0.2,
+          tw: Math.random()*0.035+0.01,
           phase: Math.random()*Math.PI*2
         });
       }
     }
 
     function drawSparkles(){
+      if (visibilityPaused) return requestAnimationFrame(drawSparkles);
       const w = sparkleCanvas.width, h = sparkleCanvas.height;
       pctx.clearRect(0,0,w,h);
       for(const sp of sparkles){
         sp.phase += sp.tw;
         const glow = (0.55 + Math.sin(sp.phase)*0.45) * sp.o;
-        const dx = mouse.x*devicePixelRatio - sp.x;
-        const dy = mouse.y*devicePixelRatio - sp.y;
-        const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-        if(dist < 240*devicePixelRatio){
-          sp.x += dx/dist * 0.18*devicePixelRatio;
-          sp.y += dy/dist * 0.18*devicePixelRatio;
-        }else{
-          sp.x += (Math.random()*0.4-0.2)*devicePixelRatio;
-          sp.y += (Math.random()*0.4-0.2)*devicePixelRatio;
+        if(!isMobile){
+          const dx = mouse.x*DPR - sp.x;
+          const dy = mouse.y*DPR - sp.y;
+          const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+          if(dist < 220*DPR){
+            sp.x += dx/dist * 0.14*DPR;
+            sp.y += dy/dist * 0.14*DPR;
+          }
         }
+        sp.x += (Math.random()*0.18-0.09)*DPR;
+        sp.y += (Math.random()*0.18-0.09)*DPR;
         if(sp.x < -10) sp.x = w+10;
         if(sp.x > w+10) sp.x = -10;
         if(sp.y < -10) sp.y = h+10;
         if(sp.y > h+10) sp.y = -10;
+        if(!isMobile){
+          pctx.beginPath();
+          pctx.fillStyle = `rgba(192,132,255,${0.18*glow})`;
+          pctx.arc(sp.x, sp.y, sp.r*2.8, 0, Math.PI*2);
+          pctx.fill();
+        }
         pctx.beginPath();
-        pctx.fillStyle = `rgba(192,132,255,${0.25*glow})`;
-        pctx.arc(sp.x, sp.y, sp.r*3.2, 0, Math.PI*2);
-        pctx.fill();
-        pctx.beginPath();
-        pctx.fillStyle = `rgba(255,255,255,${0.55*glow})`;
+        pctx.fillStyle = `rgba(255,255,255,${0.52*glow})`;
         pctx.arc(sp.x, sp.y, sp.r, 0, Math.PI*2);
         pctx.fill();
       }
@@ -789,23 +916,34 @@
     }
 
     let confetti = [];
+    const confettiPalette = [
+      'rgba(255,79,216,0.85)',
+      'rgba(155,92,255,0.85)',
+      'rgba(255,255,255,0.80)',
+      'rgba(110,203,255,0.85)'
+    ];
+
     function fireConfetti(centerX = window.innerWidth/2, centerY = window.innerHeight*0.28, count = 220){
+      if (reducedMotion) return;
       confetti = [];
       const w = confettiCanvas.width, h = confettiCanvas.height;
-      for(let i=0;i<count;i++){
+      const finalCount = Math.min(isMobile ? 70 : 180, count);
+      for(let i=0;i<finalCount;i++){
         confetti.push({
-          x: centerX*devicePixelRatio + (Math.random()*120-60)*devicePixelRatio,
-          y: centerY*devicePixelRatio,
-          vx: (Math.random()*10-5)*devicePixelRatio,
-          vy: (Math.random()*-8-6)*devicePixelRatio,
-          g: (0.22+Math.random()*0.12)*devicePixelRatio,
-          s: (Math.random()*6+4)*devicePixelRatio,
+          x: centerX*DPR + (Math.random()*90-45)*DPR,
+          y: centerY*DPR,
+          vx: (Math.random()*8-4)*DPR,
+          vy: (Math.random()*-6-5)*DPR,
+          g: (0.2+Math.random()*0.09)*DPR,
+          s: (Math.random()*5+3)*DPR,
           r: Math.random()*Math.PI*2,
-          vr: (Math.random()*0.25-0.125)
+          vr: (Math.random()*0.18-0.09),
+          col: confettiPalette[(Math.random()*confettiPalette.length)|0]
         });
       }
       let t = 0;
       function tick(){
+        if (visibilityPaused) return requestAnimationFrame(tick);
         t++;
         cctx.clearRect(0,0,w,h);
         for(const p of confetti){
@@ -816,42 +954,43 @@
           cctx.save();
           cctx.translate(p.x, p.y);
           cctx.rotate(p.r);
-          const pick = Math.random();
-          let col = 'rgba(192,132,255,0.85)';
-          if(pick < 0.33) col = 'rgba(255,79,216,0.85)';
-          else if(pick < 0.66) col = 'rgba(155,92,255,0.85)';
-          else col = 'rgba(255,255,255,0.80)';
-          cctx.fillStyle = col;
+          cctx.fillStyle = p.col;
           cctx.fillRect(-p.s/2, -p.s/3, p.s, p.s/1.5);
           cctx.restore();
         }
-        confetti = confetti.filter(p => p.y < h + 60*devicePixelRatio);
-        if(t < 220 && confetti.length) requestAnimationFrame(tick);
+        confetti = confetti.filter(p => p.y < h + 50*DPR);
+        if(t < 140 && confetti.length) requestAnimationFrame(tick);
         else cctx.clearRect(0,0,w,h);
       }
       tick();
     }
 
-    resizeCanvas(snowCanvas);
-    resizeCanvas(sparkleCanvas);
-    resizeCanvas(confettiCanvas);
-    initSnow();
-    initSparkles();
-    drawSnow();
-    drawSparkles();
+    if (!reducedMotion) {
+      resizeCanvas(snowCanvas);
+      resizeCanvas(sparkleCanvas);
+      resizeCanvas(confettiCanvas);
+      initSnow();
+      initSparkles();
+      drawSnow();
+      drawSparkles();
+    } else {
+      resizeCanvas(confettiCanvas);
+    }
 
-    window.addEventListener('pointermove', (e)=>{
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
+    if(!isMobile){
+      window.addEventListener('pointermove', (e)=>{
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      }, { passive: true });
+    }
 
     const SHAPES = [
-      { emoji:'💗', name:'Tim non', color1:'#ff76cf', color2:'#ff4fd8', score:12, radius:20 },
-      { emoji:'⭐', name:'Sao mộng', color1:'#ffe17d', color2:'#ffc94d', score:28, radius:26 },
-      { emoji:'❄️', name:'Tuyết pha lê', color1:'#baf4ff', color2:'#7ddfff', score:62, radius:33 },
-      { emoji:'🌙', name:'Trăng mịn', color1:'#a4b8ff', color2:'#8e70ff', score:120, radius:40 },
-      { emoji:'🌈', name:'Cầu vồng', color1:'#9effdd', color2:'#77b4ff', score:260, radius:49 },
-      { emoji:'☀️', name:'Mặt trời nở', color1:'#ffe28a', color2:'#ff9a5c', score:520, radius:58 }
+      { emoji:'💗', name:'Tim non', color1:'#ff76cf', color2:'#ff4fd8', score:12, radius:isMobile?18:20 },
+      { emoji:'⭐', name:'Sao mộng', color1:'#ffe17d', color2:'#ffc94d', score:28, radius:isMobile?24:26 },
+      { emoji:'❄️', name:'Tuyết pha lê', color1:'#baf4ff', color2:'#7ddfff', score:62, radius:isMobile?30:33 },
+      { emoji:'🌙', name:'Trăng mịn', color1:'#a4b8ff', color2:'#8e70ff', score:120, radius:isMobile?36:40 },
+      { emoji:'🌈', name:'Cầu vồng', color1:'#9effdd', color2:'#77b4ff', score:260, radius:isMobile?44:49 },
+      { emoji:'☀️', name:'Mặt trời nở', color1:'#ffe28a', color2:'#ff9a5c', score:520, radius:isMobile?52:58 }
     ];
     const MAX_LEVEL = SHAPES.length - 1;
 
@@ -869,14 +1008,16 @@
       skills: 1,
       gameOver: false,
       blockedUntil: 0,
-      lineExceededAt: null
+      lineExceededAt: null,
+      lastTick: performance.now()
     };
 
-    const gravity = 0.22;
+    const gravity = isMobile ? 0.24 : 0.22;
     const damping = 0.992;
     const airDrag = 0.998;
     const bounce = 0.06;
     const safeLineRatio = 0.15;
+    const collisionPasses = isMobile ? 2 : 3;
 
     function randLevel(){
       const r = Math.random();
@@ -890,11 +1031,11 @@
       const rect = boardWrap.getBoundingClientRect();
       state.width = rect.width;
       state.height = rect.height;
-      canvas.width = Math.floor(rect.width * devicePixelRatio);
-      canvas.height = Math.floor(rect.height * devicePixelRatio);
+      canvas.width = Math.floor(rect.width * DPR);
+      canvas.height = Math.floor(rect.height * DPR);
       canvas.style.width = rect.width + 'px';
       canvas.style.height = rect.height + 'px';
-      ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+      ctx.setTransform(DPR,0,0,DPR,0,0);
       state.dropX = clamp(state.dropX || rect.width / 2, 28, rect.width - 28);
       aimLine.style.left = state.dropX + 'px';
     }
@@ -914,7 +1055,6 @@
         r: s.radius,
         merged: false,
         born: now(),
-        glow: 1,
         settled: false
       };
     }
@@ -923,7 +1063,7 @@
       scoreText.textContent = Math.floor(state.score).toLocaleString('vi-VN');
       comboText.textContent = 'x' + state.combo;
       levelText.textContent = SHAPES[state.highest] ? SHAPES[state.highest].emoji : '0';
-      skillText.textContent = state.skills;
+      skillText.textContent = '✨ ' + state.skills;
       bestScoreText.textContent = Math.floor(state.best).toLocaleString('vi-VN');
       nextIconEl.textContent = SHAPES[state.nextLevel].emoji;
     }
@@ -939,6 +1079,7 @@
       state.nextLevel = randLevel();
       state.blockedUntil = 0;
       state.dropX = state.width / 2;
+      state.lastTick = performance.now();
       aimLine.style.left = state.dropX + 'px';
       gameOverOverlay.classList.remove('show');
       updateHud();
@@ -952,7 +1093,7 @@
       el.style.top = y + 'px';
       el.textContent = text || ('+' + Math.floor(value));
       boardWrap.appendChild(el);
-      setTimeout(()=> el.remove(), 920);
+      setTimeout(()=> el.remove(), 900);
     }
 
     function awardScore(x, y, base, message){
@@ -969,20 +1110,22 @@
     }
 
     function burstParticles(x, y, amount = 10){
-      for(let i=0;i<Math.min(amount,16);i++){
-        setTimeout(()=> spawnHeart(boardWrap.getBoundingClientRect().left + x + (Math.random()*28-14), boardWrap.getBoundingClientRect().top + y + (Math.random()*28-14)), i*30);
+      const maxBurst = isMobile ? 6 : 12;
+      for(let i=0;i<Math.min(amount,maxBurst);i++){
+        setTimeout(()=> spawnHeart(boardWrap.getBoundingClientRect().left + x + (Math.random()*24-12), boardWrap.getBoundingClientRect().top + y + (Math.random()*24-12)), i*26);
       }
     }
 
     function dropPiece(){
       if(state.gameOver) return;
       if(now() < state.blockedUntil) return;
+      if(state.items.length > (isMobile ? 34 : 48)) return;
       const level = state.nextLevel;
       const r = SHAPES[level].radius;
       const item = makeItem(level, clamp(state.dropX, r + 4, state.width - r - 4), r + 8);
       state.items.push(item);
       state.nextLevel = randLevel();
-      state.blockedUntil = now() + 220;
+      state.blockedUntil = now() + (isMobile ? 260 : 220);
       updateHud();
     }
 
@@ -1005,9 +1148,9 @@
         const boom = SHAPES[level].score * 4.2;
         awardScore(mx, my, boom, 'MEGA +' + Math.floor(boom * state.combo));
         burstParticles(mx, my, 18);
-        fireConfetti(boardWrap.getBoundingClientRect().left + mx, boardWrap.getBoundingClientRect().top + my, 90);
+        fireConfetti(boardWrap.getBoundingClientRect().left + mx, boardWrap.getBoundingClientRect().top + my, isMobile ? 42 : 90);
         if(Math.random() < 0.35 && state.skills < 3) state.skills += 1;
-        showToast('☀️ Hai mặt trời va chạm! Khu vực được giải phóng và bạn nhận siêu điểm.');
+        showToast('☀️ Hai mặt trời va chạm!');
         return null;
       }
       const newLevel = level + 1;
@@ -1023,12 +1166,12 @@
     function useSkill(){
       if(state.gameOver) return;
       if(state.skills <= 0){
-        showToast('Không còn kỹ năng. Hãy ghép cấp cao để kiếm lại.');
+        showToast('Không còn kỹ năng.');
         return;
       }
       const lowTargets = state.items.filter(it => it.level <= 2);
       if(!lowTargets.length){
-        showToast('Không có mảnh cấp thấp nào để kích nổ.');
+        showToast('Không có mảnh cấp thấp để nổ.');
         return;
       }
       const target = lowTargets.sort((a,b)=> b.y - a.y)[0];
@@ -1036,19 +1179,19 @@
       state.items = state.items.filter(it => it.id !== target.id);
       awardScore(target.x, target.y, 48, 'STAR BURST');
       burstParticles(target.x, target.y, 12);
-      fireConfetti(boardWrap.getBoundingClientRect().left + target.x, boardWrap.getBoundingClientRect().top + target.y, 50);
+      fireConfetti(boardWrap.getBoundingClientRect().left + target.x, boardWrap.getBoundingClientRect().top + target.y, isMobile ? 28 : 50);
       updateHud();
-      showToast('✨ Kích nổ ánh sao! Một mảnh cấp thấp đã bị xóa.');
+      showToast('✨ Kích nổ ánh sao!');
     }
 
-    function updatePhysics(){
+    function updatePhysics(step = 1){
       const items = state.items;
 
       for(const it of items){
         it.settled = false;
-        it.vy += gravity;
-        it.x += it.vx;
-        it.y += it.vy;
+        it.vy += gravity * step;
+        it.x += it.vx * step;
+        it.y += it.vy * step;
         it.vx *= airDrag;
         it.vy *= damping;
 
@@ -1073,7 +1216,7 @@
       }
 
       const spawned = [];
-      for(let pass=0; pass<3; pass++){
+      for(let pass=0; pass<collisionPasses; pass++){
         for(let i=0;i<items.length;i++){
           for(let j=i+1;j<items.length;j++){
             const a = items[i], b = items[j];
@@ -1164,11 +1307,11 @@
       ctx.arc(it.x, it.y, it.r, 0, Math.PI*2);
       ctx.fill();
       ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(255,255,255,.36)';
+      ctx.strokeStyle = 'rgba(255,255,255,.32)';
       ctx.stroke();
       ctx.shadowColor = shape.color1;
-      ctx.shadowBlur = 20;
-      ctx.font = `${Math.floor(it.r*1.05)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
+      ctx.shadowBlur = isMobile ? 12 : 20;
+      ctx.font = `${Math.floor(it.r*1.02)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = 'rgba(255,255,255,.98)';
@@ -1182,7 +1325,7 @@
       const x = clamp(state.dropX, r + 4, state.width - r - 4);
       const y = r + 10;
       ctx.save();
-      ctx.globalAlpha = 0.28;
+      ctx.globalAlpha = 0.24;
       ctx.beginPath();
       ctx.fillStyle = 'rgba(255,255,255,.14)';
       ctx.arc(x, y, r, 0, Math.PI*2);
@@ -1202,8 +1345,11 @@
       for(const it of ordered) drawPiece(it);
     }
 
-    function loop(){
-      updatePhysics();
+    function loop(ts){
+      if (visibilityPaused) return requestAnimationFrame(loop);
+      const delta = Math.min(32, ts - state.lastTick || 16.7);
+      state.lastTick = ts;
+      updatePhysics(delta / 16.7);
       draw();
       requestAnimationFrame(loop);
     }
@@ -1212,9 +1358,9 @@
       if(state.gameOver) return;
       state.gameOver = true;
       gameOverOverlay.classList.add('show');
-      gameOverText.textContent = `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất đạt được: ${SHAPES[state.highest]?.emoji || '💗'}`;
-      fireConfetti(window.innerWidth/2, window.innerHeight*0.25, 140);
-      showToast('💥 Khu vườn đã quá đầy. Hãy thử thêm một ván nữa!');
+      gameOverText.textContent = `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'}`;
+      fireConfetti(window.innerWidth/2, window.innerHeight*0.25, isMobile ? 80 : 140);
+      showToast('💥 Khu vườn đã quá đầy.');
       updateHud();
     }
 
@@ -1224,47 +1370,58 @@
       aimLine.style.left = state.dropX + 'px';
     }
 
-    boardWrap.addEventListener('pointermove', (e)=> setAimFromClientX(e.clientX));
+    boardWrap.addEventListener('pointermove', (e)=> setAimFromClientX(e.clientX), { passive: true });
     boardWrap.addEventListener('pointerdown', (e)=>{
       setAimFromClientX(e.clientX);
       dropPiece();
-      spawnHeart(e.clientX, e.clientY);
-    });
+      if(!isMobile) spawnHeart(e.clientX, e.clientY);
+    }, { passive: true });
 
     document.getElementById('btnStart').addEventListener('click', resetGame);
     document.getElementById('btnRestart').addEventListener('click', resetGame);
     document.getElementById('btnSkill').addEventListener('click', useSkill);
 
     document.getElementById('btnSnow').addEventListener('click', ()=>{
-      snowIntensity = Math.min(360, snowIntensity + 60);
+      snowIntensity = Math.min(isMobile ? 120 : 360, snowIntensity + (isMobile ? 24 : 60));
       initSnow();
       showToast('❄️ Tuyết nhiều hơn rồi!');
     });
     document.getElementById('btnSparkle').addEventListener('click', ()=>{
-      sparkleIntensity = Math.min(260, sparkleIntensity + 50);
+      sparkleIntensity = Math.min(isMobile ? 90 : 260, sparkleIntensity + (isMobile ? 18 : 50));
       initSparkles();
       showToast('✨ Lấp lánh tăng cấp!');
     });
     document.getElementById('btnCalm').addEventListener('click', ()=>{
-      snowIntensity = 140;
-      sparkleIntensity = 110;
+      snowIntensity = isMobile ? 40 : 140;
+      sparkleIntensity = isMobile ? 24 : 110;
       initSnow(); initSparkles();
-      showToast('🌙 Dịu lại cho dễ tập trung chơi hơn.');
+      showToast('🌙 Dịu lại cho dễ tập trung.');
     });
 
+    let resizeTimer = null;
     window.addEventListener('resize', ()=>{
-      resizeCanvas(snowCanvas);
-      resizeCanvas(sparkleCanvas);
-      resizeCanvas(confettiCanvas);
-      initSnow();
-      initSparkles();
-      resizeGame();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(()=>{
+        if (!reducedMotion) {
+          resizeCanvas(snowCanvas);
+          resizeCanvas(sparkleCanvas);
+          initSnow();
+          initSparkles();
+        }
+        resizeCanvas(confettiCanvas);
+        resizeGame();
+      }, 100);
+    }, { passive: true });
+
+    document.addEventListener('visibilitychange', ()=>{
+      visibilityPaused = document.hidden;
+      state.lastTick = performance.now();
     });
 
     const soundFab = document.getElementById('soundFab');
     const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/11/17/audio_c2320af613.mp3?filename=calm-background-for-video-121519.mp3');
     audio.loop = true;
-    audio.volume = 0.28;
+    audio.volume = 0.22;
 
     let triedAudio = false;
     function tryPlayAudio(){
@@ -1272,7 +1429,7 @@
       triedAudio = true;
       audio.play().catch(()=> soundFab.classList.add('show'));
     }
-    window.addEventListener('pointerdown', tryPlayAudio, { once:true });
+    window.addEventListener('pointerdown', tryPlayAudio, { once:true, passive:true });
     soundFab.addEventListener('click', ()=>{
       audio.play().then(()=> soundFab.classList.remove('show')).catch(()=>{});
     });
@@ -1280,7 +1437,7 @@
     bestScoreText.textContent = state.best.toLocaleString('vi-VN');
     resizeGame();
     resetGame();
-    loop();
+    requestAnimationFrame(loop);
   </script>
 </body>
 </html>
