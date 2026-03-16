@@ -628,14 +628,10 @@
 
   <script>
     const storyLines = [
-      "Chào mừng đến với Merge Blossom.",
-      "Mỗi lượt, bạn nhận một mảnh ghép nhỏ.",
-      "Thả đúng chỗ để 2 hình giống nhau chạm nhau và hợp nhất.",
-      "Mỗi lần ghép thành công, cấp độ tăng lên và điểm cũng bùng nổ hơn.",
-      "Khi 2 biểu tượng cấp 6 gặp nhau, chúng sẽ bốc hơi thành ánh sáng và giải phóng diện tích.",
-      "Combo càng dài, điểm càng cao.",
-      "Bạn có 1 kỹ năng 'Kích nổ ánh sao' để xóa một mảnh cấp thấp ngẫu nhiên khi bí chỗ.",
-      "Đừng để chồng mảnh vượt qua vạch an toàn quá lâu... nếu không khu vườn sẽ quá tải."
+      "Chào mừng Xun Nguỵt đến với Merge Blossom.",
+      "Game này được làm ra để giúp em giảm Stress sau khi học căng thẳng.",
+      "Luật chơi y chang game thả hình em hay chơi.",
+      "Chúc em chơi dui dẻ.",
     ];
 
     const typedEl = document.getElementById('typed');
@@ -877,9 +873,10 @@
       lineExceededAt: null
     };
 
-    const gravity = 0.28;
-    const damping = 0.985;
-    const bounce = 0.22;
+    const gravity = 0.22;
+    const damping = 0.992;
+    const airDrag = 0.998;
+    const bounce = 0.06;
     const safeLineRatio = 0.15;
 
     function randLevel(){
@@ -918,7 +915,8 @@
         r: s.radius,
         merged: false,
         born: now(),
-        glow: 1
+        glow: 1,
+        settled: false
       };
     }
 
@@ -989,6 +987,14 @@
       updateHud();
     }
 
+    function canMerge(a, b){
+      if(a.level !== b.level) return false;
+      if(a.merged || b.merged) return false;
+      const speedA = Math.abs(a.vx) + Math.abs(a.vy);
+      const speedB = Math.abs(b.vx) + Math.abs(b.vy);
+      return speedA < 2.4 && speedB < 2.4;
+    }
+
     function mergePair(a, b){
       if(a.merged || b.merged) return;
       a.merged = b.merged = true;
@@ -1038,58 +1044,81 @@
 
     function updatePhysics(){
       const items = state.items;
+
       for(const it of items){
+        it.settled = false;
         it.vy += gravity;
         it.x += it.vx;
         it.y += it.vy;
-        it.vx *= damping;
+        it.vx *= airDrag;
         it.vy *= damping;
 
         if(it.x - it.r < 0){
           it.x = it.r;
-          it.vx *= -0.45;
+          it.vx = Math.abs(it.vx) * 0.18;
         }
         if(it.x + it.r > state.width){
           it.x = state.width - it.r;
-          it.vx *= -0.45;
+          it.vx = -Math.abs(it.vx) * 0.18;
         }
         if(it.y + it.r > state.height){
           it.y = state.height - it.r;
-          if(Math.abs(it.vy) < 1.2) it.vy = 0;
-          else it.vy *= -bounce;
+          if(Math.abs(it.vy) < 1.1){
+            it.vy = 0;
+            it.settled = true;
+          }else{
+            it.vy *= -bounce;
+          }
+          it.vx *= 0.92;
         }
       }
 
       const spawned = [];
-      for(let i=0;i<items.length;i++){
-        for(let j=i+1;j<items.length;j++){
-          const a = items[i], b = items[j];
-          if(a.merged || b.merged) continue;
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const dist = Math.hypot(dx, dy) || 0.0001;
-          const minDist = a.r + b.r;
-          if(dist < minDist){
-            const overlap = minDist - dist;
-            const nx = dx / dist;
-            const ny = dy / dist;
-            const push = overlap * 0.5;
-            a.x -= nx * push;
-            a.y -= ny * push;
-            b.x += nx * push;
-            b.y += ny * push;
+      for(let pass=0; pass<3; pass++){
+        for(let i=0;i<items.length;i++){
+          for(let j=i+1;j<items.length;j++){
+            const a = items[i], b = items[j];
+            if(a.merged || b.merged) continue;
 
-            const rvx = b.vx - a.vx;
-            const rvy = b.vy - a.vy;
-            const impulse = (rvx * nx + rvy * ny) * 0.4;
-            a.vx += impulse * nx * -1;
-            a.vy += impulse * ny * -1;
-            b.vx += impulse * nx;
-            b.vy += impulse * ny;
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const dist = Math.hypot(dx, dy) || 0.0001;
+            const minDist = a.r + b.r;
 
-            if(a.level === b.level && Math.abs(a.vy - b.vy) < 3.8 && Math.abs(a.vx - b.vx) < 3.8){
-              const created = mergePair(a, b);
-              if(created) spawned.push(created);
+            if(dist < minDist){
+              const overlap = minDist - dist;
+              const nx = dx / dist;
+              const ny = dy / dist;
+
+              const aHeavy = a.y > b.y ? 1.2 : 1;
+              const bHeavy = b.y > a.y ? 1.2 : 1;
+              const totalWeight = aHeavy + bHeavy;
+
+              a.x -= nx * overlap * (bHeavy / totalWeight);
+              a.y -= ny * overlap * (bHeavy / totalWeight);
+              b.x += nx * overlap * (aHeavy / totalWeight);
+              b.y += ny * overlap * (aHeavy / totalWeight);
+
+              if(ny > 0.55){
+                a.settled = true;
+                a.vy = Math.min(0, a.vy);
+                b.vy *= 0.4;
+              } else if(ny < -0.55){
+                b.settled = true;
+                b.vy = Math.min(0, b.vy);
+                a.vy *= 0.4;
+              } else {
+                a.vx -= nx * 0.08;
+                b.vx += nx * 0.08;
+              }
+
+              a.vx *= 0.985;
+              b.vx *= 0.985;
+
+              if(canMerge(a, b)){
+                const created = mergePair(a, b);
+                if(created) spawned.push(created);
+              }
             }
           }
         }
@@ -1100,6 +1129,11 @@
         updateHud();
       }else{
         state.items = state.items.filter(it => !it.merged);
+      }
+
+      for(const it of state.items){
+        if(Math.abs(it.vx) < 0.03) it.vx = 0;
+        if(Math.abs(it.vy) < 0.03) it.vy = 0;
       }
 
       if(state.combo > 1 && now() > state.comboDecayAt){
