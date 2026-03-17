@@ -42,6 +42,7 @@
         radial-gradient(700px 400px at 80% 20%, rgba(255,79,216,.12), transparent 55%),
         linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
       min-height:100%;
+      overflow:hidden;
     }
 
     button{
@@ -70,8 +71,9 @@
     .hidden{display:none !important}
 
     .screen{
-      min-height:100vh;
+      height:100vh;
       padding:16px;
+      overflow:hidden;
     }
 
     .homeWrap{
@@ -88,6 +90,7 @@
       border:1px solid rgba(255,255,255,.14);
       box-shadow: var(--shadow);
       overflow:hidden;
+      max-height: min(92vh, 920px);
     }
 
     .homeInner{
@@ -172,12 +175,22 @@
       font-size:20px;
     }
 
-    /* Merge Blossom */
+    .homeBtn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    /* =========================
+       MERGE BLOSSOM
+    ========================== */
     .wrap{
       position:relative;
       display:grid;
       place-items:center;
       padding:8px;
+      height: calc(100vh - 70px);
+      overflow:hidden;
     }
 
     .card{
@@ -189,6 +202,7 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
+      max-height: 100%;
     }
 
     .content{
@@ -495,7 +509,15 @@
     .gameOverCard h4{ margin:0 0 10px; font-size:24px; }
     .gameOverCard p{ margin:8px 0; color: rgba(247,242,255,.82); line-height:1.55; }
 
-    /* Cooking Rush */
+    /* =========================
+       COOKING RUSH
+    ========================== */
+    #cookingScreen{
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
     .cookShell{
       width:min(1180px, 96vw);
       margin:0 auto;
@@ -504,10 +526,14 @@
       border-radius:28px;
       box-shadow: var(--shadow);
       overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      height: calc(100vh - 80px);
+      max-height: calc(100vh - 80px);
     }
 
     .cookTop{
-      padding:16px;
+      padding:12px 14px;
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -515,6 +541,7 @@
       justify-content:space-between;
       border-bottom:1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      flex:0 0 auto;
     }
 
     .cookTitle{
@@ -525,30 +552,33 @@
 
     .cookTitle h1{
       margin:0;
-      font-size: clamp(24px, 3vw, 34px);
+      font-size: clamp(22px, 3vw, 32px);
+      line-height:1;
     }
 
     .cookTitle span{
       color:rgba(255,255,255,.74);
-      font-size:13px;
+      font-size:12px;
+      line-height:1.4;
     }
 
     .stats{
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
+      gap:8px;
+      justify-content:flex-end;
     }
 
     .statBox{
-      min-width:94px;
-      padding:10px 12px;
-      border-radius:16px;
+      min-width:82px;
+      padding:8px 10px;
+      border-radius:14px;
       background: rgba(10,8,22,.34);
       border:1px solid rgba(255,255,255,.12);
     }
 
     .statBox .label{
-      font-size:10px;
+      font-size:9px;
       text-transform:uppercase;
       letter-spacing:.6px;
       opacity:.7;
@@ -556,23 +586,28 @@
     }
 
     .statBox .value{
-      font-size:22px;
+      font-size:20px;
       font-weight:900;
       line-height:1;
     }
 
     .cookBody{
-      padding:16px;
+      padding:12px;
       display:grid;
-      grid-template-columns: 1.25fr .95fr;
-      gap:16px;
+      grid-template-columns: 1.15fr .95fr;
+      gap:12px;
+      flex:1 1 auto;
+      min-height:0;
+      overflow:hidden;
     }
 
     .cookPanel{
-      border-radius:22px;
+      border-radius:20px;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border:1px solid rgba(255,255,255,.12);
-      padding:14px;
+      padding:12px;
+      min-height:0;
+      overflow:hidden;
     }
 
     .panelHeader{
@@ -580,49 +615,66 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      margin-bottom:12px;
+      margin-bottom:10px;
+      flex:0 0 auto;
     }
 
     .panelHeader h3{
       margin:0;
-      font-size:18px;
+      font-size:17px;
+      line-height:1.2;
     }
 
     .subText{
-      font-size:12px;
+      font-size:11px;
       color:rgba(255,255,255,.72);
+      line-height:1.35;
+    }
+
+    .customerArea{
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+      height:100%;
     }
 
     .customerLane{
       display:grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:12px;
-      min-height:280px;
+      grid-template-rows: repeat(2, minmax(0,1fr));
+      gap:10px;
+      flex:1 1 auto;
+      min-height:0;
+      height:100%;
     }
 
     .customerCard{
-      border-radius:20px;
+      border-radius:18px;
       background: rgba(10,8,22,.30);
       border:1px solid rgba(255,255,255,.12);
-      padding:12px;
+      padding:10px;
       position:relative;
       overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:0;
     }
 
     .customerHead{
       display:flex;
       align-items:center;
       gap:10px;
-      margin-bottom:10px;
+      margin-bottom:8px;
     }
 
     .avatar{
-      width:50px;
-      height:50px;
-      border-radius:16px;
+      width:46px;
+      height:46px;
+      border-radius:14px;
       display:grid;
       place-items:center;
-      font-size:28px;
+      font-size:26px;
       background: rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.12);
       flex:0 0 auto;
@@ -634,13 +686,16 @@
 
     .customerMeta b{
       display:block;
-      font-size:14px;
-      margin-bottom:4px;
+      font-size:13px;
+      margin-bottom:3px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .customerMeta span{
       display:block;
-      font-size:12px;
+      font-size:11px;
       color:rgba(255,255,255,.72);
       white-space:nowrap;
       overflow:hidden;
@@ -648,31 +703,35 @@
     }
 
     .orderBubble{
-      border-radius:16px;
+      border-radius:14px;
       background: rgba(255,255,255,.07);
       border:1px solid rgba(255,255,255,.12);
-      padding:10px;
+      padding:9px 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      margin-bottom:10px;
+      margin-bottom:8px;
     }
 
     .orderName{
-      font-size:18px;
+      font-size:16px;
       font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .miniBtn{
-      padding:8px 10px;
-      border-radius:12px;
+      padding:7px 10px;
+      border-radius:11px;
       font-size:12px;
-      min-width:84px;
+      min-width:76px;
+      box-shadow:none;
     }
 
     .meter{
-      height:10px;
+      height:9px;
       border-radius:999px;
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.08);
@@ -691,57 +750,81 @@
       align-items:center;
       justify-content:space-between;
       gap:8px;
-      margin-top:10px;
-      font-size:12px;
+      margin-top:8px;
+      font-size:11px;
       color:rgba(255,255,255,.76);
+      white-space:nowrap;
+      overflow:hidden;
     }
 
-    .kitchenGrid{
+    .customerFooter span{
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .kitchenColumn{
+      display:grid;
+      grid-template-rows: auto auto auto 1fr;
+      gap:12px;
+      min-height:0;
+      height:100%;
+    }
+
+    .compactPanel{
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+
+    .foodMenuGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:12px;
+      gap:8px;
     }
 
     .foodBtn{
       width:100%;
       text-align:left;
-      padding:14px;
-      border-radius:18px;
+      padding:11px;
+      border-radius:16px;
       border:1px solid rgba(255,255,255,.12);
       background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
       color:#fff;
       box-shadow:none;
+      min-height:78px;
     }
 
     .foodBtn strong{
       display:block;
-      font-size:16px;
+      font-size:15px;
       margin-bottom:4px;
+      line-height:1.2;
     }
 
     .foodBtn span{
       display:block;
-      font-size:12px;
+      font-size:11px;
       color:rgba(255,255,255,.75);
       font-weight:600;
+      line-height:1.35;
     }
 
     .stationGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:12px;
+      gap:8px;
     }
 
     .station{
-      border-radius:18px;
+      border-radius:16px;
       background: rgba(10,8,22,.30);
       border:1px solid rgba(255,255,255,.12);
-      padding:12px;
-      min-height:132px;
+      padding:10px;
+      min-height:112px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      gap:10px;
+      gap:8px;
     }
 
     .stationTop{
@@ -752,51 +835,57 @@
     }
 
     .stationState{
-      font-size:12px;
+      font-size:11px;
       color:rgba(255,255,255,.76);
     }
 
     .stationDish{
-      font-size:30px;
+      font-size:28px;
       text-align:center;
-      min-height:40px;
+      min-height:34px;
     }
 
     .readyTray{
       display:grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:10px;
+      gap:8px;
     }
 
     .readyItem{
-      border-radius:16px;
+      border-radius:14px;
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.12);
-      padding:10px;
+      padding:9px;
       text-align:center;
+      min-height:96px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:5px;
     }
 
     .readyItem .icon{
-      font-size:28px;
+      font-size:24px;
       display:block;
-      margin-bottom:6px;
+      margin-bottom:2px;
     }
 
     .eventLog{
       display:grid;
-      gap:8px;
-      max-height:196px;
+      gap:7px;
       overflow:auto;
       padding-right:4px;
+      min-height:0;
     }
 
     .logRow{
-      font-size:13px;
+      font-size:12px;
       color:rgba(255,255,255,.82);
-      padding:9px 10px;
-      border-radius:14px;
+      padding:8px 9px;
+      border-radius:12px;
       background: rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.08);
+      line-height:1.4;
     }
 
     .dayOver{
@@ -849,17 +938,20 @@
       font-size:14px;
     }
 
-    .homeBtn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-
+    /* Desktop / tablet */
     @media (max-width: 980px){
       .homeInner{grid-template-columns:1fr}
       .cookBody{grid-template-columns:1fr}
+      .cookShell{
+        height: calc(100vh - 80px);
+        max-height: calc(100vh - 80px);
+      }
+      .kitchenColumn{
+        grid-template-columns:1fr;
+      }
     }
 
+    /* Mobile portrait fallback */
     @media (max-width: 900px){
       .screen{padding:10px}
       .wrap{padding:0}
@@ -870,19 +962,227 @@
       .hudGroup:last-child{ position:absolute; right:0; top:0; }
       .boardWrap{ inset:62px 10px 10px 10px; }
       .sig{font-size:12px; flex-direction:column; align-items:flex-start}
-      .cookTop{padding:12px}
-      .cookBody{padding:12px}
-      .customerLane{grid-template-columns:1fr}
-      .kitchenGrid{grid-template-columns:1fr 1fr}
-      .stationGrid{grid-template-columns:1fr 1fr}
-      .readyTray{grid-template-columns:1fr 1fr}
+
+      .cookTop{
+        padding:10px;
+        gap:8px;
+      }
+      .cookBody{
+        padding:10px;
+        gap:10px;
+      }
+      .stats{
+        width:100%;
+        justify-content:flex-start;
+      }
+      .statBox{
+        min-width:72px;
+        flex:1 1 calc(20% - 8px);
+      }
+      .customerLane{
+        grid-template-columns:1fr 1fr;
+        grid-template-rows: repeat(2, minmax(0,1fr));
+      }
+      .foodBtn{
+        min-height:72px;
+      }
+    }
+
+    /* Landscape phone optimized */
+    @media (max-width: 900px) and (orientation: landscape){
+      #cookingScreen{
+        padding:8px;
+      }
+
+      .sectionTopBar{
+        width:100%;
+        margin:0 0 8px;
+      }
+
+      .sectionTopBar h2{
+        font-size:16px;
+      }
+
+      .sectionTopBar .homeBtn{
+        padding:8px 10px;
+        font-size:12px;
+      }
+
+      .cookShell{
+        width:100%;
+        height: calc(100vh - 52px);
+        max-height: calc(100vh - 52px);
+        border-radius:18px;
+      }
+
+      .cookTop{
+        padding:8px 10px;
+        gap:8px;
+      }
+
+      .cookTitle h1{
+        font-size:20px;
+      }
+
+      .cookTitle span{
+        font-size:10px;
+      }
+
+      .stats{
+        gap:6px;
+      }
+
+      .statBox{
+        min-width:64px;
+        padding:7px 8px;
+        border-radius:12px;
+      }
+
+      .statBox .label{
+        font-size:8px;
+        margin-bottom:4px;
+      }
+
+      .statBox .value{
+        font-size:16px;
+      }
+
+      .cookBody{
+        padding:8px;
+        gap:8px;
+        grid-template-columns: 1.1fr .9fr;
+      }
+
+      .cookPanel{
+        padding:9px;
+        border-radius:16px;
+      }
+
+      .panelHeader{
+        margin-bottom:8px;
+      }
+
+      .panelHeader h3{
+        font-size:14px;
+      }
+
+      .subText{
+        font-size:10px;
+      }
+
+      .customerLane{
+        gap:8px;
+      }
+
+      .customerCard{
+        padding:8px;
+        border-radius:14px;
+      }
+
+      .avatar{
+        width:38px;
+        height:38px;
+        font-size:22px;
+        border-radius:12px;
+      }
+
+      .customerMeta b{
+        font-size:12px;
+      }
+
+      .customerMeta span{
+        font-size:10px;
+      }
+
+      .orderBubble{
+        padding:7px 8px;
+        margin-bottom:7px;
+      }
+
+      .orderName{
+        font-size:13px;
+      }
+
+      .miniBtn{
+        padding:6px 8px;
+        font-size:11px;
+        min-width:66px;
+        border-radius:10px;
+      }
+
+      .customerFooter{
+        font-size:10px;
+        margin-top:6px;
+      }
+
+      .foodMenuGrid{
+        gap:6px;
+      }
+
+      .foodBtn{
+        min-height:60px;
+        padding:9px;
+        border-radius:12px;
+      }
+
+      .foodBtn strong{
+        font-size:13px;
+        margin-bottom:3px;
+      }
+
+      .foodBtn span{
+        font-size:10px;
+      }
+
+      .stationGrid{
+        gap:6px;
+      }
+
+      .station{
+        min-height:88px;
+        padding:8px;
+        border-radius:13px;
+      }
+
+      .stationDish{
+        font-size:24px;
+        min-height:28px;
+      }
+
+      .stationState{
+        font-size:10px;
+      }
+
+      .readyTray{
+        gap:6px;
+      }
+
+      .readyItem{
+        min-height:74px;
+        padding:7px;
+        border-radius:12px;
+      }
+
+      .readyItem .icon{
+        font-size:20px;
+      }
+
+      .readyItem b{
+        font-size:11px;
+      }
+
+      .eventLog{
+        gap:6px;
+      }
+
+      .logRow{
+        font-size:11px;
+        padding:7px 8px;
+        border-radius:10px;
+      }
     }
 
     @media (max-width: 560px){
-      .kitchenGrid,
-      .stationGrid,
-      .readyTray{grid-template-columns:1fr}
-      .foodBtn strong{font-size:15px}
       .homeCard{border-radius:22px}
       .hero, .selectCard{border-radius:18px}
     }
@@ -906,13 +1206,13 @@
             </div>
             <h1>Chọn game để chơi</h1>
             <p>
-              Một trang web có sẵn 2 game dành cho điện thoại của Babi:
-              <b>Merge Blossom</b> game xếp hình để giết thời gian, và <b>Cooking Rush</b> game phục vụ món ăn như game nấu ăn.
+              Một trang web có sẵn 2 game cho Babi chơi trên điện thoại:
+              <b>Merge Blossom</b> game xếp hình để em giết thời gian, và <b>Cooking Rush</b> game kiểu phục vụ món ăn và nấu ăn như ý em muốn.
             </p>
             <div class="pillRow" style="margin-top:16px;">
               <span class="pill">📱 Tối ưu mobile</span>
-              <span class="pill">⚡ Không cần pc</span>
-              <span class="pill">💾 Có lưu best score</span>
+              <span class="pill">↔️ Ưu tiên ngang màn hình</span>
+              <span class="pill">⚡ Không cần computer</span>
               <span class="pill">🎯 Chơi trực tiếp trên web</span>
             </div>
           </div>
@@ -920,7 +1220,7 @@
           <div class="gameSelect">
             <div class="selectCard">
               <h3>🌸 Merge Blossom</h3>
-              <p>Game xếp hình quen thuộc mà Babi hay chơi trên điện thoại hay trong Liên Quân. Có 9 cấp độ hình, có 1 cập độ hình bí ẩn nhầm tăng độ khó trong quá trình chơi.</p>
+              <p>Game xếp hình quen thuộc mà em hay chơi nhưng ở cấp độ khó hơn và có phần thưởng.</p>
               <div class="pillRow">
                 <span class="pill">Ghép 2 hình</span>
                 <span class="pill">Combo</span>
@@ -931,7 +1231,7 @@
 
             <div class="selectCard">
               <h3>🍳 Cooking Rush</h3>
-              <p>Game quản lý quán ăn: khách vào gọi món, Babi nấu theo thời gian, phục vụ trước khi họ nổi giận bỏ về. Có combo, nhiều trạm nấu, khay món hoàn thành và tổng kết cuối ngày.</p>
+              <p>Game quản lý quán ăn với khách chờ món, bếp nấu, khay thành phẩm và combo phục vụ.</p>
               <div class="pillRow">
                 <span class="pill">Khách liên tục vào</span>
                 <span class="pill">Patience bar</span>
@@ -987,6 +1287,7 @@
             </p>
 
             <div class="sig">
+              <span>Bản tối ưu cho điện thoại yếu • giảm hiệu ứng nền • ưu tiên mượt</span>
               <span>Best: <b id="bestScoreText">0</b></span>
             </div>
           </section>
@@ -1055,7 +1356,7 @@
     <div class="cookShell">
       <div class="cookTop">
         <div class="cookTitle">
-          <h1>🍳 Cooking Rush - Nhà hàng của Moon</h1>
+          <h1>🍳 Chào mừng đến với nhà hàng của Moon 😘</h1>
           <span>Khách sẽ vào liên tục. Nấu đúng món, phục vụ trước khi họ nổi giận bỏ về.</span>
         </div>
 
@@ -1084,24 +1385,24 @@
       </div>
 
       <div class="cookBody">
-        <div class="cookPanel">
+        <div class="cookPanel customerArea">
           <div class="panelHeader">
             <h3>🧍 Khách hàng</h3>
-            <span class="subText">Chạm “Phục vụ” khi bạn đã có món tương ứng trong khay.</span>
+            <span class="subText">Bấm “Phục vụ” khi khay đã có đúng món.</span>
           </div>
           <div class="customerLane" id="customerLane"></div>
         </div>
 
-        <div style="display:grid; gap:16px;">
-          <div class="cookPanel">
+        <div class="kitchenColumn">
+          <div class="cookPanel compactPanel">
             <div class="panelHeader">
               <h3>📋 Menu</h3>
               <span class="subText">Chạm món để đưa vào bếp đang rảnh.</span>
             </div>
-            <div class="kitchenGrid" id="foodMenu"></div>
+            <div class="foodMenuGrid" id="foodMenu"></div>
           </div>
 
-          <div class="cookPanel">
+          <div class="cookPanel compactPanel">
             <div class="panelHeader">
               <h3>🔥 Trạm nấu</h3>
               <span class="subText">2 bếp chạy song song.</span>
@@ -1109,15 +1410,15 @@
             <div class="stationGrid" id="stationGrid"></div>
           </div>
 
-          <div class="cookPanel">
+          <div class="cookPanel compactPanel">
             <div class="panelHeader">
               <h3>✅ Khay món hoàn thành</h3>
-              <span class="subText">Giữ sẵn món để phục vụ nhanh ăn combo.</span>
+              <span class="subText">Giữ món để phục vụ nhanh ăn combo.</span>
             </div>
             <div class="readyTray" id="readyTray"></div>
           </div>
 
-          <div class="cookPanel">
+          <div class="cookPanel compactPanel" style="min-height:0;">
             <div class="panelHeader">
               <h3>📝 Nhật ký</h3>
               <span class="subText">Sự kiện gần nhất trong ca làm.</span>
@@ -1163,9 +1464,6 @@
     }
 
     function backToHome(){
-      if(!document.getElementById('mergeScreen').classList.contains('hidden')){
-        // giữ nguyên trạng thái merge, chỉ quay lại menu
-      }
       if(!document.getElementById('cookingScreen').classList.contains('hidden')){
         stopCookingGame();
       }
@@ -1781,8 +2079,18 @@
       { id:'sushi',  icon:'🍣', name:'Sushi',  cookTime:10000, price:40, penalty:14 }
     ];
 
-    const CUSTOMER_AVATARS = ['🧑‍💼','👩‍🦰','🧔','👵','👨‍🍳','👩‍🎤','🧑‍🎓','👨‍🔧'];
-    const CUSTOMER_NAMES = ['Linh', 'Trang', 'Vy', 'Minh', 'Nam', 'An', 'Bảo', 'Khôi', 'Nhi', 'Hà'];
+    const CUSTOMER_POOL = [
+      { avatar:'🐍', name:'bét fen' },
+      { avatar:'🐶', name:'mít tờ gôn' },
+      { avatar:'👬', name:'thanh niên dính thai' },
+      { avatar:'🍑', name:'cô gái bán hoa' },
+      { avatar:'🦚', name:'tôi thành công rồi' },
+      { avatar:'🥜', name:'peanut' },
+      { avatar:'⌛️', name:'aladin và đồng hồ cát' },
+      { avatar:'⛄️', name:'sì nô men' },
+      { avatar:'🎆', name:'merry phát tài' },
+      { avatar:'🥇', name:'champion' }
+    ];
 
     const cooking = {
       money: 0,
@@ -1801,7 +2109,6 @@
       missedCount: 0,
       customerId: 1,
       timers: {
-        main: null,
         ticker: null
       }
     };
@@ -1837,7 +2144,7 @@
       cookMoney.textContent = Math.max(0, Math.floor(cooking.money)).toLocaleString('vi-VN');
       cookCombo.textContent = 'x' + cooking.combo;
       cookLives.textContent = cooking.lives;
-      cookTime.textContent = Math.max(0, cooking.timeLeft);
+      cookTime.textContent = Math.max(0, Math.ceil(cooking.timeLeft));
       cookBest.textContent = Math.floor(cooking.best).toLocaleString('vi-VN');
     }
 
@@ -1848,7 +2155,7 @@
         btn.className = 'foodBtn';
         btn.innerHTML = `
           <strong>${food.icon} ${food.name}</strong>
-          <span>Thời gian nấu: ${(food.cookTime/1000).toFixed(0)}s • Giá: ${food.price}</span>
+          <span>${Math.round(food.cookTime/1000)}s • +${food.price}</span>
         `;
         btn.addEventListener('click', ()=> startCookingFood(food.id));
         foodMenu.appendChild(btn);
@@ -1872,10 +2179,10 @@
         div.innerHTML = `
           <div class="stationTop">
             <b>Bếp ${station.id}</b>
-            <span class="stationState">${busy ? 'Đang nấu' : 'Đang rảnh'}</span>
+            <span class="stationState">${busy ? 'Đang nấu' : 'Rảnh'}</span>
           </div>
           <div class="stationDish">${busy ? station.food.icon : '🍳'}</div>
-          <div>${busy ? `<div class="subText">${station.food.name}</div>` : `<div class="subText">Chạm món ở menu để bắt đầu.</div>`}</div>
+          <div>${busy ? `<div class="subText">${station.food.name}</div>` : `<div class="subText">Chọn món để nấu</div>`}</div>
           <div class="meter"><div class="meterFill" style="transform:scaleX(${progress})"></div></div>
         `;
         stationGrid.appendChild(div);
@@ -1894,9 +2201,9 @@
         div.innerHTML = `
           <span class="icon">${food.icon}</span>
           <div><b>${food.name}</b></div>
-          <div class="subText">Sẵn sàng phục vụ</div>
-          <div style="margin-top:8px;">
-            <button class="ghost miniBtn" onclick="trashReadyFood(${index})">Bỏ món</button>
+          <div class="subText">Sẵn sàng</div>
+          <div style="margin-top:4px;">
+            <button class="ghost miniBtn" onclick="trashReadyFood(${index})">Bỏ</button>
           </div>
         `;
         readyTray.appendChild(div);
@@ -1905,9 +2212,10 @@
 
     function renderCustomers(){
       customerLane.innerHTML = '';
+
       if(!cooking.customers.length){
         customerLane.innerHTML = `
-          <div class="customerCard" style="grid-column:1/-1; display:grid; place-items:center; min-height:180px;">
+          <div class="customerCard" style="grid-column:1/-1; grid-row:1/-1; display:grid; place-items:center;">
             <div style="text-align:center;">
               <div style="font-size:42px; margin-bottom:8px;">🚪</div>
               <div style="font-weight:800;">Đang chờ khách vào quán...</div>
@@ -1924,33 +2232,51 @@
         const div = document.createElement('div');
         div.className = 'customerCard';
         div.innerHTML = `
-          <div class="customerHead">
-            <div class="avatar">${customer.avatar}</div>
-            <div class="customerMeta">
-              <b>${customer.name}</b>
-              <span>Khách đang chờ món...</span>
+          <div>
+            <div class="customerHead">
+              <div class="avatar">${customer.avatar}</div>
+              <div class="customerMeta">
+                <b title="${customer.name}">${customer.name}</b>
+                <span>Đang chờ món...</span>
+              </div>
             </div>
-          </div>
 
-          <div class="orderBubble">
-            <div>
-              <div class="subText">Gọi món</div>
-              <div class="orderName">${customer.food.icon} ${customer.food.name}</div>
+            <div class="orderBubble">
+              <div style="min-width:0;">
+                <div class="subText">Gọi món</div>
+                <div class="orderName" title="${customer.food.name}">${customer.food.icon} ${customer.food.name}</div>
+              </div>
+              <button class="miniBtn" ${matchingReadyIndex === -1 ? 'disabled style="opacity:.45; cursor:not-allowed;"' : ''} onclick="serveCustomer('${customer.id}')">
+                Serve
+              </button>
             </div>
-            <button class="miniBtn" ${matchingReadyIndex === -1 ? 'disabled style="opacity:.45; cursor:not-allowed;"' : ''} onclick="serveCustomer('${customer.id}')">
-              Phục vụ
-            </button>
-          </div>
 
-          <div class="meter"><div class="meterFill" style="transform:scaleX(${ratio})"></div></div>
+            <div class="meter"><div class="meterFill" style="transform:scaleX(${ratio})"></div></div>
+          </div>
 
           <div class="customerFooter">
-            <span>Kiên nhẫn: ${Math.ceil(customer.patience / 1000)}s</span>
-            <span>Thưởng: +${customer.food.price * cooking.combo}</span>
+            <span>⏳ ${Math.ceil(customer.patience / 1000)}s</span>
+            <span>+${customer.food.price * cooking.combo}</span>
           </div>
         `;
         customerLane.appendChild(div);
       });
+
+      const remain = 4 - cooking.customers.length;
+      for(let i = 0; i < remain; i++){
+        const empty = document.createElement('div');
+        empty.className = 'customerCard';
+        empty.style.opacity = '.22';
+        empty.innerHTML = `
+          <div style="height:100%; display:grid; place-items:center; text-align:center;">
+            <div>
+              <div style="font-size:28px; margin-bottom:6px;">🪑</div>
+              <div class="subText">Bàn trống</div>
+            </div>
+          </div>
+        `;
+        customerLane.appendChild(empty);
+      }
     }
 
     function renderCooking(){
@@ -1969,17 +2295,22 @@
       return FOODS[3];
     }
 
+    function randomCustomerIdentity(){
+      return CUSTOMER_POOL[Math.floor(Math.random() * CUSTOMER_POOL.length)];
+    }
+
     function spawnCustomer(){
       if(!cooking.running) return;
       if(cooking.customers.length >= 4) return;
 
       const food = randomFoodWeighted();
+      const identity = randomCustomerIdentity();
       const patience = 15000 + Math.random() * 7000;
 
       const customer = {
         id: 'c' + cooking.customerId++,
-        avatar: CUSTOMER_AVATARS[Math.floor(Math.random() * CUSTOMER_AVATARS.length)],
-        name: CUSTOMER_NAMES[Math.floor(Math.random() * CUSTOMER_NAMES.length)],
+        avatar: identity.avatar,
+        name: identity.name,
         food,
         patience,
         maxPatience: patience
@@ -2182,7 +2513,6 @@
     renderFoodMenu();
     renderCooking();
 
-    // Start on home screen
     showScreen('homeScreen');
   </script>
 </body>
