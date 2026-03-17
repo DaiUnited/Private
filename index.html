@@ -2,10 +2,13 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <title>Mini Game Hub • Merge Blossom + Cooking Rush</title>
 
-    <style>
+  <style>
     :root{
       --bg1:#120018;
       --bg2:#2a0b3d;
@@ -31,7 +34,7 @@
     }
 
     *{box-sizing:border-box}
-    html,body{min-height:100%;}
+    html,body{min-height:100%}
 
     body{
       margin:0;
@@ -44,6 +47,7 @@
       min-height:100dvh;
       overflow-x:hidden;
       overflow-y:auto;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button{
@@ -56,7 +60,6 @@
       color:#140018;
       background: linear-gradient(135deg, var(--violet2), var(--pink));
       user-select:none;
-      -webkit-tap-highlight-color: transparent;
       box-shadow: 0 10px 26px rgba(0,0,0,.22);
     }
 
@@ -77,19 +80,18 @@
       padding:16px;
     }
 
-    /* Chỉ cho Home + Merge được scroll */
     #homeScreen,
     #mergeScreen{
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
     }
 
-    /* Cooking vẫn full game screen */
     #cookingScreen{
-      height:100dvh;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
+      min-height:100dvh;
+      height:auto !important;
+      overflow-y:auto !important;
+      -webkit-overflow-scrolling:touch;
+      padding:10px;
     }
 
     .homeWrap{
@@ -527,166 +529,163 @@
     .gameOverCard p{ margin:8px 0; color: rgba(247,242,255,.82); line-height:1.55; }
 
     /* =========================
-       COOKING RUSH
+       COOKING RUSH - MOBILE REDESIGN
     ========================== */
-    .cookShell{
-      width:min(1180px, 96vw);
+    .cookingTopBar{
+      width:min(760px, 100%);
+      margin:0 auto 10px;
+      position:sticky;
+      top:0;
+      z-index:20;
+      padding:4px 0 8px;
+      background: linear-gradient(180deg, rgba(18,0,24,.92), rgba(18,0,24,.72), transparent);
+      backdrop-filter: blur(8px);
+    }
+
+    .mobileCookShell{
+      width:min(760px, 100%);
       margin:0 auto;
+      height:auto !important;
+      max-height:none !important;
+      overflow:visible !important;
+      border-radius:22px;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
       border:1px solid rgba(255,255,255,.14);
-      border-radius:28px;
       box-shadow: var(--shadow);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      height: calc(100dvh - 80px);
-      max-height: calc(100dvh - 80px);
     }
 
-    .cookTop{
-      padding:12px 14px;
+    .mobileCookTop{
+      padding:14px;
+      gap:12px;
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
+      flex-direction:column;
       border-bottom:1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      flex:0 0 auto;
     }
 
-    .cookTitle{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-
-    .cookTitle h1{
+    .mobileCookTop .cookTitle h1{
       margin:0;
-      font-size: clamp(22px, 3vw, 32px);
-      line-height:1;
+      font-size: clamp(24px, 6vw, 30px);
+      line-height:1.05;
     }
 
-    .cookTitle span{
-      color:rgba(255,255,255,.74);
-      font-size:12px;
-      line-height:1.4;
+    .mobileCookTop .cookTitle span{
+      display:block;
+      margin-top:6px;
+      font-size:13px;
+      color:rgba(255,255,255,.82);
     }
 
-    .stats{
-      display:flex;
-      flex-wrap:wrap;
+    .mobileStats{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap:8px;
-      justify-content:flex-end;
+      width:100%;
     }
 
     .statBox{
-      min-width:82px;
-      padding:8px 10px;
-      border-radius:14px;
-      background: rgba(10,8,22,.34);
-      border:1px solid rgba(255,255,255,.12);
+      min-width:0;
+      padding:10px 12px;
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .statBoxWide{
+      grid-column: span 2;
+    }
+
+    .highlightMoney{
+      background: linear-gradient(135deg, rgba(255,216,107,.22), rgba(255,79,216,.12));
+      border-color: rgba(255,216,107,.28);
     }
 
     .statBox .label{
-      font-size:9px;
+      font-size:10px;
+      letter-spacing:.7px;
       text-transform:uppercase;
-      letter-spacing:.6px;
-      opacity:.7;
-      margin-bottom:5px;
+      opacity:.76;
+      margin-bottom:6px;
     }
 
     .statBox .value{
-      font-size:20px;
+      font-size:22px;
       font-weight:900;
       line-height:1;
     }
 
-    .cookBody{
-      padding:12px;
+    .cookMobileBody{
       display:grid;
-      grid-template-columns: 1.15fr .95fr;
-      gap:12px;
-      flex:1 1 auto;
-      min-height:0;
-      overflow:hidden;
+      gap:10px;
+      padding:10px;
     }
 
-    .cookPanel{
-      border-radius:20px;
+    .mobilePanel{
+      border-radius:18px;
+      padding:12px;
+      overflow:visible;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border:1px solid rgba(255,255,255,.12);
-      padding:12px;
-      min-height:0;
-      overflow:hidden;
     }
 
-    .panelHeader{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+    .mobilePanel .panelHeader{
       margin-bottom:10px;
-      flex:0 0 auto;
+      align-items:flex-start;
+      flex-direction:column;
+      gap:4px;
+      display:flex;
     }
 
-    .panelHeader h3{
+    .mobilePanel .panelHeader h3{
       margin:0;
-      font-size:17px;
+      font-size:16px;
       line-height:1.2;
     }
 
-    .subText{
+    .mobilePanel .subText{
       font-size:11px;
-      color:rgba(255,255,255,.72);
+      color:rgba(255,255,255,.74);
       line-height:1.35;
     }
 
-    .customerArea{
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-      height:100%;
-    }
-
-    .customerLane{
+    .mobileCustomerLane{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      grid-template-rows: repeat(2, minmax(0,1fr));
+      grid-template-columns:1fr;
       gap:10px;
-      flex:1 1 auto;
-      min-height:0;
-      height:100%;
+      height:auto;
     }
 
     .customerCard{
+      min-height:unset;
       border-radius:18px;
-      background: rgba(10,8,22,.30);
-      border:1px solid rgba(255,255,255,.12);
-      padding:10px;
-      position:relative;
-      overflow:hidden;
+      padding:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05)),
+        rgba(10,8,22,.34);
+      border:1px solid rgba(255,255,255,.14);
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      min-height:0;
+      position:relative;
+      overflow:hidden;
     }
 
     .customerHead{
       display:flex;
       align-items:center;
-      gap:10px;
-      margin-bottom:8px;
+      gap:12px;
+      margin-bottom:10px;
     }
 
     .avatar{
-      width:46px;
-      height:46px;
-      border-radius:14px;
+      width:52px;
+      height:52px;
+      border-radius:16px;
       display:grid;
       place-items:center;
-      font-size:26px;
-      background: rgba(255,255,255,.10);
+      font-size:28px;
+      background: rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.12);
       flex:0 0 auto;
     }
@@ -697,8 +696,8 @@
 
     .customerMeta b{
       display:block;
-      font-size:13px;
-      margin-bottom:3px;
+      font-size:14px;
+      margin-bottom:4px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -706,7 +705,7 @@
 
     .customerMeta span{
       display:block;
-      font-size:11px;
+      font-size:12px;
       color:rgba(255,255,255,.72);
       white-space:nowrap;
       overflow:hidden;
@@ -714,19 +713,19 @@
     }
 
     .orderBubble{
+      padding:10px;
       border-radius:14px;
+      gap:10px;
+      align-items:center;
       background: rgba(255,255,255,.07);
       border:1px solid rgba(255,255,255,.12);
-      padding:9px 10px;
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:10px;
       margin-bottom:8px;
     }
 
     .orderName{
-      font-size:16px;
+      font-size:17px;
       font-weight:800;
       white-space:nowrap;
       overflow:hidden;
@@ -734,15 +733,18 @@
     }
 
     .miniBtn{
-      padding:7px 10px;
-      border-radius:11px;
-      font-size:12px;
-      min-width:76px;
+      min-width:88px;
+      min-height:42px;
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:13px;
+      font-weight:800;
       box-shadow:none;
+      flex:0 0 auto;
     }
 
     .meter{
-      height:9px;
+      height:10px;
       border-radius:999px;
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.08);
@@ -761,8 +763,8 @@
       align-items:center;
       justify-content:space-between;
       gap:8px;
-      margin-top:8px;
-      font-size:11px;
+      margin-top:10px;
+      font-size:12px;
       color:rgba(255,255,255,.76);
       white-space:nowrap;
       overflow:hidden;
@@ -773,65 +775,65 @@
       text-overflow:ellipsis;
     }
 
-    .kitchenColumn{
-      display:grid;
-      grid-template-rows: auto auto auto 1fr;
-      gap:12px;
-      min-height:0;
-      height:100%;
-    }
-
-    .compactPanel{
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-    }
-
-    .foodMenuGrid{
+    .foodMenuGrid.mobileFoodMenuGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:8px;
+      gap:10px;
     }
 
     .foodBtn{
       width:100%;
-      text-align:left;
-      padding:11px;
+      min-height:90px;
+      padding:12px;
       border-radius:16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      text-align:left;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.07));
+      border:1px solid rgba(255,255,255,.16);
       color:#fff;
+      transition: transform .12s ease, background .12s ease;
       box-shadow:none;
-      min-height:78px;
+    }
+
+    .foodBtn:active{
+      transform:scale(.98);
     }
 
     .foodBtn strong{
       display:block;
       font-size:15px;
-      margin-bottom:4px;
-      line-height:1.2;
+      line-height:1.25;
     }
 
     .foodBtn span{
       display:block;
+      margin-top:4px;
       font-size:11px;
+      line-height:1.35;
       color:rgba(255,255,255,.75);
       font-weight:600;
-      line-height:1.35;
     }
 
-    .stationGrid{
+    .cookSplit2{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:8px;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .mobileStationGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
     }
 
     .station{
+      min-height:128px;
       border-radius:16px;
-      background: rgba(10,8,22,.30);
-      border:1px solid rgba(255,255,255,.12);
       padding:10px;
-      min-height:112px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+        rgba(10,8,22,.28);
+      border:1px solid rgba(255,255,255,.12);
       display:flex;
       flex-direction:column;
       justify-content:space-between;
@@ -845,30 +847,34 @@
       gap:8px;
     }
 
+    .stationTop b{
+      font-size:14px;
+    }
+
     .stationState{
       font-size:11px;
       color:rgba(255,255,255,.76);
     }
 
     .stationDish{
-      font-size:28px;
+      font-size:30px;
       text-align:center;
-      min-height:34px;
+      min-height:36px;
     }
 
-    .readyTray{
+    .mobileReadyTray{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:8px;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
     }
 
     .readyItem{
-      border-radius:14px;
+      min-height:106px;
+      border-radius:16px;
+      padding:10px;
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.12);
-      padding:9px;
       text-align:center;
-      min-height:96px;
       display:flex;
       flex-direction:column;
       justify-content:center;
@@ -876,23 +882,24 @@
     }
 
     .readyItem .icon{
-      font-size:24px;
+      font-size:26px;
       display:block;
       margin-bottom:2px;
     }
 
-    .eventLog{
+    .mobileLogPanel .eventLog{
+      max-height:180px;
+      overflow:auto;
+      padding-right:2px;
+      min-height:0;
       display:grid;
       gap:7px;
-      overflow:auto;
-      padding-right:4px;
-      min-height:0;
     }
 
     .logRow{
       font-size:12px;
       color:rgba(255,255,255,.82);
-      padding:8px 9px;
+      padding:9px 10px;
       border-radius:12px;
       background: rgba(0,0,0,.18);
       border:1px solid rgba(255,255,255,.08);
@@ -949,269 +956,115 @@
       font-size:14px;
     }
 
+    /* Desktop / tablet */
     @media (max-width: 980px){
       .homeInner{grid-template-columns:1fr}
-      .cookBody{grid-template-columns:1fr}
-      .cookShell{
-        height: calc(100dvh - 80px);
-        max-height: calc(100dvh - 80px);
-      }
-      .kitchenColumn{
-        grid-template-columns:1fr;
-      }
     }
 
     @media (max-width: 900px){
       .screen{padding:10px}
-
       .wrap{
         display:block;
         padding:0 0 18px;
         min-height:auto;
         height:auto;
       }
-
       .card{
         min-height:auto;
         border-radius:20px;
         max-height:none;
         overflow:visible;
       }
-
       .content{
         grid-template-columns:1fr;
         padding:12px;
         gap:12px;
         height:auto;
       }
-
       .scene{min-height:500px; border-radius:18px}
       .gameHud{ inset:10px 10px auto 10px; grid-template-columns: 1fr; }
       .hudGroup:last-child{ position:absolute; right:0; top:0; }
       .boardWrap{ inset:62px 10px 10px 10px; }
       .sig{font-size:12px; flex-direction:column; align-items:flex-start}
-
-      .cookTop{
-        padding:10px;
-        gap:8px;
-      }
-      .cookBody{
-        padding:10px;
-        gap:10px;
-      }
-      .stats{
-        width:100%;
-        justify-content:flex-start;
-      }
-      .statBox{
-        min-width:72px;
-        flex:1 1 calc(20% - 8px);
-      }
-      .customerLane{
-        grid-template-columns:1fr 1fr;
-        grid-template-rows: repeat(2, minmax(0,1fr));
-      }
-      .foodBtn{
-        min-height:72px;
-      }
     }
 
-    @media (max-width: 900px) and (orientation: landscape){
+    @media (max-width: 560px){
+      .homeCard{border-radius:22px}
+      .hero, .selectCard{border-radius:18px}
+    }
+
+    @media (max-width: 480px){
       #cookingScreen{
         padding:8px;
       }
 
-      .sectionTopBar{
-        width:100%;
-        margin:0 0 8px;
-      }
-
-      .sectionTopBar h2{
-        font-size:16px;
-      }
-
-      .sectionTopBar .homeBtn{
-        padding:8px 10px;
-        font-size:12px;
-      }
-
-      .cookShell{
-        width:100%;
-        height: calc(100dvh - 52px);
-        max-height: calc(100dvh - 52px);
+      .mobileCookShell{
         border-radius:18px;
       }
 
-      .cookTop{
-        padding:8px 10px;
-        gap:8px;
+      .mobileCookTop{
+        padding:12px;
       }
 
-      .cookTitle h1{
-        font-size:20px;
-      }
-
-      .cookTitle span{
-        font-size:10px;
-      }
-
-      .stats{
-        gap:6px;
-      }
-
-      .statBox{
-        min-width:64px;
-        padding:7px 8px;
-        border-radius:12px;
-      }
-
-      .statBox .label{
-        font-size:8px;
-        margin-bottom:4px;
+      .mobileStats{
+        grid-template-columns: repeat(2, minmax(0,1fr));
       }
 
       .statBox .value{
-        font-size:16px;
+        font-size:20px;
       }
 
-      .cookBody{
-        padding:8px;
-        gap:8px;
-        grid-template-columns: 1.1fr .9fr;
-      }
-
-      .cookPanel{
-        padding:9px;
-        border-radius:16px;
-      }
-
-      .panelHeader{
-        margin-bottom:8px;
-      }
-
-      .panelHeader h3{
-        font-size:14px;
-      }
-
-      .subText{
-        font-size:10px;
-      }
-
-      .customerLane{
-        gap:8px;
-      }
-
-      .customerCard{
-        padding:8px;
-        border-radius:14px;
-      }
-
-      .avatar{
-        width:38px;
-        height:38px;
-        font-size:22px;
-        border-radius:12px;
-      }
-
-      .customerMeta b{
-        font-size:12px;
-      }
-
-      .customerMeta span{
-        font-size:10px;
-      }
-
-      .orderBubble{
-        padding:7px 8px;
-        margin-bottom:7px;
-      }
-
-      .orderName{
-        font-size:13px;
-      }
-
-      .miniBtn{
-        padding:6px 8px;
-        font-size:11px;
-        min-width:66px;
-        border-radius:10px;
-      }
-
-      .customerFooter{
-        font-size:10px;
-        margin-top:6px;
-      }
-
-      .foodMenuGrid{
-        gap:6px;
+      .foodMenuGrid.mobileFoodMenuGrid{
+        grid-template-columns:1fr 1fr;
       }
 
       .foodBtn{
-        min-height:60px;
-        padding:9px;
-        border-radius:12px;
+        min-height:82px;
+        padding:10px;
       }
 
       .foodBtn strong{
-        font-size:13px;
-        margin-bottom:3px;
+        font-size:14px;
       }
 
       .foodBtn span{
         font-size:10px;
       }
 
-      .stationGrid{
-        gap:6px;
+      .mobileStationGrid,
+      .mobileReadyTray{
+        grid-template-columns:1fr 1fr;
       }
 
       .station{
-        min-height:88px;
-        padding:8px;
-        border-radius:13px;
-      }
-
-      .stationDish{
-        font-size:24px;
-        min-height:28px;
-      }
-
-      .stationState{
-        font-size:10px;
-      }
-
-      .readyTray{
-        gap:6px;
+        min-height:116px;
+        padding:9px;
       }
 
       .readyItem{
-        min-height:74px;
-        padding:7px;
-        border-radius:12px;
+        min-height:96px;
+        padding:9px;
       }
 
-      .readyItem .icon{
-        font-size:20px;
+      .miniBtn{
+        min-width:80px;
+        min-height:40px;
+        font-size:12px;
       }
 
-      .readyItem b{
-        font-size:11px;
-      }
-
-      .eventLog{
-        gap:6px;
-      }
-
-      .logRow{
-        font-size:11px;
-        padding:7px 8px;
-        border-radius:10px;
+      .orderName{
+        font-size:16px;
       }
     }
 
-    @media (max-width: 560px){
-      .homeCard{border-radius:22px}
-      .hero, .selectCard{border-radius:18px}
+    @media (min-width: 700px){
+      .mobileCustomerLane{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .cookSplit2{
+        grid-template-columns:1fr 1fr;
+      }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -1234,7 +1087,8 @@
             <h1>Chọn game để chơi</h1>
             <p>
               Một trang web có sẵn 2 game cho Babi chơi trên điện thoại:
-              <b>Merge Blossom</b> game xếp hình để em giết thời gian, và <b>Cooking Rush</b> game kiểu phục vụ món ăn và nấu ăn như ý em muốn.
+              <b>Merge Blossom</b> game xếp hình để em giết thời gian, và <b>Cooking Rush</b>
+              game kiểu phục vụ món ăn và nấu ăn như ý em muốn.
             </p>
             <div class="pillRow" style="margin-top:16px;">
               <span class="pill">📱 Tối ưu mobile</span>
@@ -1306,11 +1160,15 @@
             </div>
 
             <p class="hint" style="margin-top:12px;">
-              Chạm vào bảng bên phải để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi. Ghép tới <b>cấp 9</b>, càng lên cao càng khó giữ không gian. Cứ mỗi <b>10.000 điểm</b> sẽ sinh ra một <b>💀 đầu lâu</b> không nằm trong chuỗi, không thể phá hủy và chỉ dùng để chiếm diện tích.
+              Chạm vào bảng bên phải để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi. Ghép tới
+              <b>cấp 9</b>, càng lên cao càng khó giữ không gian. Cứ mỗi <b>10.000 điểm</b> sẽ sinh ra một
+              <b>💀 đầu lâu</b> không nằm trong chuỗi, không thể phá hủy và chỉ dùng để chiếm diện tích.
               <br/><br/>
               Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️ → 🌸 → 💎 → 👑</b>
               <br/>
-              Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
+              Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b>
+              sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt
+              <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
             </p>
 
             <div class="sig">
@@ -1375,20 +1233,20 @@
 
   <!-- COOKING -->
   <section id="cookingScreen" class="screen hidden">
-    <div class="sectionTopBar">
+    <div class="sectionTopBar cookingTopBar">
       <h2>🍳 Cooking Rush</h2>
       <button class="ghost homeBtn" onclick="backToHome()">← Về menu</button>
     </div>
 
-    <div class="cookShell">
-      <div class="cookTop">
+    <div class="mobileCookShell">
+      <div class="mobileCookTop">
         <div class="cookTitle">
-          <h1>🍳 Chào mừng đến với nhà hàng của Moon 😘</h1>
-          <span>Khách sẽ vào liên tục. Nấu đúng món, phục vụ trước khi họ nổi giận bỏ về.</span>
+          <h1>🍳 Cooking Rush</h1>
+          <span>Nấu món thật nhanh, phục vụ trước khi khách bỏ về.</span>
         </div>
 
-        <div class="stats">
-          <div class="statBox">
+        <div class="mobileStats">
+          <div class="statBox highlightMoney">
             <div class="label">Tiền</div>
             <div class="value" id="cookMoney">0</div>
           </div>
@@ -1404,54 +1262,54 @@
             <div class="label">Thời gian</div>
             <div class="value" id="cookTime">90</div>
           </div>
-          <div class="statBox">
+          <div class="statBox statBoxWide">
             <div class="label">Best</div>
             <div class="value" id="cookBest">0</div>
           </div>
         </div>
       </div>
 
-      <div class="cookBody">
-        <div class="cookPanel customerArea">
+      <div class="cookMobileBody">
+        <div class="mobilePanel">
           <div class="panelHeader">
             <h3>🧍 Khách hàng</h3>
-            <span class="subText">Bấm “Phục vụ” khi khay đã có đúng món.</span>
+            <span class="subText">Bấm Serve khi đã có đúng món trong khay.</span>
           </div>
-          <div class="customerLane" id="customerLane"></div>
+          <div class="mobileCustomerLane" id="customerLane"></div>
         </div>
 
-        <div class="kitchenColumn">
-          <div class="cookPanel compactPanel">
+        <div class="mobilePanel">
+          <div class="panelHeader">
+            <h3>📋 Chọn món</h3>
+            <span class="subText">Chạm món để đưa vào bếp còn trống.</span>
+          </div>
+          <div class="foodMenuGrid mobileFoodMenuGrid" id="foodMenu"></div>
+        </div>
+
+        <div class="cookSplit2">
+          <div class="mobilePanel">
             <div class="panelHeader">
-              <h3>📋 Menu</h3>
-              <span class="subText">Chạm món để đưa vào bếp đang rảnh.</span>
+              <h3>🔥 Bếp nấu</h3>
+              <span class="subText">2 bếp hoạt động song song.</span>
             </div>
-            <div class="foodMenuGrid" id="foodMenu"></div>
+            <div class="mobileStationGrid" id="stationGrid"></div>
           </div>
 
-          <div class="cookPanel compactPanel">
+          <div class="mobilePanel">
             <div class="panelHeader">
-              <h3>🔥 Trạm nấu</h3>
-              <span class="subText">2 bếp chạy song song.</span>
+              <h3>✅ Món hoàn thành</h3>
+              <span class="subText">Giữ món ở đây để Serve khách.</span>
             </div>
-            <div class="stationGrid" id="stationGrid"></div>
+            <div class="mobileReadyTray" id="readyTray"></div>
           </div>
+        </div>
 
-          <div class="cookPanel compactPanel">
-            <div class="panelHeader">
-              <h3>✅ Khay món hoàn thành</h3>
-              <span class="subText">Giữ món để phục vụ nhanh ăn combo.</span>
-            </div>
-            <div class="readyTray" id="readyTray"></div>
+        <div class="mobilePanel mobileLogPanel">
+          <div class="panelHeader">
+            <h3>📝 Nhật ký</h3>
+            <span class="subText">Sự kiện mới nhất trong ca.</span>
           </div>
-
-          <div class="cookPanel compactPanel" style="min-height:0;">
-            <div class="panelHeader">
-              <h3>📝 Nhật ký</h3>
-              <span class="subText">Sự kiện gần nhất trong ca làm.</span>
-            </div>
-            <div class="eventLog" id="eventLog"></div>
-          </div>
+          <div class="eventLog" id="eventLog"></div>
         </div>
       </div>
     </div>
@@ -1484,9 +1342,17 @@
       SCREENS.forEach(s => {
         document.getElementById(s).classList.toggle('hidden', s !== id);
       });
-      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      window.scrollTo({ top: 0, behavior: 'auto' });
+
       if(id === 'mergeScreen'){
         setTimeout(resizeGame, 30);
+      }
+
+      if(id === 'cookingScreen'){
+        setTimeout(() => {
+          renderCooking();
+        }, 30);
       }
     }
 
@@ -1547,13 +1413,13 @@
     typedEl.textContent = storyLines.join('\n\n');
 
     const SHAPES = [
-      { emoji:'💗', name:'Tim non',   fill:'#ff67c8', score:10,  radius:isMobile?18:19 },
-      { emoji:'⭐', name:'Sao mộng',  fill:'#ffd76a', score:24,  radius:isMobile?22:24 },
+      { emoji:'💗', name:'Tim non', fill:'#ff67c8', score:10, radius:isMobile?18:19 },
+      { emoji:'⭐', name:'Sao mộng', fill:'#ffd76a', score:24, radius:isMobile?22:24 },
       { emoji:'❄️', name:'Băng sương', fill:'#9be9ff', score:46, radius:isMobile?26:29 },
-      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82,  radius:isMobile?30:34 },
+      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82, radius:isMobile?30:34 },
       { emoji:'🌈', name:'Cầu vồng', fill:'#73d8ff', score:140, radius:isMobile?34:39 },
       { emoji:'☀️', name:'Thái dương', fill:'#ffb16b', score:230, radius:isMobile?38:44 },
-      { emoji:'🌸', name:'Hoa nở',    fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
+      { emoji:'🌸', name:'Hoa nở', fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
       { emoji:'💎', name:'Tinh thạch', fill:'#89f2e1', score:560, radius:isMobile?46:54 },
       { emoji:'👑', name:'Vương miện', fill:'#ffe07e', score:860, radius:isMobile?50:59 }
     ];
@@ -2101,9 +1967,9 @@
 
     const FOODS = [
       { id:'burger', icon:'🍔', name:'Burger', cookTime:6000, price:20, penalty:8 },
-      { id:'pizza',  icon:'🍕', name:'Pizza',  cookTime:9000, price:34, penalty:12 },
+      { id:'pizza', icon:'🍕', name:'Pizza', cookTime:9000, price:34, penalty:12 },
       { id:'noodle', icon:'🍜', name:'Mì nóng', cookTime:7000, price:25, penalty:9 },
-      { id:'sushi',  icon:'🍣', name:'Sushi',  cookTime:10000, price:40, penalty:14 }
+      { id:'sushi', icon:'🍣', name:'Sushi', cookTime:10000, price:40, penalty:14 }
     ];
 
     const CUSTOMER_POOL = [
@@ -2182,7 +2048,8 @@
         btn.className = 'foodBtn';
         btn.innerHTML = `
           <strong>${food.icon} ${food.name}</strong>
-          <span>${Math.round(food.cookTime/1000)}s • +${food.price}</span>
+          <span>Nấu ${Math.round(food.cookTime/1000)} giây</span>
+          <span>Thưởng +${food.price}</span>
         `;
         btn.addEventListener('click', ()=> startCookingFood(food.id));
         foodMenu.appendChild(btn);
@@ -2219,7 +2086,7 @@
     function renderReadyTray(){
       readyTray.innerHTML = '';
       if(!cooking.ready.length){
-        readyTray.innerHTML = `<div class="readyItem" style="grid-column:1/-1;">Khay trống.</div>`;
+        readyTray.innerHTML = `<div class="readyItem" style="grid-column:1/-1;">🍽️ Chưa có món nào hoàn thành.</div>`;
         return;
       }
       cooking.ready.forEach((food, index) => {
@@ -2228,9 +2095,9 @@
         div.innerHTML = `
           <span class="icon">${food.icon}</span>
           <div><b>${food.name}</b></div>
-          <div class="subText">Sẵn sàng</div>
-          <div style="margin-top:4px;">
-            <button class="ghost miniBtn" onclick="trashReadyFood(${index})">Bỏ</button>
+          <div class="subText">Sẵn sàng phục vụ</div>
+          <div style="margin-top:6px;">
+            <button class="ghost miniBtn" onclick="trashReadyFood(${index})">Bỏ món</button>
           </div>
         `;
         readyTray.appendChild(div);
@@ -2242,10 +2109,11 @@
 
       if(!cooking.customers.length){
         customerLane.innerHTML = `
-          <div class="customerCard" style="grid-column:1/-1; grid-row:1/-1; display:grid; place-items:center;">
+          <div class="customerCard" style="grid-column:1/-1; display:grid; place-items:center; min-height:120px;">
             <div style="text-align:center;">
               <div style="font-size:42px; margin-bottom:8px;">🚪</div>
-              <div style="font-weight:800;">Đang chờ khách vào quán...</div>
+              <div style="font-weight:800; margin-bottom:4px;">Đang chờ khách vào quán...</div>
+              <div class="subText">Khách mới sẽ xuất hiện sau ít giây.</div>
             </div>
           </div>
         `;
@@ -2264,13 +2132,13 @@
               <div class="avatar">${customer.avatar}</div>
               <div class="customerMeta">
                 <b title="${customer.name}">${customer.name}</b>
-                <span>Đang chờ món...</span>
+                <span>Muốn ăn ngay bây giờ</span>
               </div>
             </div>
 
             <div class="orderBubble">
-              <div style="min-width:0;">
-                <div class="subText">Gọi món</div>
+              <div style="min-width:0; flex:1;">
+                <div class="subText">Món yêu cầu</div>
                 <div class="orderName" title="${customer.food.name}">${customer.food.icon} ${customer.food.name}</div>
               </div>
               <button class="miniBtn" ${matchingReadyIndex === -1 ? 'disabled style="opacity:.45; cursor:not-allowed;"' : ''} onclick="serveCustomer('${customer.id}')">
@@ -2278,12 +2146,14 @@
               </button>
             </div>
 
-            <div class="meter"><div class="meterFill" style="transform:scaleX(${ratio})"></div></div>
+            <div class="meter">
+              <div class="meterFill" style="transform:scaleX(${ratio})"></div>
+            </div>
           </div>
 
           <div class="customerFooter">
             <span>⏳ ${Math.ceil(customer.patience / 1000)}s</span>
-            <span>+${customer.food.price * cooking.combo}</span>
+            <span>💰 +${customer.food.price * cooking.combo}</span>
           </div>
         `;
         customerLane.appendChild(div);
@@ -2293,12 +2163,13 @@
       for(let i = 0; i < remain; i++){
         const empty = document.createElement('div');
         empty.className = 'customerCard';
-        empty.style.opacity = '.22';
+        empty.style.opacity = '.45';
         empty.innerHTML = `
-          <div style="height:100%; display:grid; place-items:center; text-align:center;">
+          <div style="height:100%; display:flex; align-items:center; justify-content:center; text-align:center; min-height:92px;">
             <div>
-              <div style="font-size:28px; margin-bottom:6px;">🪑</div>
-              <div class="subText">Bàn trống</div>
+              <div style="font-size:30px; margin-bottom:6px;">🪑</div>
+              <div style="font-weight:700; margin-bottom:3px;">Bàn trống</div>
+              <div class="subText">Đang chờ khách mới...</div>
             </div>
           </div>
         `;
