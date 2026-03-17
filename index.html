@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Merge Blossom • Mobile Optimized</title>
+  <title>Mini Game Hub • Merge Blossom + Cooking Rush</title>
 
   <style>
     :root{
@@ -20,6 +20,14 @@
       --glass: rgba(255,255,255,.10);
       --glass2: rgba(255,255,255,.16);
       --shadow: 0 20px 50px rgba(0,0,0,.45);
+      --danger:#ff5c7a;
+      --ok:#7bf4d1;
+      --warning:#ffd86b;
+      --ink:#140018;
+      --dark:#0f0918;
+      --panel:rgba(255,255,255,.08);
+      --panel2:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.12);
     }
 
     *{box-sizing:border-box}
@@ -29,24 +37,152 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color:#f7f2ff;
-      overflow:hidden;
       background:
         radial-gradient(900px 500px at 20% 15%, rgba(155,92,255,.16), transparent 60%),
         radial-gradient(700px 400px at 80% 20%, rgba(255,79,216,.12), transparent 55%),
         linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
+      min-height:100%;
     }
 
-    .wrap{
-      position:relative;
-      height:100%;
+    button{
+      cursor:pointer;
+      border:0;
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      letter-spacing:.2px;
+      color:#140018;
+      background: linear-gradient(135deg, var(--violet2), var(--pink));
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 10px 26px rgba(0,0,0,.22);
+    }
+
+    button:active{transform: scale(.98)}
+
+    .ghost{
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.94);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow:none;
+    }
+
+    .hidden{display:none !important}
+
+    .screen{
+      min-height:100vh;
+      padding:16px;
+    }
+
+    .homeWrap{
+      min-height:100vh;
       display:grid;
       place-items:center;
-      padding:16px;
+      padding:18px;
+    }
+
+    .homeCard{
+      width:min(1100px, 96vw);
+      border-radius:28px;
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .homeInner{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+      padding:20px;
+    }
+
+    .hero{
+      padding:18px;
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      min-height: 300px;
+    }
+
+    .hero h1{
+      margin:0 0 8px;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height:1.05;
+    }
+
+    .hero p{
+      margin:10px 0 0;
+      line-height:1.7;
+      color:rgba(255,255,255,.84);
+      font-size:15px;
+    }
+
+    .gameSelect{
+      display:grid;
+      gap:14px;
+    }
+
+    .selectCard{
+      padding:18px;
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .selectCard h3{
+      margin:0 0 8px;
+      font-size:22px;
+    }
+
+    .selectCard p{
+      margin:0 0 14px;
+      color:rgba(255,255,255,.8);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .pillRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      font-size:12px;
+      color:rgba(255,255,255,.88);
+    }
+
+    .sectionTopBar{
+      width:min(1180px, 96vw);
+      margin:0 auto 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .sectionTopBar h2{
+      margin:0;
+      font-size:20px;
+    }
+
+    /* Merge Blossom */
+    .wrap{
+      position:relative;
+      display:grid;
+      place-items:center;
+      padding:8px;
     }
 
     .card{
       width:min(980px, 96vw);
-      min-height:min(620px, 94vh);
+      min-height:min(620px, 92vh);
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
       border: 1px solid rgba(255,255,255,.14);
       border-radius: 24px;
@@ -61,13 +197,6 @@
       gap: 18px;
       padding: 22px;
       height:100%;
-    }
-
-    @media (max-width: 900px){
-      body{overflow:auto}
-      .wrap{height:auto; padding:10px}
-      .card{min-height:auto; border-radius:20px}
-      .content{grid-template-columns:1fr; padding:12px; gap:12px}
     }
 
     .badge{
@@ -127,10 +256,6 @@
       touch-action:none;
       user-select:none;
       contain: layout paint size;
-    }
-
-    @media (max-width: 900px){
-      .scene{min-height: 500px; border-radius:18px}
     }
 
     .gameHud{
@@ -276,27 +401,6 @@
       margin-top: 10px;
     }
 
-    button{
-      cursor:pointer;
-      border:0;
-      padding: 11px 14px;
-      border-radius: 14px;
-      font-weight: 700;
-      letter-spacing:.2px;
-      color:#140018;
-      background: linear-gradient(135deg, var(--violet2), var(--pink));
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    button:active{transform: scale(.98)}
-
-    .ghost{
-      background: rgba(255,255,255,.10);
-      color: rgba(255,255,255,.92);
-      border: 1px solid rgba(255,255,255,.16);
-    }
-
     .hint{
       font-size: 13px;
       color: rgba(247,242,255,.76);
@@ -329,8 +433,9 @@
       opacity:0;
       pointer-events:none;
       transition: opacity .18s ease, transform .18s ease;
-      z-index: 10;
+      z-index: 100;
       max-width: min(92vw, 680px);
+      backdrop-filter: blur(10px);
     }
 
     .toast.show{
@@ -390,12 +495,396 @@
     .gameOverCard h4{ margin:0 0 10px; font-size:24px; }
     .gameOverCard p{ margin:8px 0; color: rgba(247,242,255,.82); line-height:1.55; }
 
+    /* Cooking Rush */
+    .cookShell{
+      width:min(1180px, 96vw);
+      margin:0 auto;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:28px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .cookTop{
+      padding:16px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    }
+
+    .cookTitle{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+
+    .cookTitle h1{
+      margin:0;
+      font-size: clamp(24px, 3vw, 34px);
+    }
+
+    .cookTitle span{
+      color:rgba(255,255,255,.74);
+      font-size:13px;
+    }
+
+    .stats{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .statBox{
+      min-width:94px;
+      padding:10px 12px;
+      border-radius:16px;
+      background: rgba(10,8,22,.34);
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .statBox .label{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      opacity:.7;
+      margin-bottom:5px;
+    }
+
+    .statBox .value{
+      font-size:22px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .cookBody{
+      padding:16px;
+      display:grid;
+      grid-template-columns: 1.25fr .95fr;
+      gap:16px;
+    }
+
+    .cookPanel{
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      padding:14px;
+    }
+
+    .panelHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .panelHeader h3{
+      margin:0;
+      font-size:18px;
+    }
+
+    .subText{
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+    }
+
+    .customerLane{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:12px;
+      min-height:280px;
+    }
+
+    .customerCard{
+      border-radius:20px;
+      background: rgba(10,8,22,.30);
+      border:1px solid rgba(255,255,255,.12);
+      padding:12px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .customerHead{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .avatar{
+      width:50px;
+      height:50px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      font-size:28px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      flex:0 0 auto;
+    }
+
+    .customerMeta{
+      min-width:0;
+    }
+
+    .customerMeta b{
+      display:block;
+      font-size:14px;
+      margin-bottom:4px;
+    }
+
+    .customerMeta span{
+      display:block;
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .orderBubble{
+      border-radius:16px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);
+      padding:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .orderName{
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .miniBtn{
+      padding:8px 10px;
+      border-radius:12px;
+      font-size:12px;
+      min-width:84px;
+    }
+
+    .meter{
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+
+    .meterFill{
+      height:100%;
+      width:100%;
+      background: linear-gradient(90deg, var(--ok), var(--warning), var(--danger));
+      transform-origin:left center;
+    }
+
+    .customerFooter{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin-top:10px;
+      font-size:12px;
+      color:rgba(255,255,255,.76);
+    }
+
+    .kitchenGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .foodBtn{
+      width:100%;
+      text-align:left;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      color:#fff;
+      box-shadow:none;
+    }
+
+    .foodBtn strong{
+      display:block;
+      font-size:16px;
+      margin-bottom:4px;
+    }
+
+    .foodBtn span{
+      display:block;
+      font-size:12px;
+      color:rgba(255,255,255,.75);
+      font-weight:600;
+    }
+
+    .stationGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .station{
+      border-radius:18px;
+      background: rgba(10,8,22,.30);
+      border:1px solid rgba(255,255,255,.12);
+      padding:12px;
+      min-height:132px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .stationTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+
+    .stationState{
+      font-size:12px;
+      color:rgba(255,255,255,.76);
+    }
+
+    .stationDish{
+      font-size:30px;
+      text-align:center;
+      min-height:40px;
+    }
+
+    .readyTray{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+
+    .readyItem{
+      border-radius:16px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      padding:10px;
+      text-align:center;
+    }
+
+    .readyItem .icon{
+      font-size:28px;
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .eventLog{
+      display:grid;
+      gap:8px;
+      max-height:196px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .logRow{
+      font-size:13px;
+      color:rgba(255,255,255,.82);
+      padding:9px 10px;
+      border-radius:14px;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .dayOver{
+      position:fixed;
+      inset:0;
+      background: rgba(8,6,16,.64);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:90;
+      backdrop-filter: blur(6px);
+    }
+
+    .dayOver.show{display:flex}
+
+    .dayCard{
+      width:min(360px, 92vw);
+      padding:20px;
+      border-radius:24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.16);
+      text-align:center;
+      box-shadow: var(--shadow);
+    }
+
+    .dayCard h3{
+      margin:0 0 10px;
+      font-size:28px;
+    }
+
+    .dayCard p{
+      margin:10px 0;
+      color:rgba(255,255,255,.82);
+      line-height:1.6;
+    }
+
+    .dayList{
+      margin:12px 0 16px;
+      display:grid;
+      gap:8px;
+      text-align:left;
+    }
+
+    .dayList div{
+      padding:10px 12px;
+      border-radius:14px;
+      background: rgba(0,0,0,.16);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:14px;
+    }
+
+    .homeBtn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    @media (max-width: 980px){
+      .homeInner{grid-template-columns:1fr}
+      .cookBody{grid-template-columns:1fr}
+    }
+
     @media (max-width: 900px){
+      .screen{padding:10px}
+      .wrap{padding:0}
+      .card{min-height:auto; border-radius:20px}
+      .content{grid-template-columns:1fr; padding:12px; gap:12px}
+      .scene{min-height:500px; border-radius:18px}
       .gameHud{ inset:10px 10px auto 10px; grid-template-columns: 1fr; }
       .hudGroup:last-child{ position:absolute; right:0; top:0; }
       .boardWrap{ inset:62px 10px 10px 10px; }
       .sig{font-size:12px; flex-direction:column; align-items:flex-start}
-      button{padding:11px 12px}
+      .cookTop{padding:12px}
+      .cookBody{padding:12px}
+      .customerLane{grid-template-columns:1fr}
+      .kitchenGrid{grid-template-columns:1fr 1fr}
+      .stationGrid{grid-template-columns:1fr 1fr}
+      .readyTray{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width: 560px){
+      .kitchenGrid,
+      .stationGrid,
+      .readyTray{grid-template-columns:1fr}
+      .foodBtn strong{font-size:15px}
+      .homeCard{border-radius:22px}
+      .hero, .selectCard{border-radius:18px}
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -404,97 +893,253 @@
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="content">
-        <section>
-          <div class="badge">
-            <span class="dot"></span>
-            <b>✨ Merge Blossom ✨</b>
+
+  <!-- HOME -->
+  <section id="homeScreen" class="screen">
+    <div class="homeWrap">
+      <div class="homeCard">
+        <div class="homeInner">
+          <div class="hero">
+            <div class="badge">
+              <span class="dot"></span>
+              <b>🎮 Mini Game Hub</b>
+            </div>
+            <h1>Chọn game để chơi</h1>
+            <p>
+              Một trang web có sẵn 2 game dành cho điện thoại của Babi:
+              <b>Merge Blossom</b> game xếp hình để giết thời gian, và <b>Cooking Rush</b> game phục vụ món ăn như game nấu ăn.
+            </p>
+            <div class="pillRow" style="margin-top:16px;">
+              <span class="pill">📱 Tối ưu mobile</span>
+              <span class="pill">⚡ Không cần pc</span>
+              <span class="pill">💾 Có lưu best score</span>
+              <span class="pill">🎯 Chơi trực tiếp trên web</span>
+            </div>
           </div>
 
-          <h3>
-            Khu vườn mảnh ghép khó hơn:<br/>
-            <span style="color: var(--violet2)">2 hình giống nhau</span>
-            sẽ hóa thành<br/>
-            <span style="color:var(--sky)">1 hình lớn hơn, hiếm hơn</span>
-          </h3>
-
-          <div class="typebox">
-            <div class="typed" id="typed"></div>
-          </div>
-
-          <div class="actions">
-            <button id="btnStart">🎮 Chơi mới</button>
-            <button class="ghost" id="btnSkill">✨ Kích nổ ánh sao</button>
-          </div>
-
-          <p class="hint" style="margin-top:12px;">
-            Chạm vào bảng bên phải để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi. Ghép tới <b>cấp 9</b>, càng lên cao càng khó giữ không gian. Cứ mỗi <b>10.000 điểm</b> sẽ sinh ra một <b>💀 đầu lâu</b> không nằm trong chuỗi, không thể phá hủy và chỉ dùng để chiếm diện tích.
-            <br/><br/>
-            Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️ → 🌸 → 💎 → 👑</b>
-            <br/>
-            Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
-          </p>
-
-          <div class="sig">
-            <span>Bản tối ưu cho điện thoại yếu • giảm hiệu ứng nền • ưu tiên mượt</span>
-            <span>Best: <b id="bestScoreText">0</b></span>
-          </div>
-        </section>
-
-        <aside class="right">
-          <div class="scene" id="scene">
-            <div class="gameHud">
-              <div class="hudGroup">
-                <div class="hudCard">
-                  <div class="label">Điểm</div>
-                  <div class="value" id="scoreText">0</div>
-                </div>
-                <div class="hudCard">
-                  <div class="label">Combo</div>
-                  <div class="value" id="comboText">x1</div>
-                </div>
-                <div class="hudCard">
-                  <div class="label">Cao nhất</div>
-                  <div class="value" id="levelText">0</div>
-                </div>
+          <div class="gameSelect">
+            <div class="selectCard">
+              <h3>🌸 Merge Blossom</h3>
+              <p>Game xếp hình quen thuộc mà Babi hay chơi trên điện thoại hay trong Liên Quân. Có 9 cấp độ hình, có 1 cập độ hình bí ẩn nhầm tăng độ khó trong quá trình chơi.</p>
+              <div class="pillRow">
+                <span class="pill">Ghép 2 hình</span>
+                <span class="pill">Combo</span>
+                <span class="pill">Skull obstacle</span>
               </div>
-              <div class="hudGroup">
-                <div class="hudCard">
-                  <div class="label">Kỹ năng</div>
-                  <div class="value" id="skillText">1</div>
-                </div>
-              </div>
+              <button onclick="showScreen('mergeScreen')">Vào chơi Merge Blossom</button>
             </div>
 
-            <div class="boardWrap" id="boardWrap">
-              <div class="boardGrid"></div>
-              <div class="safeLine"></div>
-              <div class="safeLabel">Vạch an toàn</div>
-              <div class="aimLine" id="aimLine"></div>
-              <canvas id="gameCanvas"></canvas>
+            <div class="selectCard">
+              <h3>🍳 Cooking Rush</h3>
+              <p>Game quản lý quán ăn: khách vào gọi món, Babi nấu theo thời gian, phục vụ trước khi họ nổi giận bỏ về. Có combo, nhiều trạm nấu, khay món hoàn thành và tổng kết cuối ngày.</p>
+              <div class="pillRow">
+                <span class="pill">Khách liên tục vào</span>
+                <span class="pill">Patience bar</span>
+                <span class="pill">2 bếp nấu</span>
+                <span class="pill">Combo phục vụ</span>
+              </div>
+              <button onclick="openCookingGame()">Vào chơi Cooking Rush</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-              <div class="nextBubble">
-                <small>Tiếp theo</small>
-                <div class="nextIcon" id="nextIcon">💗</div>
+  <!-- MERGE -->
+  <section id="mergeScreen" class="screen hidden">
+    <div class="sectionTopBar">
+      <h2>🌸 Merge Blossom</h2>
+      <button class="ghost homeBtn" onclick="backToHome()">← Về menu</button>
+    </div>
+
+    <div class="wrap">
+      <div class="card">
+        <div class="content">
+          <section>
+            <div class="badge">
+              <span class="dot"></span>
+              <b>✨ Merge Blossom ✨</b>
+            </div>
+
+            <h3>
+              Khu vườn mảnh ghép khó hơn:<br/>
+              <span style="color: var(--violet2)">2 hình giống nhau</span>
+              sẽ hóa thành<br/>
+              <span style="color:var(--sky)">1 hình lớn hơn, hiếm hơn</span>
+            </h3>
+
+            <div class="typebox">
+              <div class="typed" id="typed"></div>
+            </div>
+
+            <div class="actions">
+              <button id="btnStart">🎮 Chơi mới</button>
+              <button class="ghost" id="btnSkill">✨ Kích nổ ánh sao</button>
+            </div>
+
+            <p class="hint" style="margin-top:12px;">
+              Chạm vào bảng bên phải để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi. Ghép tới <b>cấp 9</b>, càng lên cao càng khó giữ không gian. Cứ mỗi <b>10.000 điểm</b> sẽ sinh ra một <b>💀 đầu lâu</b> không nằm trong chuỗi, không thể phá hủy và chỉ dùng để chiếm diện tích.
+              <br/><br/>
+              Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️ → 🌸 → 💎 → 👑</b>
+              <br/>
+              Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
+            </p>
+
+            <div class="sig">
+              <span>Best: <b id="bestScoreText">0</b></span>
+            </div>
+          </section>
+
+          <aside class="right">
+            <div class="scene" id="scene">
+              <div class="gameHud">
+                <div class="hudGroup">
+                  <div class="hudCard">
+                    <div class="label">Điểm</div>
+                    <div class="value" id="scoreText">0</div>
+                  </div>
+                  <div class="hudCard">
+                    <div class="label">Combo</div>
+                    <div class="value" id="comboText">x1</div>
+                  </div>
+                  <div class="hudCard">
+                    <div class="label">Cao nhất</div>
+                    <div class="value" id="levelText">0</div>
+                  </div>
+                </div>
+                <div class="hudGroup">
+                  <div class="hudCard">
+                    <div class="label">Kỹ năng</div>
+                    <div class="value" id="skillText">1</div>
+                  </div>
+                </div>
               </div>
 
-              <div class="gameOverOverlay" id="gameOver">
-                <div class="gameOverCard">
-                  <h4>Game Over</h4>
-                  <p id="gameOverText">Bạn đã để khu vườn vượt vạch an toàn.</p>
-                  <div class="actions" style="justify-content:center; margin-top:14px;">
-                    <button id="btnRestart">Chơi lại</button>
+              <div class="boardWrap" id="boardWrap">
+                <div class="boardGrid"></div>
+                <div class="safeLine"></div>
+                <div class="safeLabel">Vạch an toàn</div>
+                <div class="aimLine" id="aimLine"></div>
+                <canvas id="gameCanvas"></canvas>
+
+                <div class="nextBubble">
+                  <small>Tiếp theo</small>
+                  <div class="nextIcon" id="nextIcon">💗</div>
+                </div>
+
+                <div class="gameOverOverlay" id="gameOver">
+                  <div class="gameOverCard">
+                    <h4>Game Over</h4>
+                    <p id="gameOverText">Bạn đã để khu vườn vượt vạch an toàn.</p>
+                    <div class="actions" style="justify-content:center; margin-top:14px;">
+                      <button id="btnRestart">Chơi lại</button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- COOKING -->
+  <section id="cookingScreen" class="screen hidden">
+    <div class="sectionTopBar">
+      <h2>🍳 Cooking Rush</h2>
+      <button class="ghost homeBtn" onclick="backToHome()">← Về menu</button>
+    </div>
+
+    <div class="cookShell">
+      <div class="cookTop">
+        <div class="cookTitle">
+          <h1>🍳 Cooking Rush - Nhà hàng của Moon</h1>
+          <span>Khách sẽ vào liên tục. Nấu đúng món, phục vụ trước khi họ nổi giận bỏ về.</span>
+        </div>
+
+        <div class="stats">
+          <div class="statBox">
+            <div class="label">Tiền</div>
+            <div class="value" id="cookMoney">0</div>
+          </div>
+          <div class="statBox">
+            <div class="label">Combo</div>
+            <div class="value" id="cookCombo">x1</div>
+          </div>
+          <div class="statBox">
+            <div class="label">Uy tín</div>
+            <div class="value" id="cookLives">3</div>
+          </div>
+          <div class="statBox">
+            <div class="label">Thời gian</div>
+            <div class="value" id="cookTime">90</div>
+          </div>
+          <div class="statBox">
+            <div class="label">Best</div>
+            <div class="value" id="cookBest">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cookBody">
+        <div class="cookPanel">
+          <div class="panelHeader">
+            <h3>🧍 Khách hàng</h3>
+            <span class="subText">Chạm “Phục vụ” khi bạn đã có món tương ứng trong khay.</span>
+          </div>
+          <div class="customerLane" id="customerLane"></div>
+        </div>
+
+        <div style="display:grid; gap:16px;">
+          <div class="cookPanel">
+            <div class="panelHeader">
+              <h3>📋 Menu</h3>
+              <span class="subText">Chạm món để đưa vào bếp đang rảnh.</span>
+            </div>
+            <div class="kitchenGrid" id="foodMenu"></div>
+          </div>
+
+          <div class="cookPanel">
+            <div class="panelHeader">
+              <h3>🔥 Trạm nấu</h3>
+              <span class="subText">2 bếp chạy song song.</span>
+            </div>
+            <div class="stationGrid" id="stationGrid"></div>
+          </div>
+
+          <div class="cookPanel">
+            <div class="panelHeader">
+              <h3>✅ Khay món hoàn thành</h3>
+              <span class="subText">Giữ sẵn món để phục vụ nhanh ăn combo.</span>
+            </div>
+            <div class="readyTray" id="readyTray"></div>
+          </div>
+
+          <div class="cookPanel">
+            <div class="panelHeader">
+              <h3>📝 Nhật ký</h3>
+              <span class="subText">Sự kiện gần nhất trong ca làm.</span>
+            </div>
+            <div class="eventLog" id="eventLog"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dayOver" id="dayOver">
+      <div class="dayCard">
+        <h3 id="dayOverTitle">Kết thúc ngày</h3>
+        <p id="dayOverText">Ca làm của bạn đã xong.</p>
+        <div class="dayList" id="dayOverList"></div>
+        <div class="actions" style="justify-content:center;">
+          <button onclick="restartCookingGame()">Chơi lại</button>
+          <button class="ghost" onclick="backToHome()">Về menu</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="toast" id="toast">
     <span class="chip"></span>
@@ -502,6 +1147,53 @@
   </div>
 
   <script>
+    /* =========================
+       SCREEN SWITCHER
+    ========================== */
+    const SCREENS = ['homeScreen', 'mergeScreen', 'cookingScreen'];
+
+    function showScreen(id){
+      SCREENS.forEach(s => {
+        document.getElementById(s).classList.toggle('hidden', s !== id);
+      });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if(id === 'mergeScreen'){
+        setTimeout(resizeGame, 30);
+      }
+    }
+
+    function backToHome(){
+      if(!document.getElementById('mergeScreen').classList.contains('hidden')){
+        // giữ nguyên trạng thái merge, chỉ quay lại menu
+      }
+      if(!document.getElementById('cookingScreen').classList.contains('hidden')){
+        stopCookingGame();
+      }
+      showScreen('homeScreen');
+    }
+
+    function openCookingGame(){
+      showScreen('cookingScreen');
+      restartCookingGame();
+    }
+
+    /* =========================
+       GLOBAL TOAST
+    ========================== */
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toastText');
+    let toastTimer = null;
+
+    function showToast(msg){
+      toastText.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1300);
+    }
+
+    /* =========================
+       MERGE BLOSSOM
+    ========================== */
     const storyLines = [
       'Chào mừng Babi đến với Merge Blossom.',
       'Trò chơi này được làm ra để giúp em giết thời gian và giảm stress.',
@@ -514,8 +1206,6 @@
     const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.2 : 1.6);
 
     const typedEl = document.getElementById('typed');
-    const toast = document.getElementById('toast');
-    const toastText = document.getElementById('toastText');
     const boardWrap = document.getElementById('boardWrap');
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
@@ -530,14 +1220,6 @@
     const gameOverText = document.getElementById('gameOverText');
 
     typedEl.textContent = storyLines.join('\n\n');
-
-    let toastTimer = null;
-    function showToast(msg){
-      toastText.textContent = msg;
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1300);
-    }
 
     const SHAPES = [
       { emoji:'💗', name:'Tim non',   fill:'#ff67c8', score:10,  radius:isMobile?18:19 },
@@ -601,13 +1283,30 @@
 
     function resizeGame(){
       const rect = boardWrap.getBoundingClientRect();
+      if(!rect.width || !rect.height) return;
+
+      const oldWidth = state.width || rect.width;
+      const oldHeight = state.height || rect.height;
+
       state.width = rect.width;
       state.height = rect.height;
+
       canvas.width = Math.floor(rect.width * DPR);
       canvas.height = Math.floor(rect.height * DPR);
       canvas.style.width = rect.width + 'px';
       canvas.style.height = rect.height + 'px';
       ctx.setTransform(DPR,0,0,DPR,0,0);
+
+      const scaleX = rect.width / oldWidth;
+      const scaleY = rect.height / oldHeight;
+
+      if(state.items.length && oldWidth && oldHeight){
+        state.items.forEach(it => {
+          it.x = clamp(it.x * scaleX, it.r, rect.width - it.r);
+          it.y = clamp(it.y * scaleY, it.r, rect.height - it.r);
+        });
+      }
+
       state.dropX = clamp(state.dropX || rect.width / 2, 28, rect.width - 28);
       aimLine.style.left = state.dropX + 'px';
     }
@@ -1042,7 +1741,10 @@
     let resizeTimer = null;
     window.addEventListener('resize', ()=>{
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(resizeGame, 80);
+      resizeTimer = setTimeout(()=>{
+        resizeGame();
+        renderCooking();
+      }, 80);
     }, { passive: true });
 
     document.addEventListener('visibilitychange', ()=>{
@@ -1053,6 +1755,435 @@
     resizeGame();
     resetGame();
     requestAnimationFrame(loop);
+
+    /* =========================
+       COOKING RUSH
+    ========================== */
+    const customerLane = document.getElementById('customerLane');
+    const foodMenu = document.getElementById('foodMenu');
+    const stationGrid = document.getElementById('stationGrid');
+    const readyTray = document.getElementById('readyTray');
+    const eventLog = document.getElementById('eventLog');
+    const cookMoney = document.getElementById('cookMoney');
+    const cookCombo = document.getElementById('cookCombo');
+    const cookLives = document.getElementById('cookLives');
+    const cookTime = document.getElementById('cookTime');
+    const cookBest = document.getElementById('cookBest');
+    const dayOver = document.getElementById('dayOver');
+    const dayOverTitle = document.getElementById('dayOverTitle');
+    const dayOverText = document.getElementById('dayOverText');
+    const dayOverList = document.getElementById('dayOverList');
+
+    const FOODS = [
+      { id:'burger', icon:'🍔', name:'Burger', cookTime:6000, price:20, penalty:8 },
+      { id:'pizza',  icon:'🍕', name:'Pizza',  cookTime:9000, price:34, penalty:12 },
+      { id:'noodle', icon:'🍜', name:'Mì nóng', cookTime:7000, price:25, penalty:9 },
+      { id:'sushi',  icon:'🍣', name:'Sushi',  cookTime:10000, price:40, penalty:14 }
+    ];
+
+    const CUSTOMER_AVATARS = ['🧑‍💼','👩‍🦰','🧔','👵','👨‍🍳','👩‍🎤','🧑‍🎓','👨‍🔧'];
+    const CUSTOMER_NAMES = ['Linh', 'Trang', 'Vy', 'Minh', 'Nam', 'An', 'Bảo', 'Khôi', 'Nhi', 'Hà'];
+
+    const cooking = {
+      money: 0,
+      combo: 1,
+      comboExpireAt: 0,
+      lives: 3,
+      best: Number(localStorage.getItem('cooking-rush-best') || 0),
+      timeLeft: 90,
+      running: false,
+      customers: [],
+      stations: [],
+      ready: [],
+      log: [],
+      nextCustomerAt: 0,
+      servedCount: 0,
+      missedCount: 0,
+      customerId: 1,
+      timers: {
+        main: null,
+        ticker: null
+      }
+    };
+
+    function createStations(){
+      return [
+        { id: 1, food: null, startedAt: 0, finishAt: 0 },
+        { id: 2, food: null, startedAt: 0, finishAt: 0 }
+      ];
+    }
+
+    function logEvent(text){
+      cooking.log.unshift(text);
+      cooking.log = cooking.log.slice(0, 8);
+      renderLogs();
+    }
+
+    function renderLogs(){
+      eventLog.innerHTML = '';
+      if(!cooking.log.length){
+        eventLog.innerHTML = '<div class="logRow">Ca làm chưa bắt đầu.</div>';
+        return;
+      }
+      cooking.log.forEach(row => {
+        const div = document.createElement('div');
+        div.className = 'logRow';
+        div.textContent = row;
+        eventLog.appendChild(div);
+      });
+    }
+
+    function updateCookingHud(){
+      cookMoney.textContent = Math.max(0, Math.floor(cooking.money)).toLocaleString('vi-VN');
+      cookCombo.textContent = 'x' + cooking.combo;
+      cookLives.textContent = cooking.lives;
+      cookTime.textContent = Math.max(0, cooking.timeLeft);
+      cookBest.textContent = Math.floor(cooking.best).toLocaleString('vi-VN');
+    }
+
+    function renderFoodMenu(){
+      foodMenu.innerHTML = '';
+      FOODS.forEach(food => {
+        const btn = document.createElement('button');
+        btn.className = 'foodBtn';
+        btn.innerHTML = `
+          <strong>${food.icon} ${food.name}</strong>
+          <span>Thời gian nấu: ${(food.cookTime/1000).toFixed(0)}s • Giá: ${food.price}</span>
+        `;
+        btn.addEventListener('click', ()=> startCookingFood(food.id));
+        foodMenu.appendChild(btn);
+      });
+    }
+
+    function renderStations(){
+      stationGrid.innerHTML = '';
+      cooking.stations.forEach(station => {
+        const busy = !!station.food;
+        let progress = 0;
+        if(busy){
+          const total = station.finishAt - station.startedAt;
+          const nowTs = Date.now();
+          const done = Math.min(total, Math.max(0, nowTs - station.startedAt));
+          progress = total ? done / total : 1;
+        }
+
+        const div = document.createElement('div');
+        div.className = 'station';
+        div.innerHTML = `
+          <div class="stationTop">
+            <b>Bếp ${station.id}</b>
+            <span class="stationState">${busy ? 'Đang nấu' : 'Đang rảnh'}</span>
+          </div>
+          <div class="stationDish">${busy ? station.food.icon : '🍳'}</div>
+          <div>${busy ? `<div class="subText">${station.food.name}</div>` : `<div class="subText">Chạm món ở menu để bắt đầu.</div>`}</div>
+          <div class="meter"><div class="meterFill" style="transform:scaleX(${progress})"></div></div>
+        `;
+        stationGrid.appendChild(div);
+      });
+    }
+
+    function renderReadyTray(){
+      readyTray.innerHTML = '';
+      if(!cooking.ready.length){
+        readyTray.innerHTML = `<div class="readyItem" style="grid-column:1/-1;">Khay trống.</div>`;
+        return;
+      }
+      cooking.ready.forEach((food, index) => {
+        const div = document.createElement('div');
+        div.className = 'readyItem';
+        div.innerHTML = `
+          <span class="icon">${food.icon}</span>
+          <div><b>${food.name}</b></div>
+          <div class="subText">Sẵn sàng phục vụ</div>
+          <div style="margin-top:8px;">
+            <button class="ghost miniBtn" onclick="trashReadyFood(${index})">Bỏ món</button>
+          </div>
+        `;
+        readyTray.appendChild(div);
+      });
+    }
+
+    function renderCustomers(){
+      customerLane.innerHTML = '';
+      if(!cooking.customers.length){
+        customerLane.innerHTML = `
+          <div class="customerCard" style="grid-column:1/-1; display:grid; place-items:center; min-height:180px;">
+            <div style="text-align:center;">
+              <div style="font-size:42px; margin-bottom:8px;">🚪</div>
+              <div style="font-weight:800;">Đang chờ khách vào quán...</div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      cooking.customers.forEach(customer => {
+        const ratio = Math.max(0, customer.patience / customer.maxPatience);
+        const matchingReadyIndex = cooking.ready.findIndex(f => f.id === customer.food.id);
+
+        const div = document.createElement('div');
+        div.className = 'customerCard';
+        div.innerHTML = `
+          <div class="customerHead">
+            <div class="avatar">${customer.avatar}</div>
+            <div class="customerMeta">
+              <b>${customer.name}</b>
+              <span>Khách đang chờ món...</span>
+            </div>
+          </div>
+
+          <div class="orderBubble">
+            <div>
+              <div class="subText">Gọi món</div>
+              <div class="orderName">${customer.food.icon} ${customer.food.name}</div>
+            </div>
+            <button class="miniBtn" ${matchingReadyIndex === -1 ? 'disabled style="opacity:.45; cursor:not-allowed;"' : ''} onclick="serveCustomer('${customer.id}')">
+              Phục vụ
+            </button>
+          </div>
+
+          <div class="meter"><div class="meterFill" style="transform:scaleX(${ratio})"></div></div>
+
+          <div class="customerFooter">
+            <span>Kiên nhẫn: ${Math.ceil(customer.patience / 1000)}s</span>
+            <span>Thưởng: +${customer.food.price * cooking.combo}</span>
+          </div>
+        `;
+        customerLane.appendChild(div);
+      });
+    }
+
+    function renderCooking(){
+      updateCookingHud();
+      renderStations();
+      renderReadyTray();
+      renderCustomers();
+      renderLogs();
+    }
+
+    function randomFoodWeighted(){
+      const r = Math.random();
+      if(r < 0.34) return FOODS[0];
+      if(r < 0.61) return FOODS[2];
+      if(r < 0.84) return FOODS[1];
+      return FOODS[3];
+    }
+
+    function spawnCustomer(){
+      if(!cooking.running) return;
+      if(cooking.customers.length >= 4) return;
+
+      const food = randomFoodWeighted();
+      const patience = 15000 + Math.random() * 7000;
+
+      const customer = {
+        id: 'c' + cooking.customerId++,
+        avatar: CUSTOMER_AVATARS[Math.floor(Math.random() * CUSTOMER_AVATARS.length)],
+        name: CUSTOMER_NAMES[Math.floor(Math.random() * CUSTOMER_NAMES.length)],
+        food,
+        patience,
+        maxPatience: patience
+      };
+
+      cooking.customers.push(customer);
+      logEvent(`${customer.avatar} ${customer.name} gọi ${food.icon} ${food.name}`);
+      renderCustomers();
+    }
+
+    function startCookingFood(foodId){
+      if(!cooking.running) return;
+      const station = cooking.stations.find(s => !s.food);
+      if(!station){
+        showToast('🔥 Tất cả bếp đang bận.');
+        return;
+      }
+
+      if(cooking.ready.length >= 6){
+        showToast('📦 Khay món đã đầy.');
+        return;
+      }
+
+      const food = FOODS.find(f => f.id === foodId);
+      station.food = food;
+      station.startedAt = Date.now();
+      station.finishAt = Date.now() + food.cookTime;
+      logEvent(`Bếp ${station.id} bắt đầu nấu ${food.icon} ${food.name}`);
+      renderStations();
+    }
+
+    function trashReadyFood(index){
+      if(!cooking.running) return;
+      const item = cooking.ready[index];
+      if(!item) return;
+      cooking.ready.splice(index, 1);
+      logEvent(`Bỏ ${item.icon} ${item.name} khỏi khay.`);
+      renderReadyTray();
+    }
+
+    function serveCustomer(customerId){
+      if(!cooking.running) return;
+      const customerIndex = cooking.customers.findIndex(c => c.id === customerId);
+      if(customerIndex === -1) return;
+
+      const customer = cooking.customers[customerIndex];
+      const readyIndex = cooking.ready.findIndex(f => f.id === customer.food.id);
+
+      if(readyIndex === -1){
+        showToast('❌ Chưa có đúng món này.');
+        return;
+      }
+
+      cooking.ready.splice(readyIndex, 1);
+      cooking.customers.splice(customerIndex, 1);
+
+      const gain = customer.food.price * cooking.combo;
+      cooking.money += gain;
+      cooking.servedCount += 1;
+      cooking.combo = Math.min(8, cooking.combo + 1);
+      cooking.comboExpireAt = Date.now() + 4500;
+
+      if(cooking.money > cooking.best){
+        cooking.best = cooking.money;
+        localStorage.setItem('cooking-rush-best', String(Math.floor(cooking.best)));
+      }
+
+      logEvent(`✅ Phục vụ ${customer.food.icon} ${customer.food.name} cho ${customer.name}, +${gain}`);
+      showToast(`+${gain} tiền • combo x${cooking.combo}`);
+      renderCooking();
+    }
+
+    function missCustomer(index){
+      const customer = cooking.customers[index];
+      if(!customer) return;
+
+      cooking.customers.splice(index, 1);
+      cooking.money = Math.max(0, cooking.money - customer.food.penalty);
+      cooking.missedCount += 1;
+      cooking.combo = 1;
+      cooking.lives -= 1;
+
+      logEvent(`😡 ${customer.name} bỏ về. Mất ${customer.food.penalty} tiền.`);
+      showToast(`Khách bỏ về! -${customer.food.penalty}`);
+
+      if(cooking.lives <= 0){
+        endCookingGame(false);
+      } else {
+        renderCooking();
+      }
+    }
+
+    function tickCookingGame(){
+      if(!cooking.running) return;
+
+      const nowTs = Date.now();
+
+      cooking.timeLeft -= 0.2;
+      if(cooking.timeLeft <= 0){
+        cooking.timeLeft = 0;
+        endCookingGame(true);
+        return;
+      }
+
+      if(cooking.combo > 1 && nowTs > cooking.comboExpireAt){
+        cooking.combo = 1;
+      }
+
+      if(nowTs >= cooking.nextCustomerAt){
+        spawnCustomer();
+        const spawnEvery = cooking.timeLeft > 60 ? 4200 : cooking.timeLeft > 30 ? 3300 : 2600;
+        cooking.nextCustomerAt = nowTs + spawnEvery;
+      }
+
+      cooking.customers.forEach(c => {
+        c.patience -= 200;
+      });
+
+      for(let i = cooking.customers.length - 1; i >= 0; i--){
+        if(cooking.customers[i].patience <= 0){
+          missCustomer(i);
+          if(!cooking.running) return;
+        }
+      }
+
+      cooking.stations.forEach(station => {
+        if(station.food && nowTs >= station.finishAt){
+          if(cooking.ready.length < 6){
+            cooking.ready.push(station.food);
+            logEvent(`🍽️ ${station.food.icon} ${station.food.name} đã hoàn thành.`);
+            showToast(`${station.food.icon} ${station.food.name} xong rồi!`);
+          } else {
+            logEvent(`⚠️ Khay đầy, bỏ lỡ ${station.food.icon} ${station.food.name}.`);
+            showToast('Khay đầy, món vừa nấu bị hủy.');
+          }
+          station.food = null;
+          station.startedAt = 0;
+          station.finishAt = 0;
+        }
+      });
+
+      renderCooking();
+    }
+
+    function endCookingGame(dayCompleted){
+      cooking.running = false;
+      clearInterval(cooking.timers.ticker);
+      cooking.timers.ticker = null;
+
+      dayOverTitle.textContent = dayCompleted ? 'Kết thúc ngày' : 'Thất bại';
+      dayOverText.textContent = dayCompleted
+        ? 'Ca làm đã kết thúc. Xem hôm nay bạn kiếm được bao nhiêu.'
+        : 'Quán của bạn mất hết uy tín. Hết lượt chịu đựng rồi.';
+
+      dayOverList.innerHTML = `
+        <div>💰 Tiền kiếm được: <b>${Math.floor(cooking.money).toLocaleString('vi-VN')}</b></div>
+        <div>✅ Khách phục vụ thành công: <b>${cooking.servedCount}</b></div>
+        <div>😡 Khách bỏ về: <b>${cooking.missedCount}</b></div>
+        <div>🏆 Best: <b>${Math.floor(cooking.best).toLocaleString('vi-VN')}</b></div>
+      `;
+      dayOver.classList.add('show');
+      updateCookingHud();
+    }
+
+    function stopCookingGame(){
+      cooking.running = false;
+      clearInterval(cooking.timers.ticker);
+      cooking.timers.ticker = null;
+      dayOver.classList.remove('show');
+    }
+
+    function restartCookingGame(){
+      stopCookingGame();
+
+      cooking.money = 0;
+      cooking.combo = 1;
+      cooking.comboExpireAt = 0;
+      cooking.lives = 3;
+      cooking.timeLeft = 90;
+      cooking.customers = [];
+      cooking.stations = createStations();
+      cooking.ready = [];
+      cooking.log = [];
+      cooking.nextCustomerAt = Date.now() + 1200;
+      cooking.servedCount = 0;
+      cooking.missedCount = 0;
+      cooking.customerId = 1;
+      cooking.running = true;
+
+      dayOver.classList.remove('show');
+
+      renderFoodMenu();
+      renderCooking();
+      logEvent('🟢 Bắt đầu ca làm mới.');
+
+      cooking.timers.ticker = setInterval(tickCookingGame, 200);
+      updateCookingHud();
+    }
+
+    renderFoodMenu();
+    renderCooking();
+
+    // Start on home screen
+    showScreen('homeScreen');
   </script>
 </body>
 </html>
