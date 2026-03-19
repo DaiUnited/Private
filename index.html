@@ -2,313 +2,144 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
-  />
-  <meta name="theme-color" content="#1b1028" />
-  <title>Mini Game Hub • Merge Blossom + Cooking Rush</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Merge Blossom • Mobile Optimized</title>
 
   <style>
     :root{
-      --bg:#130d1d;
-      --bg2:#1b1028;
-      --panel:#21142f;
-      --panel2:#2a1a3b;
-      --card:#261738;
-      --line:rgba(255,255,255,.10);
-      --text:#f6f0ff;
-      --muted:rgba(246,240,255,.76);
-      --muted2:rgba(246,240,255,.58);
-      --violet:#a66cff;
-      --pink:#ff68d5;
-      --sky:#70cfff;
-      --mint:#83f0d0;
-      --gold:#ffd972;
-      --danger:#ff6f86;
-      --ok:#84efcf;
-      --warning:#ffd972;
-      --safe:#8df7d3;
-      --shadow:0 8px 20px rgba(0,0,0,.22);
-      --radius:18px;
-      --radius-sm:14px;
-      --tap:46px;
-      --maxw:760px;
+      --bg1:#120018;
+      --bg2:#2a0b3d;
+      --bg3:#4b1270;
+      --violet:#9b5cff;
+      --violet2:#c084ff;
+      --pink:#ff4fd8;
+      --sky:#6ecbff;
+      --mint:#7bf4d1;
+      --gold:#ffd86b;
+      --safe:#80ffcf;
+      --glass: rgba(255,255,255,.10);
+      --glass2: rgba(255,255,255,.16);
+      --shadow: 0 20px 50px rgba(0,0,0,.45);
     }
 
     *{box-sizing:border-box}
-    html,body{min-height:100%}
-    html{-webkit-text-size-adjust:100%}
+    html,body{height:100%}
 
     body{
       margin:0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:#f7f2ff;
+      overflow:hidden;
       background:
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      min-height:100dvh;
-      overflow-x:hidden;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
+        radial-gradient(900px 500px at 20% 15%, rgba(155,92,255,.16), transparent 60%),
+        radial-gradient(700px 400px at 80% 20%, rgba(255,79,216,.12), transparent 55%),
+        linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
     }
 
-    button,
-    input,
-    select,
-    textarea,
-    canvas{
-      font:inherit;
+    .wrap{
+      position:relative;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:16px;
     }
 
-    button{
-      border:0;
-      min-height:var(--tap);
-      padding:12px 14px;
-      border-radius:14px;
-      font-weight:800;
-      letter-spacing:.15px;
-      color:#180a23;
-      background:linear-gradient(135deg, var(--violet), var(--pink));
-      box-shadow:none;
-      cursor:pointer;
+    .card{
+      width:min(980px, 96vw);
+      min-height:min(620px, 94vh);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
     }
 
-    button:active{transform:scale(.98)}
-    button:disabled{opacity:.5; cursor:not-allowed; transform:none}
-
-    .ghost{
-      background:#342045;
-      color:var(--text);
-      border:1px solid var(--line);
+    .content{
+      display:grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 18px;
+      padding: 22px;
+      height:100%;
     }
 
-    .hidden{display:none !important}
-
-    .screen{
-      min-height:100dvh;
-      padding:10px;
-    }
-
-    .shell{
-      width:min(var(--maxw), 100%);
-      margin:0 auto;
-    }
-
-    .panel{
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .topBar{
-      position:sticky;
-      top:0;
-      z-index:20;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      width:min(var(--maxw), 100%);
-      margin:0 auto 10px;
-      padding:6px 0 8px;
-      background:linear-gradient(180deg, rgba(19,13,29,.96), rgba(19,13,29,.90), rgba(19,13,29,0));
-    }
-
-    .topBar h2{
-      margin:0;
-      font-size:18px;
-      line-height:1.2;
-    }
-
-    .homeBtn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      white-space:nowrap;
+    @media (max-width: 900px){
+      body{overflow:auto}
+      .wrap{height:auto; padding:10px}
+      .card{min-height:auto; border-radius:20px}
+      .content{grid-template-columns:1fr; padding:12px; gap:12px}
     }
 
     .badge{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding:8px 12px;
+      gap:10px;
+      padding:10px 14px;
       border-radius:999px;
-      background:rgba(166,108,255,.14);
-      border:1px solid rgba(166,108,255,.26);
-      font-size:13px;
-      font-weight:700;
+      background: rgba(155,92,255,.18);
+      border: 1px solid rgba(155,92,255,.28);
+      width:max-content;
     }
 
     .dot{
-      width:9px;
-      height:9px;
-      border-radius:50%;
-      background:var(--violet);
-      box-shadow:0 0 10px rgba(166,108,255,.55);
-      flex:0 0 auto;
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--violet) 45%, rgba(155,92,255,.3));
+      box-shadow: 0 0 14px rgba(155,92,255,.7);
     }
 
-    .pillRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-
-    .pill{
-      font-size:12px;
-      color:var(--muted);
-      padding:7px 10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-    }
-
-    .subText,
-    .hint,
-    p{
-      color:var(--muted);
-    }
-
-    /* HOME */
-    .homeWrap{
-      width:min(var(--maxw), 100%);
-      margin:0 auto;
-      display:grid;
-      gap:12px;
-    }
-
-    .hero,
-    .selectCard{
-      padding:14px;
-      border-radius:var(--radius);
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-      border:1px solid var(--line);
-    }
-
-    .hero h1{
-      margin:12px 0 8px;
-      font-size:28px;
-      line-height:1.08;
-    }
-
-    .hero p{
-      margin:0;
-      line-height:1.65;
-      font-size:14px;
-    }
-
-    .gameSelect{
-      display:grid;
-      gap:12px;
-    }
-
-    .selectCard h3{
-      margin:0 0 8px;
-      font-size:20px;
-      line-height:1.2;
-    }
-
-    .selectCard p{
-      margin:0 0 12px;
-      font-size:14px;
-      line-height:1.6;
-    }
-
-    .selectCard button{
-      width:100%;
-      margin-top:2px;
-    }
-
-    /* MERGE */
-    .mergeCard{
-      width:min(var(--maxw), 100%);
-      margin:0 auto;
-      border-radius:20px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .mergeContent{
-      display:grid;
-      gap:12px;
-      padding:12px;
-    }
-
-    .mergeInfo{
-      display:grid;
-      gap:12px;
-    }
-
-    .mergeInfo h3{
-      margin:0;
-      font-size:20px;
-      line-height:1.35;
+    h3{
+      margin:14px 0 10px;
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height:1.28;
     }
 
     .typebox{
-      padding:12px;
-      border-radius:14px;
-      background:rgba(0,0,0,.14);
-      border:1px solid var(--line);
-      min-height:96px;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(255,255,255,.12);
+      min-height: 120px;
     }
 
     .typed{
-      font-size:14px;
-      line-height:1.65;
-      color:rgba(255,255,255,.92);
-      white-space:pre-wrap;
+      font-size: clamp(15px, 1.75vw, 18px);
+      line-height:1.7;
+      color: rgba(255,255,255,.92);
+      white-space: pre-wrap;
     }
 
-    .actions{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .actions button{
-      width:100%;
-    }
-
-    .hint{
-      margin:0;
-      font-size:13px;
-      line-height:1.65;
-    }
-
-    .sig{
-      display:grid;
-      gap:4px;
-      padding-top:10px;
-      border-top:1px solid var(--line);
-      font-size:12px;
-      color:var(--muted2);
+    .right{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      justify-content:space-between;
     }
 
     .scene{
       position:relative;
-      border-radius:16px;
-      background:linear-gradient(180deg, rgba(166,108,255,.10), rgba(0,0,0,.12));
-      border:1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(155,92,255,.15), rgba(0,0,0,.20));
+      border: 1px solid rgba(255,255,255,.14);
       overflow:hidden;
-      min-height:440px;
+      min-height: 340px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.28);
       touch-action:none;
       user-select:none;
+      contain: layout paint size;
+    }
+
+    @media (max-width: 900px){
+      .scene{min-height: 500px; border-radius:18px}
     }
 
     .gameHud{
       position:absolute;
-      left:8px;
-      right:8px;
-      top:8px;
-      z-index:5;
+      inset:12px 12px auto 12px;
       display:grid;
+      grid-template-columns: 1fr auto;
       gap:8px;
-      grid-template-columns:1fr;
+      z-index:4;
       pointer-events:none;
     }
 
@@ -319,45 +150,46 @@
     }
 
     .hudCard{
-      min-width:72px;
-      padding:8px 9px;
-      border-radius:12px;
-      background:rgba(16,10,26,.76);
-      border:1px solid var(--line);
+      padding:8px 10px;
+      border-radius:14px;
+      background: rgba(10,8,22,.40);
+      border:1px solid rgba(255,255,255,.12);
+      min-width:78px;
     }
 
     .hudCard .label{
       font-size:10px;
-      opacity:.68;
-      text-transform:uppercase;
       letter-spacing:.5px;
+      text-transform:uppercase;
+      opacity:.68;
       margin-bottom:4px;
     }
 
     .hudCard .value{
-      font-size:16px;
-      font-weight:900;
+      font-size:17px;
+      font-weight:800;
       line-height:1;
     }
 
     .boardWrap{
       position:absolute;
-      inset:62px 8px 8px 8px;
-      border-radius:14px;
+      inset:68px 12px 12px 12px;
+      border-radius: 18px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
-        linear-gradient(180deg, rgba(91,41,136,.18), rgba(18,8,38,.22));
-      border:1px solid var(--line);
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+        linear-gradient(180deg, rgba(91,41,136,.20), rgba(18,8,38,.28));
+      border:1px solid rgba(255,255,255,.12);
       overflow:hidden;
+      z-index:1;
     }
 
     .boardGrid{
       position:absolute;
       inset:0;
       background-image:
-        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-      background-size:calc(100% / 6) calc(100% / 11);
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: calc(100% / 6) calc(100% / 11);
       opacity:.12;
       pointer-events:none;
     }
@@ -367,21 +199,22 @@
       left:0; right:0;
       top:18%;
       height:2px;
-      background:linear-gradient(90deg, transparent, rgba(141,247,211,.9), transparent);
+      background: linear-gradient(90deg, transparent, rgba(128,255,207,.8), transparent);
+      opacity:.9;
       pointer-events:none;
     }
 
     .safeLabel{
       position:absolute;
       right:8px;
-      top:calc(18% - 13px);
+      top:calc(18% - 14px);
       font-size:10px;
-      font-weight:800;
+      font-weight:700;
       color:var(--safe);
-      padding:2px 6px;
+      padding:2px 7px;
       border-radius:999px;
-      background:rgba(8,20,20,.5);
-      border:1px solid rgba(141,247,211,.18);
+      background: rgba(8,25,22,.55);
+      border:1px solid rgba(128,255,207,.22);
       pointer-events:none;
     }
 
@@ -390,6 +223,7 @@
       inset:0;
       width:100%;
       height:100%;
+      pointer-events:auto;
       z-index:2;
     }
 
@@ -398,22 +232,22 @@
       top:0;
       bottom:0;
       width:2px;
-      background:linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.08));
-      opacity:.58;
-      transform:translateX(-50%);
+      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.10));
+      opacity:.62;
+      transform: translateX(-50%);
       z-index:3;
       pointer-events:none;
     }
 
     .nextBubble{
       position:absolute;
-      right:8px;
-      bottom:8px;
-      width:64px;
-      height:64px;
-      border-radius:14px;
-      background:rgba(16,10,26,.82);
-      border:1px solid var(--line);
+      right:10px;
+      bottom:10px;
+      width:72px;
+      height:72px;
+      border-radius:18px;
+      background: rgba(10,8,22,.46);
+      border:1px solid rgba(255,255,255,.14);
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -424,33 +258,108 @@
 
     .nextBubble small{
       font-size:9px;
-      opacity:.72;
+      opacity:.75;
+      margin-bottom:4px;
       text-transform:uppercase;
-      letter-spacing:.5px;
-      margin-bottom:3px;
+      letter-spacing:.7px;
     }
 
     .nextIcon{
-      font-size:24px;
+      font-size:26px;
       line-height:1;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 10px;
+    }
+
+    button{
+      cursor:pointer;
+      border:0;
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      letter-spacing:.2px;
+      color:#140018;
+      background: linear-gradient(135deg, var(--violet2), var(--pink));
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:active{transform: scale(.98)}
+
+    .ghost{
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.16);
+    }
+
+    .hint{
+      font-size: 13px;
+      color: rgba(247,242,255,.76);
+      line-height:1.6;
+    }
+
+    .sig{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      color: rgba(247,242,255,.72);
+      font-size: 13px;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.40);
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      z-index: 10;
+      max-width: min(92vw, 680px);
+    }
+
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .chip{
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--pink) 50%, rgba(255,79,216,.2));
+      flex:0 0 auto;
     }
 
     .floatingScore{
       position:absolute;
-      color:#fff;
+      color:#fff7ff;
       font-weight:900;
-      font-size:16px;
-      text-shadow:0 2px 8px rgba(0,0,0,.35);
+      font-size:18px;
+      text-shadow: 0 6px 18px rgba(0,0,0,.42);
       pointer-events:none;
-      animation:floatScore .65s ease-out forwards;
-      z-index:6;
-      will-change:transform, opacity;
+      animation: floatScore .7s ease-out forwards;
+      z-index:5;
+      will-change: transform, opacity;
     }
 
     @keyframes floatScore{
-      0%{transform:translate(-50%,0);opacity:0}
+      0%{transform:translate(-50%,0) scale(.92); opacity:0}
       15%{opacity:1}
-      100%{transform:translate(-50%,-28px);opacity:0}
+      100%{transform:translate(-50%,-34px) scale(1.02); opacity:0}
     }
 
     .gameOverOverlay{
@@ -459,560 +368,56 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:14px;
-      background:rgba(12,8,20,.65);
+      padding:18px;
+      background: rgba(11,8,20,.55);
       opacity:0;
       pointer-events:none;
-      transition:opacity .15s ease;
-      z-index:8;
+      transition: opacity .18s ease;
+      z-index:7;
     }
 
-    .gameOverOverlay.show{opacity:1; pointer-events:auto}
+    .gameOverOverlay.show{opacity:1; pointer-events:auto;}
 
     .gameOverCard{
-      width:min(94%, 320px);
-      padding:16px;
-      border-radius:18px;
-      text-align:center;
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border:1px solid var(--line);
-    }
-
-    .gameOverCard h4{
-      margin:0 0 10px;
-      font-size:22px;
-    }
-
-    .gameOverCard p{
-      margin:0;
-      font-size:14px;
-      line-height:1.55;
-    }
-
-    /* COOKING */
-    .cookShell{
-      width:min(var(--maxw), 100%);
-      margin:0 auto;
-      border-radius:20px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .cookTop{
-      padding:12px;
-      display:grid;
-      gap:12px;
-      border-bottom:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-    }
-
-    .cookTitle h1{
-      margin:0;
-      font-size:26px;
-      line-height:1.08;
-    }
-
-    .cookTitle span{
-      display:block;
-      margin-top:6px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.45;
-    }
-
-    .mobileStats{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-    }
-
-    .statBox{
-      min-width:0;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(255,255,255,.045);
-      border:1px solid var(--line);
-    }
-
-    .highlightMoney{
-      background:linear-gradient(135deg, rgba(255,217,114,.12), rgba(255,104,213,.08));
-    }
-
-    .statBoxWide{grid-column:span 2}
-
-    .statBox .label{
-      font-size:10px;
-      letter-spacing:.6px;
-      text-transform:uppercase;
-      opacity:.74;
-      margin-bottom:6px;
-    }
-
-    .statBox .value{
-      font-size:21px;
-      font-weight:900;
-      line-height:1;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .cookBody{
-      display:grid;
-      gap:10px;
-      padding:10px;
-    }
-
-    .mobilePanel{
-      border-radius:16px;
-      padding:12px;
-      background:rgba(255,255,255,.035);
-      border:1px solid var(--line);
-    }
-
-    .panelHeader{
-      display:grid;
-      gap:4px;
-      margin-bottom:10px;
-    }
-
-    .panelHeader h3{
-      margin:0;
-      font-size:16px;
-      line-height:1.2;
-    }
-
-    .subText{
-      font-size:11px;
-      line-height:1.4;
-    }
-
-    .mobileCustomerLane{
-      display:grid;
-      gap:10px;
-    }
-
-    .customerCard{
-      border-radius:16px;
-      padding:12px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)),
-        rgba(10,8,22,.24);
-      border:1px solid var(--line);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .customerHead{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-
-    .avatar{
-      width:48px;
-      height:48px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      font-size:26px;
-      background:rgba(255,255,255,.08);
-      border:1px solid var(--line);
-      flex:0 0 auto;
-    }
-
-    .customerMeta{
-      min-width:0;
-    }
-
-    .customerMeta b,
-    .customerMeta span{
-      display:block;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .customerMeta b{
-      font-size:14px;
-      margin-bottom:3px;
-    }
-
-    .customerMeta span{
-      font-size:12px;
-      color:var(--muted2);
-    }
-
-    .orderBubble{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px;
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-    }
-
-    .orderName{
-      font-size:16px;
-      font-weight:900;
-      line-height:1.25;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .miniBtn{
-      min-width:82px;
-      min-height:42px;
-      padding:10px 12px;
-      border-radius:12px;
-      font-size:13px;
-      font-weight:800;
-      box-shadow:none;
-      flex:0 0 auto;
-    }
-
-    .meter{
-      height:9px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.06);
-      overflow:hidden;
-    }
-
-    .meterFill{
-      height:100%;
-      width:100%;
-      background:linear-gradient(90deg, var(--ok), var(--warning), var(--danger));
-      transform-origin:left center;
-    }
-
-    .customerFooter{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .foodMenuGrid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .foodBtn{
-      width:100%;
-      min-height:86px;
-      padding:12px;
-      border-radius:14px;
-      text-align:left;
-      color:var(--text);
-      background:rgba(255,255,255,.055);
-      border:1px solid var(--line);
-    }
-
-    .foodBtn strong{
-      display:block;
-      font-size:14px;
-      line-height:1.25;
-    }
-
-    .foodBtn span{
-      display:block;
-      margin-top:4px;
-      font-size:11px;
-      color:var(--muted);
-      line-height:1.35;
-      font-weight:700;
-    }
-
-    .cookSplit2{
-      display:grid;
-      gap:10px;
-    }
-
-    .mobileStationGrid,
-    .mobileReadyTray{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .station{
-      min-height:114px;
-      border-radius:14px;
-      padding:10px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:8px;
-    }
-
-    .stationTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-    }
-
-    .stationTop b{
-      font-size:14px;
-    }
-
-    .stationState{
-      font-size:11px;
-      color:var(--muted2);
-    }
-
-    .stationDish{
-      font-size:28px;
-      text-align:center;
-      min-height:34px;
-    }
-
-    .readyItem{
-      min-height:96px;
-      border-radius:14px;
-      padding:10px;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      text-align:center;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:5px;
-    }
-
-    .readyItem .icon{
-      font-size:24px;
-      display:block;
-    }
-
-    .eventLog{
-      max-height:170px;
-      overflow:auto;
-      display:grid;
-      gap:7px;
-      padding-right:2px;
-    }
-
-    .logRow{
-      font-size:12px;
-      color:rgba(255,255,255,.86);
-      padding:9px 10px;
-      border-radius:12px;
-      background:rgba(0,0,0,.14);
-      border:1px solid rgba(255,255,255,.06);
-      line-height:1.4;
-    }
-
-    .dayOver{
-      position:fixed;
-      inset:0;
-      background:rgba(8,6,16,.74);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:90;
-    }
-
-    .dayOver.show{display:flex}
-
-    .dayCard{
-      width:min(360px, 94vw);
+      width:min(92%, 320px);
       padding:18px;
-      border-radius:18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border:1px solid var(--line);
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.16);
       text-align:center;
-      box-shadow:var(--shadow);
     }
 
-    .dayCard h3{
-      margin:0 0 10px;
-      font-size:24px;
-    }
+    .gameOverCard h4{ margin:0 0 10px; font-size:24px; }
+    .gameOverCard p{ margin:8px 0; color: rgba(247,242,255,.82); line-height:1.55; }
 
-    .dayCard p{
-      margin:0 0 12px;
-      font-size:14px;
-      line-height:1.6;
-    }
-
-    .dayList{
-      margin:0 0 14px;
-      display:grid;
-      gap:8px;
-      text-align:left;
-    }
-
-    .dayList div{
-      padding:10px 12px;
-      border-radius:12px;
-      background:rgba(0,0,0,.14);
-      border:1px solid rgba(255,255,255,.07);
-      font-size:14px;
-    }
-
-    .toast{
-      position:fixed;
-      left:50%;
-      bottom:12px;
-      transform:translateX(-50%);
-      z-index:100;
-      max-width:min(92vw, 520px);
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(18,12,28,.96);
-      border:1px solid var(--line);
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .16s ease, transform .16s ease;
-    }
-
-    .toast.show{
-      opacity:1;
-      transform:translateX(-50%) translateY(-4px);
-    }
-
-    .chip{
-      width:9px;
-      height:9px;
-      border-radius:50%;
-      background:var(--pink);
-      flex:0 0 auto;
-    }
-
-    @media (min-width: 720px){
-      .homeWrap{
-        grid-template-columns:1.02fr .98fr;
-        align-items:start;
-      }
-
-      .mergeContent{
-        grid-template-columns:1fr 1fr;
-        align-items:start;
-      }
-
-      .mobileCustomerLane{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .cookSplit2{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .scene{
-        min-height:520px;
-      }
-    }
-
-    @media (max-width: 380px){
-      .screen{padding:8px}
-      .topBar{margin-bottom:8px}
-      .topBar h2{font-size:16px}
-      .hero h1{font-size:24px}
-      .cookTitle h1{font-size:24px}
-      .foodBtn{min-height:80px; padding:10px}
-      .miniBtn{min-width:76px; font-size:12px}
-      .orderName{font-size:15px}
-      .statBox .value{font-size:19px}
-      .scene{min-height:400px}
+    @media (max-width: 900px){
+      .gameHud{ inset:10px 10px auto 10px; grid-template-columns: 1fr; }
+      .hudGroup:last-child{ position:absolute; right:0; top:0; }
+      .boardWrap{ inset:62px 10px 10px 10px; }
+      .sig{font-size:12px; flex-direction:column; align-items:flex-start}
+      button{padding:11px 12px}
     }
 
     @media (prefers-reduced-motion: reduce){
-      *{
-        animation:none !important;
-        transition:none !important;
-        scroll-behavior:auto !important;
-      }
+      .floatingScore { animation-duration: .01ms !important; }
     }
   </style>
 </head>
 <body>
-
-  <!-- HOME -->
-  <section id="homeScreen" class="screen">
-    <div class="homeWrap">
-      <div class="hero panel">
-        <div class="badge">
-          <span class="dot"></span>
-          <b>🎮 Mini Game Hub</b>
-        </div>
-        <h1>Chọn game để chơi</h1>
-        <p>
-          Một trang web có sẵn 2 game cho Babi chơi trên điện thoại:
-          <b>Merge Blossom</b> để giết thời gian, và <b>Cooking Rush</b>
-          để phục vụ món ăn thật nhanh.
-        </p>
-        <div class="pillRow" style="margin-top:14px;">
-          <span class="pill">📱 Ưu tiên Android yếu</span>
-          <span class="pill">⚡ Giao diện nhẹ</span>
-          <span class="pill">🎯 Nút bấm to</span>
-          <span class="pill">🕹️ Chơi trực tiếp trên web</span>
-        </div>
-      </div>
-
-      <div class="gameSelect">
-        <div class="selectCard panel">
-          <h3>🌸 Merge Blossom</h3>
-          <p>Game ghép hình quen thuộc, tối ưu lại để thao tác dễ hơn trên màn hình nhỏ.</p>
-          <div class="pillRow" style="margin-bottom:12px;">
-            <span class="pill">Ghép 2 hình</span>
-            <span class="pill">Combo</span>
-            <span class="pill">Skull obstacle</span>
-          </div>
-          <button onclick="showScreen('mergeScreen')">Vào chơi Merge Blossom</button>
-        </div>
-
-        <div class="selectCard panel">
-          <h3>🍳 Cooking Rush</h3>
-          <p>Game nấu ăn và phục vụ khách với giao diện chia ô rõ ràng, dễ bấm trên điện thoại.</p>
-          <div class="pillRow" style="margin-bottom:12px;">
-            <span class="pill">Khách liên tục vào</span>
-            <span class="pill">Patience bar</span>
-            <span class="pill">2 bếp nấu</span>
-            <span class="pill">Combo phục vụ</span>
-          </div>
-          <button onclick="openCookingGame()">Vào chơi Cooking Rush</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MERGE -->
-  <section id="mergeScreen" class="screen hidden">
-    <div class="topBar">
-      <h2>🌸 Merge Blossom</h2>
-      <button class="ghost homeBtn" onclick="backToHome()">← Về menu</button>
-    </div>
-
-    <div class="mergeCard">
-      <div class="mergeContent">
-        <section class="mergeInfo">
+  <div class="wrap">
+    <div class="card">
+      <div class="content">
+        <section>
           <div class="badge">
             <span class="dot"></span>
             <b>✨ Merge Blossom ✨</b>
           </div>
 
           <h3>
-            Ghép <span style="color:var(--violet)">2 hình giống nhau</span>
-            để tạo ra
-            <span style="color:var(--sky)">1 hình lớn hơn</span>
+            Khu vườn mảnh ghép khó hơn:<br/>
+            <span style="color: var(--violet2)">2 hình giống nhau</span>
+            sẽ hóa thành<br/>
+            <span style="color:var(--sky)">1 hình lớn hơn, hiếm hơn</span>
           </h3>
 
           <div class="typebox">
@@ -1021,24 +426,24 @@
 
           <div class="actions">
             <button id="btnStart">🎮 Chơi mới</button>
-            <button class="ghost" id="btnSkill">✨ Kỹ năng</button>
+            <button class="ghost" id="btnSkill">✨ Kích nổ ánh sao</button>
           </div>
 
-          <p class="hint">
-            Chạm vào bảng để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi.
-            Cứ mỗi <b>10.000 điểm</b> sẽ sinh ra <b>💀 đầu lâu</b> để chiếm chỗ.
-            <br><br>
-            Chuỗi tiến hóa:
-            <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️ → 🌸 → 💎 → 👑</b>
+          <p class="hint" style="margin-top:12px;">
+            Chạm vào bảng bên phải để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi. Ghép tới <b>cấp 9</b>, càng lên cao càng khó giữ không gian. Cứ mỗi <b>10.000 điểm</b> sẽ sinh ra một <b>💀 đầu lâu</b> không nằm trong chuỗi, không thể phá hủy và chỉ dùng để chiếm diện tích.
+            <br/><br/>
+            Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️ → 🌸 → 💎 → 👑</b>
+            <br/>
+            Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
           </p>
 
           <div class="sig">
-            <span>Bản nhẹ cho điện thoại yếu • giảm hiệu ứng để mượt hơn</span>
+            <span>Bản tối ưu cho điện thoại yếu • giảm hiệu ứng nền • ưu tiên mượt</span>
             <span>Best: <b id="bestScoreText">0</b></span>
           </div>
         </section>
 
-        <section>
+        <aside class="right">
           <div class="scene" id="scene">
             <div class="gameHud">
               <div class="hudGroup">
@@ -1054,6 +459,8 @@
                   <div class="label">Cao nhất</div>
                   <div class="value" id="levelText">0</div>
                 </div>
+              </div>
+              <div class="hudGroup">
                 <div class="hudCard">
                   <div class="label">Kỹ năng</div>
                   <div class="value" id="skillText">1</div>
@@ -1077,113 +484,17 @@
                 <div class="gameOverCard">
                   <h4>Game Over</h4>
                   <p id="gameOverText">Bạn đã để khu vườn vượt vạch an toàn.</p>
-                  <div class="actions" style="margin-top:14px; grid-template-columns:1fr;">
+                  <div class="actions" style="justify-content:center; margin-top:14px;">
                     <button id="btnRestart">Chơi lại</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </aside>
       </div>
     </div>
-  </section>
-
-  <!-- COOKING -->
-  <section id="cookingScreen" class="screen hidden">
-    <div class="topBar">
-      <h2>🍳 Cooking Rush</h2>
-      <button class="ghost homeBtn" onclick="backToHome()">← Về menu</button>
-    </div>
-
-    <div class="cookShell">
-      <div class="cookTop">
-        <div class="cookTitle">
-          <h1>🍳 Cooking Rush</h1>
-          <span>Nấu món thật nhanh, phục vụ trước khi khách bỏ về.</span>
-        </div>
-
-        <div class="mobileStats">
-          <div class="statBox highlightMoney">
-            <div class="label">Tiền</div>
-            <div class="value" id="cookMoney">0</div>
-          </div>
-          <div class="statBox">
-            <div class="label">Combo</div>
-            <div class="value" id="cookCombo">x1</div>
-          </div>
-          <div class="statBox">
-            <div class="label">Uy tín</div>
-            <div class="value" id="cookLives">3</div>
-          </div>
-          <div class="statBox">
-            <div class="label">Thời gian</div>
-            <div class="value" id="cookTime">90</div>
-          </div>
-          <div class="statBox statBoxWide">
-            <div class="label">Best</div>
-            <div class="value" id="cookBest">0</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="cookBody">
-        <div class="mobilePanel">
-          <div class="panelHeader">
-            <h3>🧍 Khách hàng</h3>
-            <span class="subText">Bấm Serve khi đã có đúng món trong khay.</span>
-          </div>
-          <div class="mobileCustomerLane" id="customerLane"></div>
-        </div>
-
-        <div class="mobilePanel">
-          <div class="panelHeader">
-            <h3>📋 Chọn món</h3>
-            <span class="subText">Chạm món để đưa vào bếp còn trống.</span>
-          </div>
-          <div class="foodMenuGrid" id="foodMenu"></div>
-        </div>
-
-        <div class="cookSplit2">
-          <div class="mobilePanel">
-            <div class="panelHeader">
-              <h3>🔥 Bếp nấu</h3>
-              <span class="subText">2 bếp hoạt động song song.</span>
-            </div>
-            <div class="mobileStationGrid" id="stationGrid"></div>
-          </div>
-
-          <div class="mobilePanel">
-            <div class="panelHeader">
-              <h3>✅ Món hoàn thành</h3>
-              <span class="subText">Giữ món ở đây để Serve khách.</span>
-            </div>
-            <div class="mobileReadyTray" id="readyTray"></div>
-          </div>
-        </div>
-
-        <div class="mobilePanel">
-          <div class="panelHeader">
-            <h3>📝 Nhật ký</h3>
-            <span class="subText">Sự kiện mới nhất trong ca.</span>
-          </div>
-          <div class="eventLog" id="eventLog"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="dayOver" id="dayOver">
-      <div class="dayCard">
-        <h3 id="dayOverTitle">Kết thúc ngày</h3>
-        <p id="dayOverText">Ca làm của bạn đã xong.</p>
-        <div class="dayList" id="dayOverList"></div>
-        <div class="actions" style="grid-template-columns:1fr 1fr;">
-          <button onclick="restartCookingGame()">Chơi lại</button>
-          <button class="ghost" onclick="backToHome()">Về menu</button>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <div class="toast" id="toast">
     <span class="chip"></span>
@@ -1191,74 +502,23 @@
   </div>
 
   <script>
-    /* =========================
-       SCREEN SWITCHER
-    ========================== */
-    const SCREENS = ['homeScreen', 'mergeScreen', 'cookingScreen'];
-
-    function showScreen(id){
-      SCREENS.forEach(s => {
-        document.getElementById(s).classList.toggle('hidden', s !== id);
-      });
-
-      window.scrollTo(0, 0);
-
-      if(id === 'mergeScreen'){
-        setTimeout(resizeGame, 30);
-      }
-
-      if(id === 'cookingScreen'){
-        setTimeout(renderCooking, 30);
-      }
-    }
-
-    function backToHome(){
-      if(!document.getElementById('cookingScreen').classList.contains('hidden')){
-        stopCookingGame();
-      }
-      showScreen('homeScreen');
-    }
-
-    function openCookingGame(){
-      showScreen('cookingScreen');
-      restartCookingGame();
-    }
-
-    /* =========================
-       GLOBAL TOAST
-    ========================== */
-    const toast = document.getElementById('toast');
-    const toastText = document.getElementById('toastText');
-    let toastTimer = null;
-
-    function showToast(msg){
-      toastText.textContent = msg;
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 1200);
-    }
-
-    /* =========================
-       MERGE BLOSSOM
-    ========================== */
     const storyLines = [
       'Chào mừng Babi đến với Merge Blossom.',
       'Trò chơi này được làm ra để giúp em giết thời gian và giảm stress.',
-      '100.000 điểm sẽ đổi được 1 tháng 4G.',
-      'Chúc em chơi dui dẻ 😘'
+      '100.000 điểm sẽ đổi được 1 tháng 4G',
+      'Chúc em chơi dui dẻ 😘.'
     ];
 
     const isMobile = matchMedia('(max-width: 900px)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const DPR = 1; // khóa về 1 để giảm tải cho máy yếu
+    const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.2 : 1.6);
 
     const typedEl = document.getElementById('typed');
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toastText');
     const boardWrap = document.getElementById('boardWrap');
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
-
     const aimLine = document.getElementById('aimLine');
     const nextIconEl = document.getElementById('nextIcon');
     const scoreText = document.getElementById('scoreText');
@@ -1271,18 +531,25 @@
 
     typedEl.textContent = storyLines.join('\n\n');
 
+    let toastTimer = null;
+    function showToast(msg){
+      toastText.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1300);
+    }
+
     const SHAPES = [
-      { emoji:'💗', name:'Tim non', fill:'#ff67c8', score:10, radius:isMobile?18:19 },
-      { emoji:'⭐', name:'Sao mộng', fill:'#ffd76a', score:24, radius:isMobile?22:24 },
+      { emoji:'💗', name:'Tim non',   fill:'#ff67c8', score:10,  radius:isMobile?18:19 },
+      { emoji:'⭐', name:'Sao mộng',  fill:'#ffd76a', score:24,  radius:isMobile?22:24 },
       { emoji:'❄️', name:'Băng sương', fill:'#9be9ff', score:46, radius:isMobile?26:29 },
-      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82, radius:isMobile?30:34 },
+      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82,  radius:isMobile?30:34 },
       { emoji:'🌈', name:'Cầu vồng', fill:'#73d8ff', score:140, radius:isMobile?34:39 },
       { emoji:'☀️', name:'Thái dương', fill:'#ffb16b', score:230, radius:isMobile?38:44 },
-      { emoji:'🌸', name:'Hoa nở', fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
+      { emoji:'🌸', name:'Hoa nở',    fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
       { emoji:'💎', name:'Tinh thạch', fill:'#89f2e1', score:560, radius:isMobile?46:54 },
       { emoji:'👑', name:'Vương miện', fill:'#ffe07e', score:860, radius:isMobile?50:59 }
     ];
-
     const OBSTACLE = { emoji:'💀', name:'Đầu lâu', fill:'#b7bcc8', radius:isMobile?24:28 };
     const MAX_LEVEL = SHAPES.length - 1;
 
@@ -1302,20 +569,22 @@
       blockedUntil: 0,
       lineExceededAt: null,
       lastTick: performance.now(),
+      frameSkip: 0,
       nextSkullScore: 10000,
-      dangerLevel: 0
+      dangerLevel: 0,
+      dropPenaltyActive: false
     };
 
     const gravity = isMobile ? 0.40 : 0.35;
-    const damping = 0.987;
+    const damping = isMobile ? 0.987 : 0.989;
     const airDrag = 0.994;
     const bounce = 0.025;
     const sideBounce = 0.08;
     const frictionGround = 0.84;
     const frictionCollision = 0.92;
     const safeLineRatio = 0.18;
-    const collisionPasses = 2;
-    const maxItems = isMobile ? 42 : 54;
+    const collisionPasses = isMobile ? 2 : 3;
+    const maxItems = isMobile ? 44 : 58;
     const cellSize = isMobile ? 72 : 84;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
@@ -1332,31 +601,14 @@
 
     function resizeGame(){
       const rect = boardWrap.getBoundingClientRect();
-      if(!rect.width || !rect.height) return;
-
-      const oldWidth = state.width || rect.width;
-      const oldHeight = state.height || rect.height;
-
       state.width = rect.width;
       state.height = rect.height;
-
       canvas.width = Math.floor(rect.width * DPR);
       canvas.height = Math.floor(rect.height * DPR);
       canvas.style.width = rect.width + 'px';
       canvas.style.height = rect.height + 'px';
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-
-      const scaleX = rect.width / oldWidth;
-      const scaleY = rect.height / oldHeight;
-
-      if(state.items.length && oldWidth && oldHeight){
-        state.items.forEach(it => {
-          it.x = clamp(it.x * scaleX, it.r, rect.width - it.r);
-          it.y = clamp(it.y * scaleY, it.r, rect.height - it.r);
-        });
-      }
-
-      state.dropX = clamp(state.dropX || rect.width / 2, 24, rect.width - 24);
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      state.dropX = clamp(state.dropX || rect.width / 2, 28, rect.width - 28);
       aimLine.style.left = state.dropX + 'px';
     }
 
@@ -1398,6 +650,7 @@
       state.lastTick = performance.now();
       state.nextSkullScore = 10000;
       state.dangerLevel = 0;
+      state.dropPenaltyActive = false;
       aimLine.style.left = state.dropX + 'px';
       gameOverOverlay.classList.remove('show');
       updateHud();
@@ -1405,28 +658,25 @@
     }
 
     function addFloatingScore(x, y, value, text = null){
-      if(reducedMotion && isMobile) return;
+      if (reducedMotion && isMobile) return;
       const el = document.createElement('div');
       el.className = 'floatingScore';
       el.style.left = x + 'px';
       el.style.top = y + 'px';
       el.textContent = text || ('+' + Math.floor(value));
       boardWrap.appendChild(el);
-      setTimeout(() => el.remove(), 650);
+      setTimeout(()=> el.remove(), 700);
     }
 
     function awardScore(x, y, base, message){
       const points = Math.floor(base * state.combo);
       state.score += points;
-
       if(state.score > state.best){
         state.best = state.score;
         localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
       }
-
       state.combo = Math.min(9, state.combo + 1);
       state.comboDecayAt = now() + (state.dangerLevel >= 2 ? 1100 : 1600);
-
       addFloatingScore(x, y, points, message || ('+' + points));
       maybeSpawnSkull();
       updateHud();
@@ -1436,15 +686,14 @@
       if(state.gameOver) return;
       if(now() < state.blockedUntil) return;
       if(state.items.length >= maxItems) return;
-
       const level = state.nextLevel;
       const r = SHAPES[level].radius;
       const item = makeItem(level, clamp(state.dropX, r + 4, state.width - r - 4), r + 8);
-
       item.vy = state.dangerLevel >= 2 ? 2.8 : 2.1;
       state.items.push(item);
       state.nextLevel = randLevel();
-      state.blockedUntil = now() + (state.dangerLevel >= 2 ? 120 : 165);
+      const cooldown = state.dangerLevel >= 2 ? (isMobile ? 120 : 105) : (isMobile ? 165 : 140);
+      state.blockedUntil = now() + cooldown;
       updateHud();
     }
 
@@ -1458,7 +707,6 @@
 
     function mergePair(a, b){
       if(a.merged || b.merged) return null;
-
       a.merged = b.merged = true;
       const mx = (a.x + b.x) / 2;
       const my = (a.y + b.y) / 2;
@@ -1477,14 +725,7 @@
       const next = makeItem(newLevel, mx, my);
       next.vx = (a.vx + b.vx) * 0.10;
       next.vy = -1.8;
-
-      awardScore(
-        mx,
-        my,
-        SHAPES[newLevel].score,
-        SHAPES[newLevel].emoji + ' +' + Math.floor(SHAPES[newLevel].score * state.combo)
-      );
-
+      awardScore(mx, my, SHAPES[newLevel].score, SHAPES[newLevel].emoji + ' +' + Math.floor(SHAPES[newLevel].score * state.combo));
       if(newLevel >= 5 && Math.random() < 0.18 && state.skills < 3) state.skills += 1;
       return next;
     }
@@ -1495,14 +736,12 @@
         showToast('Không còn kỹ năng.');
         return;
       }
-
       const lowTargets = state.items.filter(it => !it.isSkull && it.level <= 3);
       if(!lowTargets.length){
         showToast('Không có mảnh cấp thấp để nổ.');
         return;
       }
-
-      const target = lowTargets.sort((a, b) => b.y - a.y)[0];
+      const target = lowTargets.sort((a,b)=> b.y - a.y)[0];
       state.skills -= 1;
       state.items = state.items.filter(it => it.id !== target.id);
       awardScore(target.x, target.y, 54, 'STAR BURST');
@@ -1512,14 +751,12 @@
 
     function buildSpatialGrid(items){
       const grid = new Map();
-
       for(let i = 0; i < items.length; i++){
         const it = items[i];
         const minX = Math.floor((it.x - it.r) / cellSize);
         const maxX = Math.floor((it.x + it.r) / cellSize);
         const minY = Math.floor((it.y - it.r) / cellSize);
         const maxY = Math.floor((it.y + it.r) / cellSize);
-
         for(let gx = minX; gx <= maxX; gx++){
           for(let gy = minY; gy <= maxY; gy++){
             const key = gx + ',' + gy;
@@ -1528,14 +765,12 @@
           }
         }
       }
-
       return grid;
     }
 
     function spawnSkull(){
       const margin = OBSTACLE.radius + 8;
       const x = clamp(margin + Math.random() * (state.width - margin * 2), margin, state.width - margin);
-
       const skull = {
         id: 'skull_' + Math.random().toString(36).slice(2),
         isSkull: true,
@@ -1548,7 +783,6 @@
         merged: false,
         settled: false
       };
-
       state.items.push(skull);
       showToast('💀 Đầu lâu xuất hiện!');
     }
@@ -1563,18 +797,14 @@
     function updateDangerState(){
       const safeY = state.height * safeLineRatio;
       let minTop = state.height;
-
       for(let i = 0; i < state.items.length; i++){
         const top = state.items[i].y - state.items[i].r;
         if(top < minTop) minTop = top;
       }
-
       const fillRatio = 1 - (minTop / state.height);
       let nextDanger = 0;
-
       if(minTop < safeY + 56 || fillRatio > 0.70) nextDanger = 1;
       if(minTop < safeY + 18 || fillRatio > 0.80) nextDanger = 2;
-
       if(nextDanger !== state.dangerLevel){
         state.dangerLevel = nextDanger;
         if(nextDanger === 1) showToast('⚠️ Vùng căng thẳng!');
@@ -1616,7 +846,6 @@
       }
 
       const spawned = [];
-
       for(let pass = 0; pass < collisionPasses; pass++){
         const grid = buildSpatialGrid(items);
         const seenPairs = new Set();
@@ -1646,7 +875,6 @@
                 const weightA = a.isSkull ? 1.7 : 1;
                 const weightB = b.isSkull ? 1.7 : 1;
                 const totalWeight = weightA + weightB;
-
                 a.x -= nx * overlap * (weightB / totalWeight);
                 a.y -= ny * overlap * (weightB / totalWeight);
                 b.x += nx * overlap * (weightA / totalWeight);
@@ -1709,7 +937,6 @@
 
       const safeY = state.height * safeLineRatio;
       const danger = state.items.some(it => it.y - it.r < safeY);
-
       if(danger){
         if(state.lineExceededAt == null) state.lineExceededAt = now();
         if(now() - state.lineExceededAt > (state.dangerLevel >= 2 ? 800 : 1100)){
@@ -1727,12 +954,12 @@
         ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
         ctx.fill();
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = 'rgba(255,255,255,.16)';
+        ctx.strokeStyle = 'rgba(255,255,255,.18)';
         ctx.stroke();
         ctx.font = `${Math.floor(it.r * 0.92)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'rgba(255,255,255,.96)';
+        ctx.fillStyle = 'rgba(255,255,255,.95)';
         ctx.fillText(OBSTACLE.emoji, it.x, it.y + 1);
         return;
       }
@@ -1743,7 +970,7 @@
       ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
       ctx.fill();
       ctx.lineWidth = 1.5;
-      ctx.strokeStyle = 'rgba(255,255,255,.18)';
+      ctx.strokeStyle = 'rgba(255,255,255,.20)';
       ctx.stroke();
       ctx.font = `${Math.floor(it.r * 0.98)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
       ctx.textAlign = 'center';
@@ -1757,12 +984,11 @@
       const r = shape.radius;
       const x = clamp(state.dropX, r + 4, state.width - r - 4);
       const y = r + 10;
-
       ctx.save();
-      ctx.globalAlpha = 0.18;
+      ctx.globalAlpha = 0.20;
       ctx.beginPath();
       ctx.fillStyle = 'rgba(255,255,255,.14)';
-      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.arc(x, y, r, 0, Math.PI*2);
       ctx.fill();
       ctx.font = `${Math.floor(r * 0.98)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
       ctx.textAlign = 'center';
@@ -1775,7 +1001,7 @@
     function draw(){
       ctx.clearRect(0, 0, state.width, state.height);
       drawGhostNext();
-      const ordered = [...state.items].sort((a, b) => a.r - b.r || a.y - b.y);
+      const ordered = [...state.items].sort((a,b)=> a.r - b.r || a.y - b.y);
       for(let i = 0; i < ordered.length; i++) drawPiece(ordered[i]);
     }
 
@@ -1789,16 +1015,10 @@
 
     function endGame(){
       if(state.gameOver) return;
-
       state.gameOver = true;
       gameOverOverlay.classList.add('show');
-
       const skullCount = state.items.filter(it => it.isSkull).length;
-      gameOverText.textContent =
-        `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • ` +
-        `Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'} • ` +
-        `Đầu lâu: ${skullCount}`;
-
+      gameOverText.textContent = `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'} • Đầu lâu: ${skullCount}`;
       showToast('💥 Khu vườn đã quá đầy.');
       updateHud();
     }
@@ -1809,29 +1029,23 @@
       aimLine.style.left = state.dropX + 'px';
     }
 
-    boardWrap.addEventListener('pointermove', (e) => {
-      setAimFromClientX(e.clientX);
-    }, { passive:true });
-
-    boardWrap.addEventListener('pointerdown', (e) => {
+    boardWrap.addEventListener('pointermove', (e)=> setAimFromClientX(e.clientX), { passive: true });
+    boardWrap.addEventListener('pointerdown', (e)=>{
       setAimFromClientX(e.clientX);
       dropPiece();
-    }, { passive:true });
+    }, { passive: true });
 
     document.getElementById('btnStart').addEventListener('click', resetGame);
     document.getElementById('btnRestart').addEventListener('click', resetGame);
     document.getElementById('btnSkill').addEventListener('click', useSkill);
 
     let resizeTimer = null;
-    window.addEventListener('resize', () => {
+    window.addEventListener('resize', ()=>{
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        resizeGame();
-        renderCooking();
-      }, 80);
-    }, { passive:true });
+      resizeTimer = setTimeout(resizeGame, 80);
+    }, { passive: true });
 
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', ()=>{
       state.lastTick = performance.now();
     });
 
@@ -1839,477 +1053,6 @@
     resizeGame();
     resetGame();
     requestAnimationFrame(loop);
-
-    /* =========================
-       COOKING RUSH
-    ========================== */
-    const customerLane = document.getElementById('customerLane');
-    const foodMenu = document.getElementById('foodMenu');
-    const stationGrid = document.getElementById('stationGrid');
-    const readyTray = document.getElementById('readyTray');
-    const eventLog = document.getElementById('eventLog');
-    const cookMoney = document.getElementById('cookMoney');
-    const cookCombo = document.getElementById('cookCombo');
-    const cookLives = document.getElementById('cookLives');
-    const cookTime = document.getElementById('cookTime');
-    const cookBest = document.getElementById('cookBest');
-    const dayOver = document.getElementById('dayOver');
-    const dayOverTitle = document.getElementById('dayOverTitle');
-    const dayOverText = document.getElementById('dayOverText');
-    const dayOverList = document.getElementById('dayOverList');
-
-    const FOODS = [
-      { id:'burger', icon:'🍔', name:'Burger', cookTime:6000, price:20, penalty:8 },
-      { id:'pizza', icon:'🍕', name:'Pizza', cookTime:9000, price:34, penalty:12 },
-      { id:'noodle', icon:'🍜', name:'Mì nóng', cookTime:7000, price:25, penalty:9 },
-      { id:'sushi', icon:'🍣', name:'Sushi', cookTime:10000, price:40, penalty:14 }
-    ];
-
-    const CUSTOMER_POOL = [
-      { avatar:'🐍', name:'bét fen' },
-      { avatar:'🐶', name:'mít tờ gôn' },
-      { avatar:'👬', name:'thanh niên dính thai' },
-      { avatar:'🍑', name:'cô gái bán hoa' },
-      { avatar:'🦚', name:'tôi thành công rồi' },
-      { avatar:'🥜', name:'peanut' },
-      { avatar:'⌛️', name:'aladin và đồng hồ cát' },
-      { avatar:'⛄️', name:'sì nô men' },
-      { avatar:'🎆', name:'merry phát tài' },
-      { avatar:'🥇', name:'champion' }
-    ];
-
-    const cooking = {
-      money: 0,
-      combo: 1,
-      comboExpireAt: 0,
-      lives: 3,
-      best: Number(localStorage.getItem('cooking-rush-best') || 0),
-      timeLeft: 90,
-      running: false,
-      customers: [],
-      stations: [],
-      ready: [],
-      log: [],
-      nextCustomerAt: 0,
-      servedCount: 0,
-      missedCount: 0,
-      customerId: 1,
-      timers: {
-        ticker: null
-      }
-    };
-
-    function createStations(){
-      return [
-        { id:1, food:null, startedAt:0, finishAt:0 },
-        { id:2, food:null, startedAt:0, finishAt:0 }
-      ];
-    }
-
-    function logEvent(text){
-      cooking.log.unshift(text);
-      cooking.log = cooking.log.slice(0, 8);
-      renderLogs();
-    }
-
-    function renderLogs(){
-      eventLog.innerHTML = '';
-      if(!cooking.log.length){
-        eventLog.innerHTML = '<div class="logRow">Ca làm chưa bắt đầu.</div>';
-        return;
-      }
-
-      cooking.log.forEach(row => {
-        const div = document.createElement('div');
-        div.className = 'logRow';
-        div.textContent = row;
-        eventLog.appendChild(div);
-      });
-    }
-
-    function updateCookingHud(){
-      cookMoney.textContent = Math.max(0, Math.floor(cooking.money)).toLocaleString('vi-VN');
-      cookCombo.textContent = 'x' + cooking.combo;
-      cookLives.textContent = cooking.lives;
-      cookTime.textContent = Math.max(0, Math.ceil(cooking.timeLeft));
-      cookBest.textContent = Math.floor(cooking.best).toLocaleString('vi-VN');
-    }
-
-    function renderFoodMenu(){
-      foodMenu.innerHTML = '';
-      FOODS.forEach(food => {
-        const btn = document.createElement('button');
-        btn.className = 'foodBtn';
-        btn.innerHTML = `
-          <strong>${food.icon} ${food.name}</strong>
-          <span>Nấu ${Math.round(food.cookTime / 1000)} giây</span>
-          <span>Thưởng +${food.price}</span>
-        `;
-        btn.addEventListener('click', () => startCookingFood(food.id));
-        foodMenu.appendChild(btn);
-      });
-    }
-
-    function renderStations(){
-      stationGrid.innerHTML = '';
-
-      cooking.stations.forEach(station => {
-        const busy = !!station.food;
-        let progress = 0;
-
-        if(busy){
-          const total = station.finishAt - station.startedAt;
-          const nowTs = Date.now();
-          const done = Math.min(total, Math.max(0, nowTs - station.startedAt));
-          progress = total ? done / total : 1;
-        }
-
-        const div = document.createElement('div');
-        div.className = 'station';
-        div.innerHTML = `
-          <div class="stationTop">
-            <b>Bếp ${station.id}</b>
-            <span class="stationState">${busy ? 'Đang nấu' : 'Rảnh'}</span>
-          </div>
-          <div class="stationDish">${busy ? station.food.icon : '🍳'}</div>
-          <div>${busy ? `<div class="subText">${station.food.name}</div>` : `<div class="subText">Chọn món để nấu</div>`}</div>
-          <div class="meter"><div class="meterFill" style="transform:scaleX(${progress})"></div></div>
-        `;
-        stationGrid.appendChild(div);
-      });
-    }
-
-    function renderReadyTray(){
-      readyTray.innerHTML = '';
-
-      if(!cooking.ready.length){
-        readyTray.innerHTML = `<div class="readyItem" style="grid-column:1/-1;">🍽️ Chưa có món nào hoàn thành.</div>`;
-        return;
-      }
-
-      cooking.ready.forEach((food, index) => {
-        const div = document.createElement('div');
-        div.className = 'readyItem';
-        div.innerHTML = `
-          <span class="icon">${food.icon}</span>
-          <div><b>${food.name}</b></div>
-          <div class="subText">Sẵn sàng phục vụ</div>
-          <div style="margin-top:6px;">
-            <button class="ghost miniBtn" onclick="trashReadyFood(${index})">Bỏ món</button>
-          </div>
-        `;
-        readyTray.appendChild(div);
-      });
-    }
-
-    function renderCustomers(){
-      customerLane.innerHTML = '';
-
-      if(!cooking.customers.length){
-        customerLane.innerHTML = `
-          <div class="customerCard" style="grid-column:1/-1; display:grid; place-items:center; min-height:110px;">
-            <div style="text-align:center;">
-              <div style="font-size:38px; margin-bottom:8px;">🚪</div>
-              <div style="font-weight:800; margin-bottom:4px;">Đang chờ khách vào quán...</div>
-              <div class="subText">Khách mới sẽ xuất hiện sau ít giây.</div>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      cooking.customers.forEach(customer => {
-        const ratio = Math.max(0, customer.patience / customer.maxPatience);
-        const matchingReadyIndex = cooking.ready.findIndex(f => f.id === customer.food.id);
-
-        const div = document.createElement('div');
-        div.className = 'customerCard';
-        div.innerHTML = `
-          <div class="customerHead">
-            <div class="avatar">${customer.avatar}</div>
-            <div class="customerMeta">
-              <b title="${customer.name}">${customer.name}</b>
-              <span>Muốn ăn ngay bây giờ</span>
-            </div>
-          </div>
-
-          <div class="orderBubble">
-            <div style="min-width:0; flex:1;">
-              <div class="subText">Món yêu cầu</div>
-              <div class="orderName" title="${customer.food.name}">${customer.food.icon} ${customer.food.name}</div>
-            </div>
-            <button class="miniBtn" ${matchingReadyIndex === -1 ? 'disabled' : ''} onclick="serveCustomer('${customer.id}')">
-              Serve
-            </button>
-          </div>
-
-          <div class="meter">
-            <div class="meterFill" style="transform:scaleX(${ratio})"></div>
-          </div>
-
-          <div class="customerFooter">
-            <span>⏳ ${Math.ceil(customer.patience / 1000)}s</span>
-            <span>💰 +${customer.food.price * cooking.combo}</span>
-          </div>
-        `;
-        customerLane.appendChild(div);
-      });
-
-      const remain = 4 - cooking.customers.length;
-      for(let i = 0; i < remain; i++){
-        const empty = document.createElement('div');
-        empty.className = 'customerCard';
-        empty.style.opacity = '.44';
-        empty.innerHTML = `
-          <div style="height:100%; display:flex; align-items:center; justify-content:center; text-align:center; min-height:88px;">
-            <div>
-              <div style="font-size:28px; margin-bottom:6px;">🪑</div>
-              <div style="font-weight:700; margin-bottom:3px;">Bàn trống</div>
-              <div class="subText">Đang chờ khách mới...</div>
-            </div>
-          </div>
-        `;
-        customerLane.appendChild(empty);
-      }
-    }
-
-    function renderCooking(){
-      updateCookingHud();
-      renderStations();
-      renderReadyTray();
-      renderCustomers();
-      renderLogs();
-    }
-
-    function randomFoodWeighted(){
-      const r = Math.random();
-      if(r < 0.34) return FOODS[0];
-      if(r < 0.61) return FOODS[2];
-      if(r < 0.84) return FOODS[1];
-      return FOODS[3];
-    }
-
-    function randomCustomerIdentity(){
-      return CUSTOMER_POOL[Math.floor(Math.random() * CUSTOMER_POOL.length)];
-    }
-
-    function spawnCustomer(){
-      if(!cooking.running) return;
-      if(cooking.customers.length >= 4) return;
-
-      const food = randomFoodWeighted();
-      const identity = randomCustomerIdentity();
-      const patience = 15000 + Math.random() * 7000;
-
-      const customer = {
-        id: 'c' + cooking.customerId++,
-        avatar: identity.avatar,
-        name: identity.name,
-        food,
-        patience,
-        maxPatience: patience
-      };
-
-      cooking.customers.push(customer);
-      logEvent(`${customer.avatar} ${customer.name} gọi ${food.icon} ${food.name}`);
-      renderCustomers();
-    }
-
-    function startCookingFood(foodId){
-      if(!cooking.running) return;
-
-      const station = cooking.stations.find(s => !s.food);
-      if(!station){
-        showToast('🔥 Tất cả bếp đang bận.');
-        return;
-      }
-
-      if(cooking.ready.length >= 6){
-        showToast('📦 Khay món đã đầy.');
-        return;
-      }
-
-      const food = FOODS.find(f => f.id === foodId);
-      station.food = food;
-      station.startedAt = Date.now();
-      station.finishAt = Date.now() + food.cookTime;
-      logEvent(`Bếp ${station.id} bắt đầu nấu ${food.icon} ${food.name}`);
-      renderStations();
-    }
-
-    function trashReadyFood(index){
-      if(!cooking.running) return;
-      const item = cooking.ready[index];
-      if(!item) return;
-      cooking.ready.splice(index, 1);
-      logEvent(`Bỏ ${item.icon} ${item.name} khỏi khay.`);
-      renderReadyTray();
-    }
-
-    function serveCustomer(customerId){
-      if(!cooking.running) return;
-
-      const customerIndex = cooking.customers.findIndex(c => c.id === customerId);
-      if(customerIndex === -1) return;
-
-      const customer = cooking.customers[customerIndex];
-      const readyIndex = cooking.ready.findIndex(f => f.id === customer.food.id);
-
-      if(readyIndex === -1){
-        showToast('❌ Chưa có đúng món này.');
-        return;
-      }
-
-      cooking.ready.splice(readyIndex, 1);
-      cooking.customers.splice(customerIndex, 1);
-
-      const gain = customer.food.price * cooking.combo;
-      cooking.money += gain;
-      cooking.servedCount += 1;
-      cooking.combo = Math.min(8, cooking.combo + 1);
-      cooking.comboExpireAt = Date.now() + 4500;
-
-      if(cooking.money > cooking.best){
-        cooking.best = cooking.money;
-        localStorage.setItem('cooking-rush-best', String(Math.floor(cooking.best)));
-      }
-
-      logEvent(`✅ Phục vụ ${customer.food.icon} ${customer.food.name} cho ${customer.name}, +${gain}`);
-      showToast(`+${gain} tiền • combo x${cooking.combo}`);
-      renderCooking();
-    }
-
-    function missCustomer(index){
-      const customer = cooking.customers[index];
-      if(!customer) return;
-
-      cooking.customers.splice(index, 1);
-      cooking.money = Math.max(0, cooking.money - customer.food.penalty);
-      cooking.missedCount += 1;
-      cooking.combo = 1;
-      cooking.lives -= 1;
-
-      logEvent(`😡 ${customer.name} bỏ về. Mất ${customer.food.penalty} tiền.`);
-      showToast(`Khách bỏ về! -${customer.food.penalty}`);
-
-      if(cooking.lives <= 0){
-        endCookingGame(false);
-      } else {
-        renderCooking();
-      }
-    }
-
-    function tickCookingGame(){
-      if(!cooking.running) return;
-
-      const nowTs = Date.now();
-
-      cooking.timeLeft -= 0.2;
-      if(cooking.timeLeft <= 0){
-        cooking.timeLeft = 0;
-        endCookingGame(true);
-        return;
-      }
-
-      if(cooking.combo > 1 && nowTs > cooking.comboExpireAt){
-        cooking.combo = 1;
-      }
-
-      if(nowTs >= cooking.nextCustomerAt){
-        spawnCustomer();
-        const spawnEvery = cooking.timeLeft > 60 ? 4200 : cooking.timeLeft > 30 ? 3300 : 2600;
-        cooking.nextCustomerAt = nowTs + spawnEvery;
-      }
-
-      cooking.customers.forEach(c => {
-        c.patience -= 200;
-      });
-
-      for(let i = cooking.customers.length - 1; i >= 0; i--){
-        if(cooking.customers[i].patience <= 0){
-          missCustomer(i);
-          if(!cooking.running) return;
-        }
-      }
-
-      cooking.stations.forEach(station => {
-        if(station.food && nowTs >= station.finishAt){
-          if(cooking.ready.length < 6){
-            cooking.ready.push(station.food);
-            logEvent(`🍽️ ${station.food.icon} ${station.food.name} đã hoàn thành.`);
-            showToast(`${station.food.icon} ${station.food.name} xong rồi!`);
-          } else {
-            logEvent(`⚠️ Khay đầy, bỏ lỡ ${station.food.icon} ${station.food.name}.`);
-            showToast('Khay đầy, món vừa nấu bị hủy.');
-          }
-          station.food = null;
-          station.startedAt = 0;
-          station.finishAt = 0;
-        }
-      });
-
-      renderCooking();
-    }
-
-    function endCookingGame(dayCompleted){
-      cooking.running = false;
-      clearInterval(cooking.timers.ticker);
-      cooking.timers.ticker = null;
-
-      dayOverTitle.textContent = dayCompleted ? 'Kết thúc ngày' : 'Thất bại';
-      dayOverText.textContent = dayCompleted
-        ? 'Ca làm đã kết thúc. Xem hôm nay bạn kiếm được bao nhiêu.'
-        : 'Quán của bạn mất hết uy tín. Hết lượt chịu đựng rồi.';
-
-      dayOverList.innerHTML = `
-        <div>💰 Tiền kiếm được: <b>${Math.floor(cooking.money).toLocaleString('vi-VN')}</b></div>
-        <div>✅ Khách phục vụ thành công: <b>${cooking.servedCount}</b></div>
-        <div>😡 Khách bỏ về: <b>${cooking.missedCount}</b></div>
-        <div>🏆 Best: <b>${Math.floor(cooking.best).toLocaleString('vi-VN')}</b></div>
-      `;
-
-      dayOver.classList.add('show');
-      updateCookingHud();
-    }
-
-    function stopCookingGame(){
-      cooking.running = false;
-      clearInterval(cooking.timers.ticker);
-      cooking.timers.ticker = null;
-      dayOver.classList.remove('show');
-    }
-
-    function restartCookingGame(){
-      stopCookingGame();
-
-      cooking.money = 0;
-      cooking.combo = 1;
-      cooking.comboExpireAt = 0;
-      cooking.lives = 3;
-      cooking.timeLeft = 90;
-      cooking.customers = [];
-      cooking.stations = createStations();
-      cooking.ready = [];
-      cooking.log = [];
-      cooking.nextCustomerAt = Date.now() + 1200;
-      cooking.servedCount = 0;
-      cooking.missedCount = 0;
-      cooking.customerId = 1;
-      cooking.running = true;
-
-      dayOver.classList.remove('show');
-
-      renderFoodMenu();
-      renderCooking();
-      logEvent('🟢 Bắt đầu ca làm mới.');
-
-      cooking.timers.ticker = setInterval(tickCookingGame, 200);
-      updateCookingHud();
-    }
-
-    renderFoodMenu();
-    renderCooking();
-    showScreen('homeScreen');
   </script>
 </body>
 </html>
