@@ -584,11 +584,11 @@
             <br/>
             Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
             <br/><br/>
-            Từ <b>50.000 điểm</b>, cứ mỗi mốc <b>50.000</b> sẽ kích hoạt <b>Fruit Frenzy</b>. Nếu thắng, bạn nhận điểm thưởng lớn và có thể thanh tẩy <b>đầu lâu đỏ</b>. Nếu thua hoặc chém trúng bom, một số mảnh trong vườn sẽ bị nguyền thành <b>đầu lâu đỏ</b>.
+            Từ <b>50.000 điểm</b>, cứ mỗi mốc <b>50.000</b> sẽ kích hoạt <b>Fruit Frenzy</b>. Nếu thắng, bạn nhận điểm thưởng lớn, được <b>+1 kỹ năng</b>, và có thể thanh tẩy <b>đầu lâu đỏ</b>. Nếu thua hoặc chém trúng bom, một số mảnh trong vườn sẽ bị nguyền thành <b>đầu lâu đỏ</b>.
           </p>
 
           <div class="sig">
-            <span>Bản tối ưu cho điện thoại yếu • Fruit Frenzy chạy cùng layout • ưu tiên mượt</span>
+            <span>Bản tối ưu cho điện thoại yếu • Fruit Frenzy cùng layout • đã vá bug Game Over oan</span>
             <span>Best: <b id="bestScoreText">0</b></span>
           </div>
         </section>
@@ -649,7 +649,7 @@
                   <div class="frenzyBadge">🍉 Mini Event</div>
                   <h4 id="frenzyTitle">Fruit Frenzy</h4>
                   <p id="frenzyDesc1">Board đã đóng băng. Hãy chém trái cây thật nhanh.</p>
-                  <p id="frenzyDesc2">Thắng để lấy điểm và thanh tẩy đầu lâu đỏ.</p>
+                  <p id="frenzyDesc2">Thắng để lấy điểm, +1 kỹ năng và thanh tẩy đầu lâu đỏ.</p>
                 </div>
 
                 <canvas id="frenzyCanvas"></canvas>
@@ -687,6 +687,7 @@
       'Chào mừng Babi đến với Merge Blossom.',
       'Trò chơi này được làm ra để giúp em giết thời gian và giảm stress.',
       'Mỗi 50.000 điểm sẽ có Fruit Frenzy để kiếm thưởng lớn.',
+      'Thắng minigame sẽ nhận thêm 1 kỹ năng.',
       'Chúc em chơi dui dẻ 😘.'
     ];
 
@@ -779,10 +780,12 @@
       gameOver: false,
       blockedUntil: 0,
       lineExceededAt: null,
+      mergeGraceUntil: 0,
       lastTick: performance.now(),
       nextSkullScore: 10000,
       dangerLevel: 0,
-      nextEventScore: EVENT_THRESHOLD
+      nextEventScore: EVENT_THRESHOLD,
+      pendingEventScore: null
     };
 
     const frenzy = {
@@ -917,18 +920,21 @@
       state.skills = 1;
       state.gameOver = false;
       state.lineExceededAt = null;
+      state.mergeGraceUntil = 0;
       state.blockedUntil = 0;
       state.dropX = state.width / 2;
       state.lastTick = performance.now();
       state.nextSkullScore = 10000;
       state.dangerLevel = 0;
       state.nextEventScore = EVENT_THRESHOLD;
+      state.pendingEventScore = null;
 
       frenzy.active = false;
       frenzy.intro = false;
       frenzy.fruits = [];
       frenzy.slashTrail = [];
       frenzy.pointerDown = false;
+      frenzy.resultEndAt = 0;
 
       pickNextPiece();
       aimLine.style.left = state.dropX + 'px';
@@ -955,32 +961,46 @@
       setTimeout(()=> el.remove(), 700);
     }
 
+    function queueFruitFrenzyIfNeeded(){
+      if(frenzy.active || state.gameOver) return;
+      if(state.score >= state.nextEventScore && state.pendingEventScore == null){
+        state.pendingEventScore = state.nextEventScore;
+        state.nextEventScore += EVENT_THRESHOLD;
+      }
+    }
+
     function awardScore(x, y, base, message){
       const points = Math.floor(base * state.combo);
       state.score += points;
+
       if(state.score > state.best){
         state.best = state.score;
         localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
       }
+
       state.combo = Math.min(9, state.combo + 1);
       state.comboDecayAt = now() + (state.dangerLevel >= 2 ? 1100 : 1600);
+
       addFloatingScore(x, y, points, message || ('+' + points));
       maybeSpawnSkull();
-      maybeTriggerFruitFrenzy();
+      queueFruitFrenzyIfNeeded();
       updateHud();
     }
 
     function addRawScore(points, text, x, y){
       state.score += points;
+
       if(state.score > state.best){
         state.best = state.score;
         localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
       }
+
       if(typeof x === 'number' && typeof y === 'number'){
         addFloatingScore(x, y, points, text || ('+' + points), '#fff7b2');
       }
+
       maybeSpawnSkull();
-      maybeTriggerFruitFrenzy();
+      queueFruitFrenzyIfNeeded();
       updateHud();
     }
 
@@ -1040,23 +1060,60 @@
       return next;
     }
 
+    function getSkillTarget(){
+      const candidates = state.items.filter(it =>
+        !it.isSkull &&
+        !it.isRedSkull &&
+        !it.isMystery &&
+        typeof it.level === 'number' &&
+        it.level >= 0
+      );
+
+      if(!candidates.length) return null;
+
+      const safeY = state.height * safeLineRatio;
+
+      let best = candidates[0];
+      let bestScore = -Infinity;
+
+      for(const it of candidates){
+        const top = it.y - it.r;
+        const dangerProximity = Math.max(0, safeY + 90 - top);
+        const heightPressure = (state.height - it.y) * 0.18;
+        const sizePressure = it.r * 5 + it.level * 90;
+        const centerPenalty = Math.abs(it.x - state.width * 0.5) * -0.02;
+        const score = dangerProximity * 8 + heightPressure + sizePressure + centerPenalty;
+
+        if(score > bestScore){
+          bestScore = score;
+          best = it;
+        }
+      }
+
+      return best;
+    }
+
     function useSkill(){
       if(state.gameOver || frenzy.active) return;
       if(state.skills <= 0){
         showToast('Không còn kỹ năng.');
         return;
       }
-      const lowTargets = state.items.filter(it => !it.isSkull && !it.isRedSkull && !it.isMystery && it.level <= 3);
-      if(!lowTargets.length){
-        showToast('Không có mảnh cấp thấp để nổ.');
+
+      const target = getSkillTarget();
+      if(!target){
+        showToast('Không có mảnh phù hợp để nổ.');
         return;
       }
-      const target = lowTargets.sort((a,b)=> b.y - a.y)[0];
+
       state.skills -= 1;
       state.items = state.items.filter(it => it.id !== target.id);
-      awardScore(target.x, target.y, 54, 'STAR BURST');
+
+      const bonus = Math.floor(90 + target.r * 1.2 + Math.max(0, target.level) * 35);
+      addRawScore(bonus, 'STAR BURST', target.x, target.y);
+
       updateHud();
-      showToast('✨ Kích nổ ánh sao!');
+      showToast(`✨ Kích nổ ${SHAPES[target.level]?.emoji || 'mảnh'} nguy hiểm nhất!`);
     }
 
     function buildSpatialGrid(items){
@@ -1102,15 +1159,6 @@
       while(state.score >= state.nextSkullScore){
         state.nextSkullScore += 10000;
         spawnSkull();
-      }
-    }
-
-    function maybeTriggerFruitFrenzy(){
-      if(frenzy.active || state.gameOver) return;
-      if(state.score >= state.nextEventScore){
-        const thresholdHit = state.nextEventScore;
-        state.nextEventScore += EVENT_THRESHOLD;
-        startFruitFrenzy(thresholdHit);
       }
     }
 
@@ -1276,14 +1324,19 @@
       }
 
       const safeY = state.height * safeLineRatio;
-      const danger = state.items.some(it => it.y - it.r < safeY);
-      if(danger){
-        if(state.lineExceededAt == null) state.lineExceededAt = now();
-        if(now() - state.lineExceededAt > (state.dangerLevel >= 2 ? 800 : 1100)){
-          endGame();
-        }
-      }else{
+
+      if(now() < state.mergeGraceUntil){
         state.lineExceededAt = null;
+      } else {
+        const danger = state.items.some(it => it.y - it.r < safeY);
+        if(danger){
+          if(state.lineExceededAt == null) state.lineExceededAt = now();
+          if(now() - state.lineExceededAt > (state.dangerLevel >= 2 ? 800 : 1100)){
+            endGame();
+          }
+        }else{
+          state.lineExceededAt = null;
+        }
       }
     }
 
@@ -1415,6 +1468,10 @@
 
     function startFruitFrenzy(thresholdHit){
       if(state.gameOver) return;
+
+      state.lineExceededAt = null;
+      state.mergeGraceUntil = 0;
+
       frenzy.active = true;
       frenzy.intro = true;
       frenzy.failed = false;
@@ -1439,8 +1496,8 @@
       frenzyTitle.textContent = 'Fruit Frenzy';
       frenzyDesc1.textContent = `Mốc ${thresholdHit.toLocaleString('vi-VN')} điểm đã kích hoạt minigame.`;
       frenzyDesc2.textContent = countRedSkulls() > 0
-        ? `Thắng để thanh tẩy ${countRedSkulls()} đầu lâu đỏ và nhận +1000 điểm mỗi cái.`
-        : 'Vuốt thật nhanh để chém trái cây và lấy điểm thưởng.';
+        ? `Thắng để thanh tẩy ${countRedSkulls()} đầu lâu đỏ, nhận +1 kỹ năng và +1000 điểm mỗi cái.`
+        : 'Vuốt thật nhanh để chém trái cây, lấy điểm và nhận +1 kỹ năng.';
       frenzyBottomHint.textContent = 'Vuốt trên màn hình để chém trái cây • tránh bom';
 
       frenzyOverlay.classList.add('show');
@@ -1458,7 +1515,7 @@
 
       if(win){
         frenzyTitle.textContent = frenzy.cleanedRedSkulls > 0 ? 'Redemption Burst!' : 'Frenzy Clear!';
-        frenzyDesc1.textContent = `Bạn nhận ${Math.floor(frenzy.score).toLocaleString('vi-VN')} điểm từ minigame.`;
+        frenzyDesc1.textContent = `Bạn nhận ${Math.floor(frenzy.score).toLocaleString('vi-VN')} điểm từ minigame và +1 kỹ năng.`;
         frenzyDesc2.textContent = frenzy.cleanedRedSkulls > 0
           ? `Thanh tẩy ${frenzy.cleanedRedSkulls} đầu lâu đỏ • +${(frenzy.cleanedRedSkulls * 1000).toLocaleString('vi-VN')} điểm`
           : 'Quay lại khu vườn và tiếp tục ghép.';
@@ -1479,11 +1536,17 @@
       frenzy.fruits = [];
       frenzy.slashTrail = [];
       frenzy.pointerDown = false;
+
       frenzyOverlay.classList.remove('show');
       frenzyCanvas.style.opacity = '0';
       frenzyCanvas.style.pointerEvents = 'none';
+
       aimLine.style.opacity = '0.62';
       nextBubble.style.opacity = '1';
+
+      state.lineExceededAt = null;
+      state.mergeGraceUntil = now() + 1800;
+
       updateHud();
     }
 
@@ -1588,7 +1651,6 @@
       fctx.clearRect(0, 0, state.width, state.height);
       if(!frenzy.active) return;
 
-      fctx.fillStyle = 'rgba(255,255,255,.03)';
       for(let i = 0; i < frenzy.fruits.length; i++){
         const fr = frenzy.fruits[i];
         fctx.save();
@@ -1650,6 +1712,9 @@
       const rawScore = Math.floor(frenzy.score);
       addRawScore(rawScore, 'FRENZY +' + rawScore, state.width * 0.5, state.height * 0.35);
 
+      state.skills = Math.min(9, state.skills + 1);
+      addFloatingScore(state.width * 0.5, state.height * 0.30, 0, '✨ +1 SKILL', '#fff0c8');
+
       const redSkulls = state.items.filter(it => it.isRedSkull);
       frenzy.cleanedRedSkulls = redSkulls.length;
 
@@ -1660,6 +1725,8 @@
         state.items = state.items.filter(it => !it.isRedSkull);
         addRawScore(redSkulls.length * 1000, 'REDEMPTION', state.width * 0.5, state.height * 0.42);
       }
+
+      updateHud();
     }
 
     function applyRedSkullPenalty(count){
@@ -1686,6 +1753,8 @@
 
       for(const it of state.items){
         if(chosenIds.has(it.id)){
+          const oldR = it.r;
+
           it.isRedSkull = true;
           it.isSkull = false;
           it.isMystery = false;
@@ -1693,6 +1762,12 @@
           it.level = -2;
           it.actualLevel = -2;
           it.r = RED_SKULL.radius;
+
+          const grow = it.r - oldR;
+          if(grow > 0){
+            it.y = clamp(it.y + grow, it.r, state.height - it.r);
+          }
+
           it.vx *= 0.2;
           it.vy = -0.3;
           addFloatingScore(it.x, it.y, 0, 'CURSED', '#ffb5bf');
@@ -1746,6 +1821,12 @@
     function loop(ts){
       const delta = Math.min(30, ts - state.lastTick || 16.7);
       state.lastTick = ts;
+
+      if(!frenzy.active && !state.gameOver && state.pendingEventScore != null){
+        const thresholdHit = state.pendingEventScore;
+        state.pendingEventScore = null;
+        startFruitFrenzy(thresholdHit);
+      }
 
       updatePhysics(delta / 16.7);
       updateFrenzy(delta);
