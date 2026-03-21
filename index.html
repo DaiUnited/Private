@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Merge Blossom • Mobile Optimized</title>
+  <title>Merge Blossom • Premium Mobile UI</title>
 
   <style>
     :root{
@@ -17,9 +17,14 @@
       --mint:#7bf4d1;
       --gold:#ffd86b;
       --safe:#80ffcf;
-      --glass: rgba(255,255,255,.10);
-      --glass2: rgba(255,255,255,.16);
+
+      --glass: rgba(255,255,255,.08);
+      --glass-2: rgba(255,255,255,.12);
+      --glass-3: rgba(255,255,255,.16);
+      --line: rgba(255,255,255,.12);
+      --line-2: rgba(255,255,255,.18);
       --shadow: 0 20px 50px rgba(0,0,0,.45);
+      --shadow-soft: 0 12px 30px rgba(0,0,0,.28);
     }
 
     *{box-sizing:border-box}
@@ -31,8 +36,9 @@
       color:#f7f2ff;
       overflow:hidden;
       background:
-        radial-gradient(900px 500px at 20% 15%, rgba(155,92,255,.16), transparent 60%),
-        radial-gradient(700px 400px at 80% 20%, rgba(255,79,216,.12), transparent 55%),
+        radial-gradient(1000px 560px at 15% 10%, rgba(155,92,255,.18), transparent 60%),
+        radial-gradient(820px 480px at 88% 14%, rgba(255,79,216,.14), transparent 55%),
+        radial-gradient(680px 420px at 50% 100%, rgba(110,203,255,.10), transparent 60%),
         linear-gradient(140deg, var(--bg1), var(--bg2), var(--bg3));
     }
 
@@ -47,26 +53,41 @@
     .card{
       width:min(980px, 96vw);
       min-height:min(620px, 94vh);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:26px;
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
+      backdrop-filter: blur(10px);
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 16%),
+        radial-gradient(360px 180px at 18% 0%, rgba(255,255,255,.06), transparent 75%);
+      opacity:.9;
     }
 
     .content{
       display:grid;
       grid-template-columns: 1.02fr .98fr;
-      gap: 18px;
-      padding: 22px;
+      gap:18px;
+      padding:22px;
       height:100%;
+      position:relative;
+      z-index:1;
     }
 
     @media (max-width: 900px){
       body{overflow:auto}
       .wrap{height:auto; padding:10px}
-      .card{min-height:auto; border-radius:20px}
+      .card{min-height:auto; border-radius:22px}
       .content{grid-template-columns:1fr; padding:12px; gap:12px}
     }
 
@@ -76,13 +97,17 @@
       gap:10px;
       padding:10px 14px;
       border-radius:999px;
-      background: rgba(155,92,255,.18);
-      border: 1px solid rgba(155,92,255,.28);
+      background: rgba(155,92,255,.14);
+      border:1px solid rgba(192,132,255,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
       width:max-content;
+      backdrop-filter: blur(8px);
     }
 
     .dot{
-      width:10px; height:10px; border-radius:50%;
+      width:10px;
+      height:10px;
+      border-radius:50%;
       background: radial-gradient(circle at 30% 30%, #fff, var(--violet) 45%, rgba(155,92,255,.3));
       box-shadow: 0 0 14px rgba(155,92,255,.7);
     }
@@ -94,12 +119,14 @@
     }
 
     .typebox{
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.20);
-      border: 1px solid rgba(255,255,255,.12);
-      min-height: 120px;
+      margin-top:12px;
+      padding:14px;
+      border-radius:18px;
+      background: rgba(0,0,0,.16);
+      border:1px solid rgba(255,255,255,.10);
+      min-height:120px;
+      backdrop-filter: blur(8px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
 
     .typed{
@@ -118,77 +145,149 @@
 
     .scene{
       position:relative;
-      border-radius: 20px;
-      background: linear-gradient(180deg, rgba(155,92,255,.15), rgba(0,0,0,.20));
-      border: 1px solid rgba(255,255,255,.14);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg, rgba(155,92,255,.14), rgba(0,0,0,.18));
+      border:1px solid rgba(255,255,255,.12);
       overflow:hidden;
-      min-height: 340px;
-      box-shadow: 0 14px 40px rgba(0,0,0,.28);
+      min-height:340px;
+      box-shadow: var(--shadow-soft);
       touch-action:none;
       user-select:none;
       contain: layout paint size;
+      backdrop-filter: blur(10px);
+    }
+
+    .scene::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(220px 120px at 12% 0%, rgba(255,255,255,.07), transparent 78%);
+      opacity:.9;
     }
 
     @media (max-width: 900px){
-      .scene{min-height: 500px; border-radius:18px}
+      .scene{min-height:500px; border-radius:20px}
     }
 
     .gameHud{
       position:absolute;
-      inset:12px 12px auto 12px;
-      display:grid;
-      grid-template-columns: 1fr auto;
+      inset:10px 10px auto 10px;
+      display:flex;
+      flex-direction:column;
       gap:8px;
       z-index:4;
       pointer-events:none;
     }
 
     .hudGroup{
-      display:flex;
-      flex-wrap:wrap;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap:8px;
+      width:100%;
     }
 
     .hudCard{
-      padding:8px 10px;
-      border-radius:14px;
-      background: rgba(10,8,22,.40);
-      border:1px solid rgba(255,255,255,.12);
-      min-width:78px;
+      position:relative;
+      overflow:hidden;
+      padding:9px 11px;
+      border-radius:16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid var(--line);
+      min-width:0;
+      min-height:60px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      backdrop-filter: blur(10px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06),
+        0 8px 18px rgba(0,0,0,.18);
+    }
+
+    .hudCard::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 35%);
+      opacity:.8;
     }
 
     .hudCard .label{
+      position:relative;
+      z-index:1;
       font-size:10px;
-      letter-spacing:.5px;
+      letter-spacing:.45px;
       text-transform:uppercase;
       opacity:.68;
       margin-bottom:4px;
+      line-height:1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .hudCard .value{
-      font-size:17px;
+      position:relative;
+      z-index:1;
+      font-size:19px;
       font-weight:800;
-      line-height:1;
+      line-height:1.05;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-shadow: 0 2px 10px rgba(0,0,0,.25);
+    }
+
+    .hudCard.scoreCard .value{ color:#fff7ff; }
+    .hudCard.comboCard .value{ color:#ffdff7; }
+
+    .hudCard.levelCard .value{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      color:#ffe89b;
+    }
+
+    .hudCard.skillCard .value{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      color:#fff2a8;
+    }
+
+    .hudIcon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:20px;
+      flex:0 0 auto;
+      transform: translateY(-.5px);
     }
 
     .boardWrap{
       position:absolute;
-      inset:68px 12px 12px 12px;
-      border-radius: 18px;
+      inset:84px 10px 10px 10px;
+      border-radius:20px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
-        linear-gradient(180deg, rgba(91,41,136,.20), rgba(18,8,38,.28));
-      border:1px solid rgba(255,255,255,.12);
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)),
+        linear-gradient(180deg, rgba(91,41,136,.18), rgba(18,8,38,.24));
+      border:1px solid rgba(255,255,255,.10);
       overflow:hidden;
       z-index:1;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
 
     .boardGrid{
       position:absolute;
       inset:0;
       background-image:
-        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
       background-size: calc(100% / 6) calc(100% / 11);
       opacity:.12;
       pointer-events:none;
@@ -196,12 +295,14 @@
 
     .safeLine{
       position:absolute;
-      left:0; right:0;
+      left:0;
+      right:0;
       top:18%;
       height:2px;
-      background: linear-gradient(90deg, transparent, rgba(128,255,207,.8), transparent);
-      opacity:.9;
+      background: linear-gradient(90deg, transparent, rgba(128,255,207,.9), transparent);
+      opacity:.95;
       pointer-events:none;
+      box-shadow: 0 0 12px rgba(128,255,207,.35);
     }
 
     .safeLabel{
@@ -209,13 +310,15 @@
       right:8px;
       top:calc(18% - 14px);
       font-size:10px;
-      font-weight:700;
+      font-weight:800;
       color:var(--safe);
-      padding:2px 7px;
+      padding:3px 8px;
       border-radius:999px;
-      background: rgba(8,25,22,.55);
+      background: rgba(8,25,22,.58);
       border:1px solid rgba(128,255,207,.22);
       pointer-events:none;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 10px rgba(0,0,0,.18);
     }
 
     #gameCanvas{
@@ -232,61 +335,69 @@
       top:0;
       bottom:0;
       width:2px;
-      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.10));
+      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.08));
       opacity:.62;
       transform: translateX(-50%);
       z-index:3;
       pointer-events:none;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,.20));
     }
 
     .nextBubble{
       position:absolute;
       right:10px;
       bottom:10px;
-      width:72px;
-      height:72px;
-      border-radius:18px;
-      background: rgba(10,8,22,.46);
-      border:1px solid rgba(255,255,255,.14);
+      width:82px;
+      height:82px;
+      border-radius:20px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
       z-index:4;
       pointer-events:none;
+      backdrop-filter: blur(10px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.05),
+        0 10px 24px rgba(0,0,0,.22);
     }
 
     .nextBubble small{
       font-size:9px;
-      opacity:.75;
+      opacity:.76;
       margin-bottom:4px;
       text-transform:uppercase;
       letter-spacing:.7px;
     }
 
     .nextIcon{
-      font-size:26px;
+      font-size:29px;
       line-height:1;
+      text-shadow: 0 4px 12px rgba(0,0,0,.22);
     }
 
     .actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top: 10px;
+      margin-top:10px;
     }
 
     button{
       cursor:pointer;
       border:0;
-      padding: 11px 14px;
-      border-radius: 14px;
-      font-weight: 700;
+      padding:11px 14px;
+      border-radius:14px;
+      font-weight:800;
       letter-spacing:.2px;
       color:#140018;
       background: linear-gradient(135deg, var(--violet2), var(--pink));
       user-select:none;
       -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 10px 18px rgba(155,92,255,.20);
     }
 
     button:active{transform: scale(.98)}
@@ -294,11 +405,12 @@
     .ghost{
       background: rgba(255,255,255,.10);
       color: rgba(255,255,255,.92);
-      border: 1px solid rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:none;
     }
 
     .hint{
-      font-size: 13px;
+      font-size:13px;
       color: rgba(247,242,255,.76);
       line-height:1.6;
     }
@@ -308,10 +420,10 @@
       justify-content:space-between;
       align-items:center;
       gap:12px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(255,255,255,.10);
+      padding-top:8px;
+      border-top:1px solid rgba(255,255,255,.10);
       color: rgba(247,242,255,.72);
-      font-size: 13px;
+      font-size:13px;
     }
 
     .toast{
@@ -319,18 +431,21 @@
       left: 50%;
       bottom: 14px;
       transform: translateX(-50%);
-      background: rgba(0,0,0,.40);
-      border: 1px solid rgba(255,255,255,.16);
-      border-radius: 14px;
-      padding: 10px 12px;
+      background:
+        linear-gradient(180deg, rgba(26,18,38,.76), rgba(10,8,22,.68));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:16px;
+      padding:10px 12px;
       display:flex;
       gap:10px;
       align-items:center;
       opacity:0;
       pointer-events:none;
       transition: opacity .18s ease, transform .18s ease;
-      z-index: 10;
-      max-width: min(92vw, 680px);
+      z-index:10;
+      max-width:min(92vw, 680px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.24);
     }
 
     .toast.show{
@@ -339,7 +454,9 @@
     }
 
     .chip{
-      width:10px; height:10px; border-radius:50%;
+      width:10px;
+      height:10px;
+      border-radius:50%;
       background: radial-gradient(circle at 30% 30%, #fff, var(--pink) 50%, rgba(255,79,216,.2));
       flex:0 0 auto;
     }
@@ -369,37 +486,97 @@
       align-items:center;
       justify-content:center;
       padding:18px;
-      background: rgba(11,8,20,.55);
+      background: rgba(11,8,20,.58);
       opacity:0;
       pointer-events:none;
       transition: opacity .18s ease;
       z-index:7;
+      backdrop-filter: blur(5px);
     }
 
-    .gameOverOverlay.show{opacity:1; pointer-events:auto;}
+    .gameOverOverlay.show{
+      opacity:1;
+      pointer-events:auto;
+    }
 
     .gameOverCard{
       width:min(92%, 320px);
       padding:18px;
-      border-radius:22px;
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
       border:1px solid rgba(255,255,255,.16);
       text-align:center;
+      box-shadow: 0 20px 40px rgba(0,0,0,.28);
+      backdrop-filter: blur(10px);
     }
 
-    .gameOverCard h4{ margin:0 0 10px; font-size:24px; }
-    .gameOverCard p{ margin:8px 0; color: rgba(247,242,255,.82); line-height:1.55; }
+    .gameOverCard h4{
+      margin:0 0 10px;
+      font-size:24px;
+    }
+
+    .gameOverCard p{
+      margin:8px 0;
+      color: rgba(247,242,255,.82);
+      line-height:1.55;
+    }
 
     @media (max-width: 900px){
-      .gameHud{ inset:10px 10px auto 10px; grid-template-columns: 1fr; }
-      .hudGroup:last-child{ position:absolute; right:0; top:0; }
-      .boardWrap{ inset:62px 10px 10px 10px; }
-      .sig{font-size:12px; flex-direction:column; align-items:flex-start}
-      button{padding:11px 12px}
+      .sig{
+        font-size:12px;
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      button{
+        padding:11px 12px;
+      }
+    }
+
+    @media (max-width: 420px){
+      .gameHud{
+        inset:8px 8px auto 8px;
+        gap:7px;
+      }
+
+      .hudGroup{
+        gap:7px;
+      }
+
+      .hudCard{
+        padding:8px 9px;
+        min-height:56px;
+        border-radius:15px;
+      }
+
+      .hudCard .label{
+        font-size:9px;
+        margin-bottom:3px;
+      }
+
+      .hudCard .value{
+        font-size:17px;
+      }
+
+      .boardWrap{
+        inset:78px 8px 8px 8px;
+        border-radius:18px;
+      }
+
+      .nextBubble{
+        width:76px;
+        height:76px;
+        border-radius:18px;
+      }
+
+      .nextIcon{
+        font-size:27px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce){
-      .floatingScore { animation-duration: .01ms !important; }
+      .floatingScore{ animation-duration: .01ms !important; }
     }
   </style>
 </head>
@@ -434,9 +611,9 @@
             <br/><br/>
             Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️ → 🌸 → 💎 → 👑</b>
             <br/>
-            Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và Babi dễ chết hơn.
+            Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
             <br/><br/>
-            Từ <b>50.000 điểm</b>: đôi khi mảnh tiếp theo sẽ là <b>❓</b> và chỉ lộ diện sau khi rơi xong. Đồng thời sẽ có một <b>🟣 trái banh quấy rối</b> chạy và nhảy khắp bảng để cản Babi, nhưng nó <b>không làm Babi thua</b> nếu chạm vạch an toàn.
+            Từ <b>50.000 điểm</b>: đôi khi mảnh tiếp theo sẽ là <b>❓</b> và sẽ tự lộ diện sau <b>5 giây</b>. Đồng thời sẽ có một <b>🟣 trái banh quấy rối</b> chạy và nhảy khắp bảng để cản bạn, nhưng nó <b>không làm bạn thua</b> nếu chạm vạch an toàn.
           </p>
 
           <div class="sig">
@@ -449,23 +626,24 @@
           <div class="scene" id="scene">
             <div class="gameHud">
               <div class="hudGroup">
-                <div class="hudCard">
+                <div class="hudCard scoreCard">
                   <div class="label">Điểm</div>
                   <div class="value" id="scoreText">0</div>
                 </div>
-                <div class="hudCard">
+                <div class="hudCard comboCard">
                   <div class="label">Combo</div>
                   <div class="value" id="comboText">x1</div>
                 </div>
-                <div class="hudCard">
-                  <div class="label">Cao nhất</div>
-                  <div class="value" id="levelText">0</div>
-                </div>
               </div>
+
               <div class="hudGroup">
-                <div class="hudCard">
+                <div class="hudCard levelCard">
+                  <div class="label">Cao nhất</div>
+                  <div class="value" id="levelText"><span class="hudIcon">💗</span><span>Tim non</span></div>
+                </div>
+                <div class="hudCard skillCard">
                   <div class="label">Kỹ năng</div>
-                  <div class="value" id="skillText">1</div>
+                  <div class="value" id="skillText"><span class="hudIcon">✨</span><span>1</span></div>
                 </div>
               </div>
             </div>
@@ -485,7 +663,7 @@
               <div class="gameOverOverlay" id="gameOver">
                 <div class="gameOverCard">
                   <h4>Game Over</h4>
-                  <p id="gameOverText">Babi đã để khu vườn vượt vạch an toàn.</p>
+                  <p id="gameOverText">Bạn đã để khu vườn vượt vạch an toàn.</p>
                   <div class="actions" style="justify-content:center; margin-top:14px;">
                     <button id="btnRestart">Chơi lại</button>
                   </div>
@@ -542,16 +720,17 @@
     }
 
     const SHAPES = [
-      { emoji:'💗', name:'Tim non',   fill:'#ff67c8', score:10,  radius:isMobile?18:19 },
-      { emoji:'⭐', name:'Sao mộng',  fill:'#ffd76a', score:24,  radius:isMobile?22:24 },
+      { emoji:'💗', name:'Tim non', fill:'#ff67c8', score:10, radius:isMobile?18:19 },
+      { emoji:'⭐', name:'Sao mộng', fill:'#ffd76a', score:24, radius:isMobile?22:24 },
       { emoji:'❄️', name:'Băng sương', fill:'#9be9ff', score:46, radius:isMobile?26:29 },
-      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82,  radius:isMobile?30:34 },
+      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82, radius:isMobile?30:34 },
       { emoji:'🌈', name:'Cầu vồng', fill:'#73d8ff', score:140, radius:isMobile?34:39 },
       { emoji:'☀️', name:'Thái dương', fill:'#ffb16b', score:230, radius:isMobile?38:44 },
-      { emoji:'🌸', name:'Hoa nở',    fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
+      { emoji:'🌸', name:'Hoa nở', fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
       { emoji:'💎', name:'Tinh thạch', fill:'#89f2e1', score:560, radius:isMobile?46:54 },
       { emoji:'👑', name:'Vương miện', fill:'#ffe07e', score:860, radius:isMobile?50:59 }
     ];
+
     const OBSTACLE = { emoji:'💀', name:'Đầu lâu', fill:'#b7bcc8', radius:isMobile?24:28 };
     const CHAOS_BALL = { emoji:'🟣', name:'Banh quấy rối', fill:'#b06bff', radius:isMobile?19:22 };
     const MAX_LEVEL = SHAPES.length - 1;
@@ -595,8 +774,13 @@
     const maxItems = isMobile ? 44 : 58;
     const cellSize = isMobile ? 72 : 84;
 
-    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
-    function now(){ return performance.now(); }
+    function clamp(v, min, max){
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function now(){
+      return performance.now();
+    }
 
     function randLevel(){
       const r = Math.random();
@@ -626,7 +810,7 @@
       canvas.height = Math.floor(rect.height * DPR);
       canvas.style.width = rect.width + 'px';
       canvas.style.height = rect.height + 'px';
-      ctx.setTransform(DPR,0,0,DPR,0,0);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
       state.dropX = clamp(state.dropX || rect.width / 2, 28, rect.width - 28);
       aimLine.style.left = state.dropX + 'px';
     }
@@ -656,6 +840,8 @@
       item.r = SHAPES[level].radius;
       item.isMystery = true;
       item.revealed = false;
+      item.createdAt = now();
+      item.revealAt = now() + 5000;
       return item;
     }
 
@@ -694,14 +880,16 @@
       item.revealed = true;
       item.isMystery = false;
       item.level = item.actualLevel;
+      delete item.revealAt;
+      delete item.createdAt;
       addFloatingScore(item.x, item.y, 0, SHAPES[item.level].emoji);
     }
 
     function updateHud(){
       scoreText.textContent = Math.floor(state.score).toLocaleString('vi-VN');
       comboText.textContent = 'x' + state.combo;
-      levelText.textContent = SHAPES[state.highest] ? SHAPES[state.highest].emoji : '0';
-      skillText.textContent = '✨ ' + state.skills;
+      levelText.innerHTML = '<span class="hudIcon">' + (SHAPES[state.highest]?.emoji || '💗') + '</span><span>' + (SHAPES[state.highest]?.name || 'Tim non') + '</span>';
+      skillText.innerHTML = '<span class="hudIcon">✨</span><span>' + state.skills + '</span>';
       bestScoreText.textContent = Math.floor(state.best).toLocaleString('vi-VN');
       nextIconEl.textContent = state.nextIsMystery ? '❓' : SHAPES[state.nextLevel].emoji;
     }
@@ -731,7 +919,7 @@
     }
 
     function addFloatingScore(x, y, value, text = null){
-      if (reducedMotion && isMobile) return;
+      if(reducedMotion && isMobile) return;
       const el = document.createElement('div');
       el.className = 'floatingScore';
       el.style.left = x + 'px';
@@ -744,12 +932,15 @@
     function awardScore(x, y, base, message){
       const points = Math.floor(base * state.combo);
       state.score += points;
+
       if(state.score > state.best){
         state.best = state.score;
         localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
       }
+
       state.combo = Math.min(9, state.combo + 1);
       state.comboDecayAt = now() + (state.dangerLevel >= 2 ? 1100 : 1600);
+
       addFloatingScore(x, y, points, message || ('+' + points));
       maybeSpawnSkull();
       maybeUnlockChaos();
@@ -785,6 +976,7 @@
       if(a.isMystery || b.isMystery) return false;
       if(a.level !== b.level) return false;
       if(a.merged || b.merged) return false;
+
       const speedA = Math.abs(a.vx) + Math.abs(a.vy);
       const speedB = Math.abs(b.vx) + Math.abs(b.vy);
       return speedA < 3.1 && speedB < 3.1;
@@ -792,7 +984,10 @@
 
     function mergePair(a, b){
       if(a.merged || b.merged) return null;
-      a.merged = b.merged = true;
+
+      a.merged = true;
+      b.merged = true;
+
       const mx = (a.x + b.x) / 2;
       const my = (a.y + b.y) / 2;
       const level = a.level;
@@ -807,25 +1002,45 @@
 
       const newLevel = level + 1;
       state.highest = Math.max(state.highest, newLevel);
+
       const next = makeItem(newLevel, mx, my);
       next.vx = (a.vx + b.vx) * 0.10;
       next.vy = -1.8;
-      awardScore(mx, my, SHAPES[newLevel].score, SHAPES[newLevel].emoji + ' +' + Math.floor(SHAPES[newLevel].score * state.combo));
-      if(newLevel >= 5 && Math.random() < 0.18 && state.skills < 3) state.skills += 1;
+
+      awardScore(
+        mx,
+        my,
+        SHAPES[newLevel].score,
+        SHAPES[newLevel].emoji + ' +' + Math.floor(SHAPES[newLevel].score * state.combo)
+      );
+
+      if(newLevel >= 5 && Math.random() < 0.18 && state.skills < 3){
+        state.skills += 1;
+      }
+
       return next;
     }
 
     function useSkill(){
       if(state.gameOver) return;
+
       if(state.skills <= 0){
         showToast('Không còn kỹ năng.');
         return;
       }
-      const lowTargets = state.items.filter(it => !it.isSkull && !it.isHazardBall && !it.isMystery && it.level <= 3);
+
+      const lowTargets = state.items.filter(it =>
+        !it.isSkull &&
+        !it.isHazardBall &&
+        !it.isMystery &&
+        it.level <= 3
+      );
+
       if(!lowTargets.length){
         showToast('Không có mảnh cấp thấp để nổ.');
         return;
       }
+
       const target = lowTargets.sort((a,b)=> b.y - a.y)[0];
       state.skills -= 1;
       state.items = state.items.filter(it => it.id !== target.id);
@@ -836,12 +1051,14 @@
 
     function buildSpatialGrid(items){
       const grid = new Map();
+
       for(let i = 0; i < items.length; i++){
         const it = items[i];
         const minX = Math.floor((it.x - it.r) / cellSize);
         const maxX = Math.floor((it.x + it.r) / cellSize);
         const minY = Math.floor((it.y - it.r) / cellSize);
         const maxY = Math.floor((it.y + it.r) / cellSize);
+
         for(let gx = minX; gx <= maxX; gx++){
           for(let gy = minY; gy <= maxY; gy++){
             const key = gx + ',' + gy;
@@ -850,12 +1067,18 @@
           }
         }
       }
+
       return grid;
     }
 
     function spawnSkull(){
       const margin = OBSTACLE.radius + 8;
-      const x = clamp(margin + Math.random() * (state.width - margin * 2), margin, state.width - margin);
+      const x = clamp(
+        margin + Math.random() * (state.width - margin * 2),
+        margin,
+        state.width - margin
+      );
+
       const skull = {
         id: 'skull_' + Math.random().toString(36).slice(2),
         isSkull: true,
@@ -868,6 +1091,7 @@
         merged: false,
         settled: false
       };
+
       state.items.push(skull);
       showToast('💀 Đầu lâu xuất hiện!');
     }
@@ -892,8 +1116,10 @@
 
       const fillRatio = 1 - (minTop / state.height);
       let nextDanger = 0;
+
       if(minTop < safeY + 56 || fillRatio > 0.70) nextDanger = 1;
       if(minTop < safeY + 18 || fillRatio > 0.80) nextDanger = 2;
+
       if(nextDanger !== state.dangerLevel){
         state.dangerLevel = nextDanger;
         if(nextDanger === 1) showToast('⚠️ Vùng căng thẳng!');
@@ -906,14 +1132,17 @@
       if(!ball || state.gameOver) return;
 
       const t = now();
+
       if(t >= state.nextBallActionAt){
         const dir = Math.random() < 0.5 ? -1 : 1;
         ball.vx += dir * (isMobile ? 2.8 : 3.4);
+
         if(ball.y + ball.r >= state.height - 4 || Math.abs(ball.vy) < 0.2){
           ball.vy -= isMobile ? 7.2 : 8.4;
-        } else if (Math.random() < 0.45){
+        }else if(Math.random() < 0.45){
           ball.vy -= isMobile ? 4.6 : 5.4;
         }
+
         state.nextBallActionAt = t + (isMobile ? 650 : 540) + Math.random() * 650;
       }
 
@@ -953,12 +1182,15 @@
           it.x = it.r;
           it.vx = Math.abs(it.vx) * (it.isHazardBall ? 0.92 : sideBounce);
         }
+
         if(it.x + it.r > state.width){
           it.x = state.width - it.r;
           it.vx = -Math.abs(it.vx) * (it.isHazardBall ? 0.92 : sideBounce);
         }
+
         if(it.y + it.r > state.height){
           it.y = state.height - it.r;
+
           if(it.isHazardBall){
             it.vy = -Math.max(4.8, Math.abs(it.vy) * 0.82);
             it.vx += (Math.random() - 0.5) * 0.7;
@@ -968,11 +1200,13 @@
           }else{
             it.vy *= -bounce;
           }
+
           it.vx *= it.isHazardBall ? 0.98 : frictionGround;
         }
       }
 
       const spawned = [];
+
       for(let pass = 0; pass < collisionPasses; pass++){
         const grid = buildSpatialGrid(items);
         const seenPairs = new Set();
@@ -983,10 +1217,12 @@
               const ai = bucket[i];
               const bi = bucket[j];
               const pairKey = ai < bi ? ai + ':' + bi : bi + ':' + ai;
+
               if(seenPairs.has(pairKey)) continue;
               seenPairs.add(pairKey);
 
-              const a = items[ai], b = items[bi];
+              const a = items[ai];
+              const b = items[bi];
               if(!a || !b || a.merged || b.merged) continue;
 
               const dx = b.x - a.x;
@@ -1017,6 +1253,7 @@
                   a.vx += nx * impulse;
                   a.vy += ny * impulse;
                 }
+
                 if(!b.isSkull){
                   b.vx -= nx * impulse;
                   b.vy -= ny * impulse;
@@ -1031,7 +1268,7 @@
                   if(a.y < b.y){
                     if(!a.isHazardBall) a.vy = Math.min(a.vy, 0.25);
                     if(!b.isHazardBall) b.settled = true;
-                  } else {
+                  }else{
                     if(!b.isHazardBall) b.vy = Math.min(b.vy, 0.25);
                     if(!a.isHazardBall) a.settled = true;
                   }
@@ -1056,9 +1293,7 @@
         const it = state.items[i];
 
         if(it.isMystery && !it.revealed){
-          const resting = (it.y + it.r >= state.height - 2 && Math.abs(it.vy) < 1.2)
-            || (Math.abs(it.vx) < 0.08 && Math.abs(it.vy) < 0.08 && it.y > state.height * 0.22);
-          if(resting){
+          if(now() >= it.revealAt){
             revealMystery(it);
           }
         }
@@ -1078,6 +1313,7 @@
 
       const safeY = state.height * safeLineRatio;
       const danger = state.items.some(it => !it.isHazardBall && (it.y - it.r < safeY));
+
       if(danger){
         if(state.lineExceededAt == null) state.lineExceededAt = now();
         if(now() - state.lineExceededAt > (state.dangerLevel >= 2 ? 800 : 1100)){
@@ -1123,13 +1359,16 @@
 
       const level = it.revealed ? it.level : it.actualLevel;
       const shape = SHAPES[level];
+
       ctx.beginPath();
       ctx.fillStyle = it.revealed ? shape.fill : 'rgba(255,255,255,.22)';
       ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
       ctx.fill();
+
       ctx.lineWidth = 1.5;
       ctx.strokeStyle = 'rgba(255,255,255,.20)';
       ctx.stroke();
+
       ctx.font = `${Math.floor(it.r * 0.98)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -1142,12 +1381,14 @@
       const r = shape.radius;
       const x = clamp(state.dropX, r + 4, state.width - r - 4);
       const y = r + 10;
+
       ctx.save();
       ctx.globalAlpha = 0.20;
       ctx.beginPath();
       ctx.fillStyle = 'rgba(255,255,255,.14)';
-      ctx.arc(x, y, r, 0, Math.PI*2);
+      ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fill();
+
       ctx.font = `${Math.floor(r * 0.98)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -1173,10 +1414,16 @@
 
     function endGame(){
       if(state.gameOver) return;
+
       state.gameOver = true;
       gameOverOverlay.classList.add('show');
+
       const skullCount = state.items.filter(it => it.isSkull).length;
-      gameOverText.textContent = `Điểm của Babi: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'} • Đầu lâu: ${skullCount}`;
+      gameOverText.textContent =
+        `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • ` +
+        `Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'} • ` +
+        `Đầu lâu: ${skullCount}`;
+
       showToast('💥 Khu vườn đã quá đầy.');
       updateHud();
     }
@@ -1187,7 +1434,10 @@
       aimLine.style.left = state.dropX + 'px';
     }
 
-    boardWrap.addEventListener('pointermove', (e)=> setAimFromClientX(e.clientX), { passive: true });
+    boardWrap.addEventListener('pointermove', (e)=>{
+      setAimFromClientX(e.clientX);
+    }, { passive: true });
+
     boardWrap.addEventListener('pointerdown', (e)=>{
       setAimFromClientX(e.clientX);
       dropPiece();
