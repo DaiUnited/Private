@@ -436,7 +436,7 @@
             <br/>
             Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
             <br/><br/>
-            Từ <b>50.000 điểm</b>: đôi khi mảnh tiếp theo sẽ là <b>❓</b> và sẽ tự lộ diện sau <b>5 giây</b>. Đồng thời sẽ có một <b>🟣 trái banh quấy rối</b> chạy và nhảy khắp bảng để cản bạn, nhưng nó <b>không làm bạn thua</b> nếu chạm vạch an toàn.
+            Từ <b>50.000 điểm</b>: đôi khi mảnh tiếp theo sẽ là <b>❓</b> và sẽ tự lộ diện sau <b>5 giây</b>.
           </p>
 
           <div class="sig">
@@ -553,7 +553,6 @@
       { emoji:'👑', name:'Vương miện', fill:'#ffe07e', score:860, radius:isMobile?50:59 }
     ];
     const OBSTACLE = { emoji:'💀', name:'Đầu lâu', fill:'#b7bcc8', radius:isMobile?24:28 };
-    const CHAOS_BALL = { emoji:'🟣', name:'Banh quấy rối', fill:'#b06bff', radius:isMobile?19:22 };
     const MAX_LEVEL = SHAPES.length - 1;
     const CHAOS_THRESHOLD = 50000;
 
@@ -577,10 +576,7 @@
       frameSkip: 0,
       nextSkullScore: 10000,
       dangerLevel: 0,
-      dropPenaltyActive: false,
-      chaosUnlocked: false,
-      ballSpawned: false,
-      nextBallActionAt: 0
+      dropPenaltyActive: false
     };
 
     const gravity = isMobile ? 0.40 : 0.35;
@@ -684,9 +680,6 @@
       state.nextSkullScore = 10000;
       state.dangerLevel = 0;
       state.dropPenaltyActive = false;
-      state.chaosUnlocked = false;
-      state.ballSpawned = false;
-      state.nextBallActionAt = 0;
       pickNextPiece();
       aimLine.style.left = state.dropX + 'px';
       gameOverOverlay.classList.remove('show');
@@ -716,14 +709,13 @@
       state.comboDecayAt = now() + (state.dangerLevel >= 2 ? 1100 : 1600);
       addFloatingScore(x, y, points, message || ('+' + points));
       maybeSpawnSkull();
-      maybeUnlockChaos();
       updateHud();
     }
 
     function dropPiece(){
       if(state.gameOver) return;
       if(now() < state.blockedUntil) return;
-      if(state.items.filter(it => !it.isHazardBall).length >= maxItems) return;
+      if(state.items.length >= maxItems) return;
 
       const level = state.nextLevel;
       const r = SHAPES[level].radius;
@@ -784,7 +776,7 @@
         showToast('Không còn kỹ năng.');
         return;
       }
-      const lowTargets = state.items.filter(it => !it.isSkull && !it.isHazardBall && !it.isMystery && it.level <= 3);
+      const lowTargets = state.items.filter(it => !it.isSkull && !it.isMystery && it.level <= 3);
       if(!lowTargets.length){
         showToast('Không có mảnh cấp thấp để nổ.');
         return;
@@ -835,36 +827,6 @@
       showToast('💀 Đầu lâu xuất hiện!');
     }
 
-    function spawnChaosBall(){
-      if(state.ballSpawned) return;
-      const r = CHAOS_BALL.radius;
-      const ball = {
-        id: 'chaos_ball',
-        isHazardBall: true,
-        x: clamp(state.width * 0.72, r + 4, state.width - r - 4),
-        y: state.height * 0.35,
-        vx: isMobile ? -2.2 : -2.7,
-        vy: -1.8,
-        r,
-        merged: false,
-        settled: false
-      };
-      state.items.push(ball);
-      state.ballSpawned = true;
-      state.nextBallActionAt = now() + 700;
-      showToast('🟣 Trái banh quấy rối xuất hiện!');
-    }
-
-    function maybeUnlockChaos(){
-      if(state.score >= CHAOS_THRESHOLD && !state.chaosUnlocked){
-        state.chaosUnlocked = true;
-        showToast('❓ Chế độ hỗn loạn đã mở!');
-      }
-      if(state.chaosUnlocked && !state.ballSpawned){
-        spawnChaosBall();
-      }
-    }
-
     function maybeSpawnSkull(){
       while(state.score >= state.nextSkullScore){
         state.nextSkullScore += 10000;
@@ -887,7 +849,6 @@
       let minTop = state.height;
       for(let i = 0; i < state.items.length; i++){
         const it = state.items[i];
-        if(it.isHazardBall) continue;
         const top = it.y - it.r;
         if(top < minTop) minTop = top;
       }
@@ -902,73 +863,39 @@
       }
     }
 
-    function updateChaosBallAI(step){
-      const ball = state.items.find(it => it.isHazardBall);
-      if(!ball || state.gameOver) return;
-
-      const t = now();
-      if(t >= state.nextBallActionAt){
-        const dir = Math.random() < 0.5 ? -1 : 1;
-        ball.vx += dir * (isMobile ? 2.8 : 3.4);
-        if(ball.y + ball.r >= state.height - 4 || Math.abs(ball.vy) < 0.2){
-          ball.vy -= isMobile ? 7.2 : 8.4;
-        } else if (Math.random() < 0.45){
-          ball.vy -= isMobile ? 4.6 : 5.4;
-        }
-        state.nextBallActionAt = t + (isMobile ? 650 : 540) + Math.random() * 650;
-      }
-
-      const centerBias = (state.width * 0.5 - ball.x) * 0.0008 * step;
-      ball.vx += centerBias;
-
-      const maxH = isMobile ? 4.4 : 5.1;
-      ball.vx = clamp(ball.vx, -maxH, maxH);
-      ball.vy = clamp(ball.vy, -9.5, 12);
-    }
-
     function updatePhysics(step = 1){
       const items = state.items;
-      updateChaosBallAI(step);
 
       for(let i = 0; i < items.length; i++){
         const it = items[i];
         it.settled = false;
         let grav = gravity * (state.dangerLevel >= 2 ? 1.12 : 1);
         if(it.isSkull) grav = gravity * 0.92;
-        if(it.isHazardBall) grav = gravity * 0.96;
 
         it.vy += grav * step;
         it.x += it.vx * step;
         it.y += it.vy * step;
 
-        if(it.isHazardBall){
-          it.vx *= 0.998;
-          it.vy *= 0.992;
-        }else{
-          it.vx *= airDrag;
-          it.vy *= damping;
-        }
+        it.vx *= airDrag;
+        it.vy *= damping;
 
         if(it.x - it.r < 0){
           it.x = it.r;
-          it.vx = Math.abs(it.vx) * (it.isHazardBall ? 0.92 : sideBounce);
+          it.vx = Math.abs(it.vx) * sideBounce;
         }
         if(it.x + it.r > state.width){
           it.x = state.width - it.r;
-          it.vx = -Math.abs(it.vx) * (it.isHazardBall ? 0.92 : sideBounce);
+          it.vx = -Math.abs(it.vx) * sideBounce;
         }
         if(it.y + it.r > state.height){
           it.y = state.height - it.r;
-          if(it.isHazardBall){
-            it.vy = -Math.max(4.8, Math.abs(it.vy) * 0.82);
-            it.vx += (Math.random() - 0.5) * 0.7;
-          }else if(Math.abs(it.vy) < (it.isSkull ? 1.1 : 1.4)){
+          if(Math.abs(it.vy) < (it.isSkull ? 1.1 : 1.4)){
             it.vy = 0;
             it.settled = true;
           }else{
             it.vy *= -bounce;
           }
-          it.vx *= it.isHazardBall ? 0.98 : frictionGround;
+          it.vx *= frictionGround;
         }
       }
 
@@ -999,8 +926,8 @@
                 const nx = dx / dist;
                 const ny = dy / dist;
 
-                const weightA = a.isSkull ? 1.7 : a.isHazardBall ? 1.25 : 1;
-                const weightB = b.isSkull ? 1.7 : b.isHazardBall ? 1.25 : 1;
+                const weightA = a.isSkull ? 1.7 : 1;
+                const weightB = b.isSkull ? 1.7 : 1;
                 const totalWeight = weightA + weightB;
                 a.x -= nx * overlap * (weightB / totalWeight);
                 a.y -= ny * overlap * (weightB / totalWeight);
@@ -1009,7 +936,7 @@
 
                 const relVx = b.vx - a.vx;
                 const relVy = b.vy - a.vy;
-                const impulseBase = (a.isHazardBall || b.isHazardBall) ? 0.26 : 0.17;
+                const impulseBase = 0.17;
                 const impulse = (relVx * nx + relVy * ny) * impulseBase;
 
                 if(!a.isSkull){
@@ -1021,22 +948,22 @@
                   b.vy -= ny * impulse;
                 }
 
-                a.vx *= a.isHazardBall ? 0.997 : a.isSkull ? 0.985 : frictionCollision;
-                b.vx *= b.isHazardBall ? 0.997 : b.isSkull ? 0.985 : frictionCollision;
-                a.vy *= a.isHazardBall ? 0.998 : 0.996;
-                b.vy *= b.isHazardBall ? 0.998 : 0.996;
+                a.vx *= a.isSkull ? 0.985 : frictionCollision;
+                b.vx *= b.isSkull ? 0.985 : frictionCollision;
+                a.vy *= 0.996;
+                b.vy *= 0.996;
 
                 if(Math.abs(ny) > 0.5){
                   if(a.y < b.y){
-                    if(!a.isHazardBall) a.vy = Math.min(a.vy, 0.25);
-                    if(!b.isHazardBall) b.settled = true;
+                    a.vy = Math.min(a.vy, 0.25);
+                    if(!b.isSkull) b.settled = true;
                   } else {
-                    if(!b.isHazardBall) b.vy = Math.min(b.vy, 0.25);
-                    if(!a.isHazardBall) a.settled = true;
+                    b.vy = Math.min(b.vy, 0.25);
+                    if(!a.isSkull) a.settled = true;
                   }
                 }
 
-                const blockMerge = a.isSkull || b.isSkull || a.isHazardBall || b.isHazardBall;
+                const blockMerge = a.isSkull || b.isSkull;
                 if(!blockMerge && canMerge(a, b)){
                   const created = mergePair(a, b);
                   if(created) spawned.push(created);
@@ -1053,17 +980,14 @@
 
       for(let i = 0; i < state.items.length; i++){
         const it = state.items[i];
-
         if(it.isMystery && !it.revealed){
           if(now() >= it.revealAt){
             revealMystery(it);
           }
         }
 
-        if(!it.isHazardBall){
-          if(Math.abs(it.vx) < 0.02) it.vx = 0;
-          if(Math.abs(it.vy) < 0.02) it.vy = 0;
-        }
+        if(Math.abs(it.vx) < 0.02) it.vx = 0;
+        if(Math.abs(it.vy) < 0.02) it.vy = 0;
       }
 
       updateDangerState();
@@ -1074,7 +998,7 @@
       }
 
       const safeY = state.height * safeLineRatio;
-      const danger = state.items.some(it => !it.isHazardBall && (it.y - it.r < safeY));
+      const danger = state.items.some(it => it.y - it.r < safeY);
       if(danger){
         if(state.lineExceededAt == null) state.lineExceededAt = now();
         if(now() - state.lineExceededAt > (state.dangerLevel >= 2 ? 800 : 1100)){
@@ -1086,22 +1010,6 @@
     }
 
     function drawPiece(it){
-      if(it.isHazardBall){
-        ctx.beginPath();
-        ctx.fillStyle = CHAOS_BALL.fill;
-        ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = 'rgba(255,255,255,.22)';
-        ctx.stroke();
-        ctx.font = `${Math.floor(it.r * 0.92)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'rgba(255,255,255,.98)';
-        ctx.fillText(CHAOS_BALL.emoji, it.x, it.y + 1);
-        return;
-      }
-
       if(it.isSkull){
         ctx.beginPath();
         ctx.fillStyle = OBSTACLE.fill;
