@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Merge Blossom • Mobile Optimized</title>
+  <title>Merge Blossom • Fruit Frenzy Edition</title>
 
   <style>
     :root{
@@ -17,6 +17,8 @@
       --mint:#7bf4d1;
       --gold:#ffd86b;
       --safe:#80ffcf;
+      --danger:#ff667a;
+      --danger2:#ff334e;
       --glass: rgba(255,255,255,.10);
       --glass2: rgba(255,255,255,.16);
       --shadow: 0 20px 50px rgba(0,0,0,.45);
@@ -58,8 +60,8 @@
     .content{
       display:grid;
       grid-template-columns: 1.02fr .98fr;
-      gap: 18px;
-      padding: 22px;
+      gap:18px;
+      padding:22px;
       height:100%;
     }
 
@@ -77,7 +79,7 @@
       padding:10px 14px;
       border-radius:999px;
       background: rgba(155,92,255,.18);
-      border: 1px solid rgba(155,92,255,.28);
+      border:1px solid rgba(155,92,255,.28);
       width:max-content;
     }
 
@@ -94,12 +96,12 @@
     }
 
     .typebox{
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.20);
-      border: 1px solid rgba(255,255,255,.12);
-      min-height: 120px;
+      margin-top:12px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.12);
+      min-height:120px;
     }
 
     .typed{
@@ -118,11 +120,11 @@
 
     .scene{
       position:relative;
-      border-radius: 20px;
+      border-radius:20px;
       background: linear-gradient(180deg, rgba(155,92,255,.15), rgba(0,0,0,.20));
-      border: 1px solid rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.14);
       overflow:hidden;
-      min-height: 340px;
+      min-height:340px;
       box-shadow: 0 14px 40px rgba(0,0,0,.28);
       touch-action:none;
       user-select:none;
@@ -130,14 +132,14 @@
     }
 
     @media (max-width: 900px){
-      .scene{min-height: 500px; border-radius:18px}
+      .scene{min-height:500px; border-radius:18px}
     }
 
     .gameHud{
       position:absolute;
       inset:12px 12px auto 12px;
       display:grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns:1fr auto;
       gap:8px;
       z-index:4;
       pointer-events:none;
@@ -174,7 +176,7 @@
     .boardWrap{
       position:absolute;
       inset:68px 12px 12px 12px;
-      border-radius: 18px;
+      border-radius:18px;
       background:
         linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
         linear-gradient(180deg, rgba(91,41,136,.20), rgba(18,8,38,.28));
@@ -218,13 +220,21 @@
       pointer-events:none;
     }
 
-    #gameCanvas{
+    #gameCanvas,
+    #frenzyCanvas{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       pointer-events:auto;
       z-index:2;
+    }
+
+    #frenzyCanvas{
+      z-index:11;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .15s ease;
     }
 
     .aimLine{
@@ -237,6 +247,7 @@
       transform: translateX(-50%);
       z-index:3;
       pointer-events:none;
+      transition: opacity .15s ease;
     }
 
     .nextBubble{
@@ -254,6 +265,7 @@
       justify-content:center;
       z-index:4;
       pointer-events:none;
+      transition: opacity .15s ease;
     }
 
     .nextBubble small{
@@ -273,15 +285,15 @@
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top: 10px;
+      margin-top:10px;
     }
 
     button{
       cursor:pointer;
       border:0;
-      padding: 11px 14px;
-      border-radius: 14px;
-      font-weight: 700;
+      padding:11px 14px;
+      border-radius:14px;
+      font-weight:700;
       letter-spacing:.2px;
       color:#140018;
       background: linear-gradient(135deg, var(--violet2), var(--pink));
@@ -289,16 +301,16 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    button:active{transform: scale(.98)}
+    button:active{transform:scale(.98)}
 
     .ghost{
       background: rgba(255,255,255,.10);
       color: rgba(255,255,255,.92);
-      border: 1px solid rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.16);
     }
 
     .hint{
-      font-size: 13px;
+      font-size:13px;
       color: rgba(247,242,255,.76);
       line-height:1.6;
     }
@@ -308,34 +320,34 @@
       justify-content:space-between;
       align-items:center;
       gap:12px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(255,255,255,.10);
+      padding-top:8px;
+      border-top:1px solid rgba(255,255,255,.10);
       color: rgba(247,242,255,.72);
-      font-size: 13px;
+      font-size:13px;
     }
 
     .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 14px;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,.40);
-      border: 1px solid rgba(255,255,255,.16);
-      border-radius: 14px;
-      padding: 10px 12px;
+      position:fixed;
+      left:50%;
+      bottom:14px;
+      transform:translateX(-50%);
+      background:rgba(0,0,0,.40);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:14px;
+      padding:10px 12px;
       display:flex;
       gap:10px;
       align-items:center;
       opacity:0;
       pointer-events:none;
       transition: opacity .18s ease, transform .18s ease;
-      z-index: 10;
-      max-width: min(92vw, 680px);
+      z-index:20;
+      max-width:min(92vw, 680px);
     }
 
     .toast.show{
       opacity:1;
-      transform: translateX(-50%) translateY(-4px);
+      transform:translateX(-50%) translateY(-4px);
     }
 
     .chip{
@@ -352,7 +364,7 @@
       text-shadow: 0 6px 18px rgba(0,0,0,.42);
       pointer-events:none;
       animation: floatScore .7s ease-out forwards;
-      z-index:5;
+      z-index:8;
       will-change: transform, opacity;
     }
 
@@ -373,7 +385,7 @@
       opacity:0;
       pointer-events:none;
       transition: opacity .18s ease;
-      z-index:7;
+      z-index:30;
     }
 
     .gameOverOverlay.show{opacity:1; pointer-events:auto;}
@@ -390,12 +402,148 @@
     .gameOverCard h4{ margin:0 0 10px; font-size:24px; }
     .gameOverCard p{ margin:8px 0; color: rgba(247,242,255,.82); line-height:1.55; }
 
+    .frenzyOverlay{
+      position:absolute;
+      inset:0;
+      z-index:10;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease;
+      background:
+        radial-gradient(100% 70% at 50% 0%, rgba(255,79,216,.16), transparent 60%),
+        linear-gradient(180deg, rgba(10,8,20,.35), rgba(10,8,20,.42));
+    }
+
+    .frenzyOverlay.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .frenzyTop{
+      position:absolute;
+      inset:10px 10px auto 10px;
+      display:grid;
+      grid-template-columns: 1fr auto auto;
+      gap:8px;
+      z-index:12;
+      pointer-events:none;
+    }
+
+    .frenzyCard{
+      padding:10px 12px;
+      border-radius:14px;
+      background: rgba(10,8,22,.48);
+      border:1px solid rgba(255,255,255,.12);
+      min-width:84px;
+      backdrop-filter: blur(4px);
+    }
+
+    .frenzyCard .label{
+      font-size:10px;
+      text-transform:uppercase;
+      opacity:.72;
+      letter-spacing:.6px;
+      margin-bottom:4px;
+    }
+
+    .frenzyCard .value{
+      font-size:18px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .frenzyBanner{
+      position:absolute;
+      left:50%;
+      top:56%;
+      transform:translate(-50%, -50%);
+      z-index:13;
+      text-align:center;
+      padding:18px 20px;
+      width:min(88%, 340px);
+      border-radius:20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow: 0 20px 50px rgba(0,0,0,.3);
+      transition: opacity .18s ease, transform .18s ease;
+      pointer-events:none;
+    }
+
+    .frenzyBanner.hide{
+      opacity:0;
+      transform:translate(-50%, -54%);
+    }
+
+    .frenzyBanner h4{
+      margin:0 0 8px;
+      font-size:26px;
+      line-height:1.05;
+    }
+
+    .frenzyBanner p{
+      margin:6px 0;
+      color: rgba(255,255,255,.86);
+      line-height:1.45;
+      font-size:14px;
+    }
+
+    .frenzyBadge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      margin-bottom:10px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .frenzyBottomHint{
+      position:absolute;
+      left:50%;
+      bottom:12px;
+      transform:translateX(-50%);
+      z-index:12;
+      font-size:12px;
+      color: rgba(255,255,255,.86);
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.12);
+      pointer-events:none;
+      white-space:nowrap;
+    }
+
     @media (max-width: 900px){
       .gameHud{ inset:10px 10px auto 10px; grid-template-columns: 1fr; }
       .hudGroup:last-child{ position:absolute; right:0; top:0; }
       .boardWrap{ inset:62px 10px 10px 10px; }
       .sig{font-size:12px; flex-direction:column; align-items:flex-start}
       button{padding:11px 12px}
+      .frenzyTop{
+        grid-template-columns: 1fr 1fr 1fr;
+        inset:8px 8px auto 8px;
+      }
+      .frenzyCard{
+        min-width:0;
+        padding:8px 9px;
+      }
+      .frenzyCard .value{
+        font-size:16px;
+      }
+      .frenzyBanner{
+        width:min(92%, 320px);
+        padding:16px 14px;
+      }
+      .frenzyBanner h4{
+        font-size:22px;
+      }
+      .frenzyBottomHint{
+        font-size:11px;
+        bottom:10px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -436,11 +584,11 @@
             <br/>
             Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
             <br/><br/>
-            Từ <b>50.000 điểm</b>: đôi khi mảnh tiếp theo sẽ là <b>❓</b> và sẽ tự lộ diện sau <b>5 giây</b>.
+            Từ <b>50.000 điểm</b>, cứ mỗi mốc <b>50.000</b> sẽ kích hoạt <b>Fruit Frenzy</b>. Nếu thắng, bạn nhận điểm thưởng lớn và có thể thanh tẩy <b>đầu lâu đỏ</b>. Nếu thua hoặc chém trúng bom, một số mảnh trong vườn sẽ bị nguyền thành <b>đầu lâu đỏ</b>.
           </p>
 
           <div class="sig">
-            <span>Bản tối ưu cho điện thoại yếu • giảm hiệu ứng nền • ưu tiên mượt</span>
+            <span>Bản tối ưu cho điện thoại yếu • Fruit Frenzy chạy cùng layout • ưu tiên mượt</span>
             <span>Best: <b id="bestScoreText">0</b></span>
           </div>
         </section>
@@ -467,6 +615,10 @@
                   <div class="label">Kỹ năng</div>
                   <div class="value" id="skillText">✨ 1</div>
                 </div>
+                <div class="hudCard">
+                  <div class="label">💀 Đỏ</div>
+                  <div class="value" id="redSkullText">0</div>
+                </div>
               </div>
             </div>
 
@@ -477,7 +629,34 @@
               <div class="aimLine" id="aimLine"></div>
               <canvas id="gameCanvas"></canvas>
 
-              <div class="nextBubble">
+              <div class="frenzyOverlay" id="frenzyOverlay">
+                <div class="frenzyTop">
+                  <div class="frenzyCard">
+                    <div class="label">Fruit Frenzy</div>
+                    <div class="value" id="frenzyPhaseText">#1</div>
+                  </div>
+                  <div class="frenzyCard">
+                    <div class="label">Mục tiêu</div>
+                    <div class="value" id="frenzyTargetText">1500</div>
+                  </div>
+                  <div class="frenzyCard">
+                    <div class="label">Thời gian</div>
+                    <div class="value" id="frenzyTimeText">12.0</div>
+                  </div>
+                </div>
+
+                <div class="frenzyBanner" id="frenzyBanner">
+                  <div class="frenzyBadge">🍉 Mini Event</div>
+                  <h4 id="frenzyTitle">Fruit Frenzy</h4>
+                  <p id="frenzyDesc1">Board đã đóng băng. Hãy chém trái cây thật nhanh.</p>
+                  <p id="frenzyDesc2">Thắng để lấy điểm và thanh tẩy đầu lâu đỏ.</p>
+                </div>
+
+                <canvas id="frenzyCanvas"></canvas>
+                <div class="frenzyBottomHint" id="frenzyBottomHint">Vuốt trên màn hình để chém trái cây • tránh bom</div>
+              </div>
+
+              <div class="nextBubble" id="nextBubble">
                 <small>Tiếp theo</small>
                 <div class="nextIcon" id="nextIcon">💗</div>
               </div>
@@ -507,13 +686,13 @@
     const storyLines = [
       'Chào mừng Babi đến với Merge Blossom.',
       'Trò chơi này được làm ra để giúp em giết thời gian và giảm stress.',
-      '100.000 điểm sẽ đổi được 1 tháng 4G',
+      'Mỗi 50.000 điểm sẽ có Fruit Frenzy để kiếm thưởng lớn.',
       'Chúc em chơi dui dẻ 😘.'
     ];
 
     const isMobile = matchMedia('(max-width: 900px)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.2 : 1.6);
+    const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.15 : 1.5);
 
     const typedEl = document.getElementById('typed');
     const toast = document.getElementById('toast');
@@ -521,15 +700,30 @@
     const boardWrap = document.getElementById('boardWrap');
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+    const frenzyCanvas = document.getElementById('frenzyCanvas');
+    const fctx = frenzyCanvas.getContext('2d', { alpha: true, desynchronized: true });
+
     const aimLine = document.getElementById('aimLine');
+    const nextBubble = document.getElementById('nextBubble');
     const nextIconEl = document.getElementById('nextIcon');
     const scoreText = document.getElementById('scoreText');
     const comboText = document.getElementById('comboText');
     const levelText = document.getElementById('levelText');
     const skillText = document.getElementById('skillText');
+    const redSkullText = document.getElementById('redSkullText');
     const bestScoreText = document.getElementById('bestScoreText');
     const gameOverOverlay = document.getElementById('gameOver');
     const gameOverText = document.getElementById('gameOverText');
+
+    const frenzyOverlay = document.getElementById('frenzyOverlay');
+    const frenzyBanner = document.getElementById('frenzyBanner');
+    const frenzyPhaseText = document.getElementById('frenzyPhaseText');
+    const frenzyTargetText = document.getElementById('frenzyTargetText');
+    const frenzyTimeText = document.getElementById('frenzyTimeText');
+    const frenzyTitle = document.getElementById('frenzyTitle');
+    const frenzyDesc1 = document.getElementById('frenzyDesc1');
+    const frenzyDesc2 = document.getElementById('frenzyDesc2');
+    const frenzyBottomHint = document.getElementById('frenzyBottomHint');
 
     typedEl.textContent = storyLines.join('\n\n');
 
@@ -538,23 +732,36 @@
       toastText.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1300);
+      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1450);
     }
 
     const SHAPES = [
-      { emoji:'💗', name:'Tim non',   fill:'#ff67c8', score:10,  radius:isMobile?18:19 },
-      { emoji:'⭐', name:'Sao mộng',  fill:'#ffd76a', score:24,  radius:isMobile?22:24 },
+      { emoji:'💗', name:'Tim non', fill:'#ff67c8', score:10, radius:isMobile?18:19 },
+      { emoji:'⭐', name:'Sao mộng', fill:'#ffd76a', score:24, radius:isMobile?22:24 },
       { emoji:'❄️', name:'Băng sương', fill:'#9be9ff', score:46, radius:isMobile?26:29 },
-      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82,  radius:isMobile?30:34 },
+      { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82, radius:isMobile?30:34 },
       { emoji:'🌈', name:'Cầu vồng', fill:'#73d8ff', score:140, radius:isMobile?34:39 },
       { emoji:'☀️', name:'Thái dương', fill:'#ffb16b', score:230, radius:isMobile?38:44 },
-      { emoji:'🌸', name:'Hoa nở',    fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
+      { emoji:'🌸', name:'Hoa nở', fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
       { emoji:'💎', name:'Tinh thạch', fill:'#89f2e1', score:560, radius:isMobile?46:54 },
       { emoji:'👑', name:'Vương miện', fill:'#ffe07e', score:860, radius:isMobile?50:59 }
     ];
-    const OBSTACLE = { emoji:'💀', name:'Đầu lâu', fill:'#b7bcc8', radius:isMobile?24:28 };
+
+    const OBSTACLE = { emoji:'💀', fill:'#b7bcc8', radius:isMobile?24:28 };
+    const RED_SKULL = { emoji:'💀', fill:'#ff445d', radius:isMobile?24:28 };
+
+    const FRUITS = [
+      { emoji:'🍒', fill:'#ff6387', score:80,  r:isMobile?16:18, weight:22, speed:1.18 },
+      { emoji:'🍋', fill:'#ffe16e', score:120, r:isMobile?18:20, weight:20, speed:1.12 },
+      { emoji:'🍎', fill:'#ff5a5a', score:160, r:isMobile?20:22, weight:18, speed:1.04 },
+      { emoji:'🍊', fill:'#ffaf5c', score:220, r:isMobile?22:24, weight:16, speed:1.00 },
+      { emoji:'🍉', fill:'#66e1a2', score:350, r:isMobile?25:28, weight:12, speed:0.92 },
+      { emoji:'🍍', fill:'#ffd86b', score:500, r:isMobile?27:30, weight:8,  speed:0.86 }
+    ];
+    const BOMB = { emoji:'💣', fill:'#444a58', r:isMobile?20:22 };
+
     const MAX_LEVEL = SHAPES.length - 1;
-    const CHAOS_THRESHOLD = 50000;
+    const EVENT_THRESHOLD = 50000;
 
     const state = {
       width: 0,
@@ -573,10 +780,29 @@
       blockedUntil: 0,
       lineExceededAt: null,
       lastTick: performance.now(),
-      frameSkip: 0,
       nextSkullScore: 10000,
       dangerLevel: 0,
-      dropPenaltyActive: false
+      nextEventScore: EVENT_THRESHOLD
+    };
+
+    const frenzy = {
+      active: false,
+      intro: false,
+      phase: 0,
+      target: 0,
+      timeLeft: 0,
+      duration: 12,
+      score: 0,
+      fruits: [],
+      slashTrail: [],
+      lastSpawnAt: 0,
+      nextSpawnIn: 260,
+      pointerDown: false,
+      introEndAt: 0,
+      resultEndAt: 0,
+      failed: false,
+      failByBomb: false,
+      cleanedRedSkulls: 0
     };
 
     const gravity = isMobile ? 0.40 : 0.35;
@@ -593,6 +819,7 @@
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
     function now(){ return performance.now(); }
+    function lerp(a,b,t){ return a + (b-a)*t; }
 
     function randLevel(){
       const r = Math.random();
@@ -604,7 +831,7 @@
     }
 
     function shouldMysterySpawn(){
-      if(state.score < CHAOS_THRESHOLD) return false;
+      if(state.score < EVENT_THRESHOLD) return false;
       const rate = state.dangerLevel >= 2 ? 0.35 : 0.24;
       return Math.random() < rate;
     }
@@ -618,11 +845,19 @@
       const rect = boardWrap.getBoundingClientRect();
       state.width = rect.width;
       state.height = rect.height;
+
       canvas.width = Math.floor(rect.width * DPR);
       canvas.height = Math.floor(rect.height * DPR);
       canvas.style.width = rect.width + 'px';
       canvas.style.height = rect.height + 'px';
       ctx.setTransform(DPR,0,0,DPR,0,0);
+
+      frenzyCanvas.width = Math.floor(rect.width * DPR);
+      frenzyCanvas.height = Math.floor(rect.height * DPR);
+      frenzyCanvas.style.width = rect.width + 'px';
+      frenzyCanvas.style.height = rect.height + 'px';
+      fctx.setTransform(DPR,0,0,DPR,0,0);
+
       state.dropX = clamp(state.dropX || rect.width / 2, 28, rect.width - 28);
       aimLine.style.left = state.dropX + 'px';
     }
@@ -633,15 +868,16 @@
         id: Math.random().toString(36).slice(2),
         level,
         actualLevel: level,
-        x,
-        y,
+        x, y,
         vx: 0,
         vy: 0,
         r: s.radius,
         merged: false,
         settled: false,
         isMystery: false,
-        revealed: true
+        revealed: true,
+        isSkull: false,
+        isRedSkull: false
       };
     }
 
@@ -657,11 +893,18 @@
       return item;
     }
 
+    function countRedSkulls(){
+      let c = 0;
+      for(const it of state.items) if(it.isRedSkull) c++;
+      return c;
+    }
+
     function updateHud(){
       scoreText.textContent = Math.floor(state.score).toLocaleString('vi-VN');
       comboText.textContent = 'x' + state.combo;
       levelText.textContent = SHAPES[state.highest] ? SHAPES[state.highest].emoji : '0';
       skillText.textContent = '✨ ' + state.skills;
+      redSkullText.textContent = countRedSkulls();
       bestScoreText.textContent = Math.floor(state.best).toLocaleString('vi-VN');
       nextIconEl.textContent = state.nextIsMystery ? '❓' : SHAPES[state.nextLevel].emoji;
     }
@@ -679,20 +922,34 @@
       state.lastTick = performance.now();
       state.nextSkullScore = 10000;
       state.dangerLevel = 0;
-      state.dropPenaltyActive = false;
+      state.nextEventScore = EVENT_THRESHOLD;
+
+      frenzy.active = false;
+      frenzy.intro = false;
+      frenzy.fruits = [];
+      frenzy.slashTrail = [];
+      frenzy.pointerDown = false;
+
       pickNextPiece();
       aimLine.style.left = state.dropX + 'px';
       gameOverOverlay.classList.remove('show');
+      frenzyOverlay.classList.remove('show');
+      frenzyCanvas.style.opacity = '0';
+      frenzyCanvas.style.pointerEvents = 'none';
+      aimLine.style.opacity = '0.62';
+      nextBubble.style.opacity = '1';
+
       updateHud();
       showToast('🌸 Vườn ghép đã sẵn sàng!');
     }
 
-    function addFloatingScore(x, y, value, text = null){
+    function addFloatingScore(x, y, value, text = null, color = null){
       if (reducedMotion && isMobile) return;
       const el = document.createElement('div');
       el.className = 'floatingScore';
       el.style.left = x + 'px';
       el.style.top = y + 'px';
+      if(color) el.style.color = color;
       el.textContent = text || ('+' + Math.floor(value));
       boardWrap.appendChild(el);
       setTimeout(()=> el.remove(), 700);
@@ -709,11 +966,26 @@
       state.comboDecayAt = now() + (state.dangerLevel >= 2 ? 1100 : 1600);
       addFloatingScore(x, y, points, message || ('+' + points));
       maybeSpawnSkull();
+      maybeTriggerFruitFrenzy();
+      updateHud();
+    }
+
+    function addRawScore(points, text, x, y){
+      state.score += points;
+      if(state.score > state.best){
+        state.best = state.score;
+        localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
+      }
+      if(typeof x === 'number' && typeof y === 'number'){
+        addFloatingScore(x, y, points, text || ('+' + points), '#fff7b2');
+      }
+      maybeSpawnSkull();
+      maybeTriggerFruitFrenzy();
       updateHud();
     }
 
     function dropPiece(){
-      if(state.gameOver) return;
+      if(state.gameOver || frenzy.active) return;
       if(now() < state.blockedUntil) return;
       if(state.items.length >= maxItems) return;
 
@@ -721,12 +993,9 @@
       const r = SHAPES[level].radius;
       const x = clamp(state.dropX, r + 4, state.width - r - 4);
 
-      let item;
-      if(state.nextIsMystery){
-        item = makeMysteryItem(level, x, r + 8);
-      }else{
-        item = makeItem(level, x, r + 8);
-      }
+      let item = state.nextIsMystery
+        ? makeMysteryItem(level, x, r + 8)
+        : makeItem(level, x, r + 8);
 
       item.vy = state.dangerLevel >= 2 ? 2.8 : 2.1;
       state.items.push(item);
@@ -738,6 +1007,7 @@
 
     function canMerge(a, b){
       if(a.isMystery || b.isMystery) return false;
+      if(a.isSkull || b.isSkull || a.isRedSkull || b.isRedSkull) return false;
       if(a.level !== b.level) return false;
       if(a.merged || b.merged) return false;
       const speedA = Math.abs(a.vx) + Math.abs(a.vy);
@@ -771,12 +1041,12 @@
     }
 
     function useSkill(){
-      if(state.gameOver) return;
+      if(state.gameOver || frenzy.active) return;
       if(state.skills <= 0){
         showToast('Không còn kỹ năng.');
         return;
       }
-      const lowTargets = state.items.filter(it => !it.isSkull && !it.isMystery && it.level <= 3);
+      const lowTargets = state.items.filter(it => !it.isSkull && !it.isRedSkull && !it.isMystery && it.level <= 3);
       if(!lowTargets.length){
         showToast('Không có mảnh cấp thấp để nổ.');
         return;
@@ -814,6 +1084,7 @@
       const skull = {
         id: 'skull_' + Math.random().toString(36).slice(2),
         isSkull: true,
+        isRedSkull: false,
         level: -1,
         x,
         y: OBSTACLE.radius + 8,
@@ -831,6 +1102,15 @@
       while(state.score >= state.nextSkullScore){
         state.nextSkullScore += 10000;
         spawnSkull();
+      }
+    }
+
+    function maybeTriggerFruitFrenzy(){
+      if(frenzy.active || state.gameOver) return;
+      if(state.score >= state.nextEventScore){
+        const thresholdHit = state.nextEventScore;
+        state.nextEventScore += EVENT_THRESHOLD;
+        startFruitFrenzy(thresholdHit);
       }
     }
 
@@ -864,13 +1144,15 @@
     }
 
     function updatePhysics(step = 1){
+      if(frenzy.active) return;
+
       const items = state.items;
 
       for(let i = 0; i < items.length; i++){
         const it = items[i];
         it.settled = false;
         let grav = gravity * (state.dangerLevel >= 2 ? 1.12 : 1);
-        if(it.isSkull) grav = gravity * 0.92;
+        if(it.isSkull || it.isRedSkull) grav = gravity * 0.92;
 
         it.vy += grav * step;
         it.x += it.vx * step;
@@ -889,7 +1171,7 @@
         }
         if(it.y + it.r > state.height){
           it.y = state.height - it.r;
-          if(Math.abs(it.vy) < (it.isSkull ? 1.1 : 1.4)){
+          if(Math.abs(it.vy) < ((it.isSkull || it.isRedSkull) ? 1.1 : 1.4)){
             it.vy = 0;
             it.settled = true;
           }else{
@@ -926,44 +1208,43 @@
                 const nx = dx / dist;
                 const ny = dy / dist;
 
-                const weightA = a.isSkull ? 1.7 : 1;
-                const weightB = b.isSkull ? 1.7 : 1;
-                const totalWeight = weightA + weightB;
-                a.x -= nx * overlap * (weightB / totalWeight);
-                a.y -= ny * overlap * (weightB / totalWeight);
-                b.x += nx * overlap * (weightA / totalWeight);
-                b.y += ny * overlap * (weightA / totalWeight);
+                const solidA = (a.isSkull || a.isRedSkull) ? 1.7 : 1;
+                const solidB = (b.isSkull || b.isRedSkull) ? 1.7 : 1;
+                const total = solidA + solidB;
+                a.x -= nx * overlap * (solidB / total);
+                a.y -= ny * overlap * (solidB / total);
+                b.x += nx * overlap * (solidA / total);
+                b.y += ny * overlap * (solidA / total);
 
                 const relVx = b.vx - a.vx;
                 const relVy = b.vy - a.vy;
-                const impulseBase = 0.17;
-                const impulse = (relVx * nx + relVy * ny) * impulseBase;
+                const impulse = (relVx * nx + relVy * ny) * 0.17;
 
-                if(!a.isSkull){
+                if(!(a.isSkull || a.isRedSkull)){
                   a.vx += nx * impulse;
                   a.vy += ny * impulse;
                 }
-                if(!b.isSkull){
+                if(!(b.isSkull || b.isRedSkull)){
                   b.vx -= nx * impulse;
                   b.vy -= ny * impulse;
                 }
 
-                a.vx *= a.isSkull ? 0.985 : frictionCollision;
-                b.vx *= b.isSkull ? 0.985 : frictionCollision;
+                a.vx *= (a.isSkull || a.isRedSkull) ? 0.985 : frictionCollision;
+                b.vx *= (b.isSkull || b.isRedSkull) ? 0.985 : frictionCollision;
                 a.vy *= 0.996;
                 b.vy *= 0.996;
 
                 if(Math.abs(ny) > 0.5){
                   if(a.y < b.y){
                     a.vy = Math.min(a.vy, 0.25);
-                    if(!b.isSkull) b.settled = true;
+                    if(!(b.isSkull || b.isRedSkull)) b.settled = true;
                   } else {
                     b.vy = Math.min(b.vy, 0.25);
-                    if(!a.isSkull) a.settled = true;
+                    if(!(a.isSkull || a.isRedSkull)) a.settled = true;
                   }
                 }
 
-                const blockMerge = a.isSkull || b.isSkull;
+                const blockMerge = a.isSkull || a.isRedSkull || b.isSkull || b.isRedSkull;
                 if(!blockMerge && canMerge(a, b)){
                   const created = mergePair(a, b);
                   if(created) spawned.push(created);
@@ -980,12 +1261,9 @@
 
       for(let i = 0; i < state.items.length; i++){
         const it = state.items[i];
-        if(it.isMystery && !it.revealed){
-          if(now() >= it.revealAt){
-            revealMystery(it);
-          }
+        if(it.isMystery && !it.revealed && now() >= it.revealAt){
+          revealMystery(it);
         }
-
         if(Math.abs(it.vx) < 0.02) it.vx = 0;
         if(Math.abs(it.vy) < 0.02) it.vy = 0;
       }
@@ -1010,6 +1288,22 @@
     }
 
     function drawPiece(it){
+      if(it.isRedSkull){
+        ctx.beginPath();
+        ctx.fillStyle = RED_SKULL.fill;
+        ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 1.8;
+        ctx.strokeStyle = 'rgba(255,220,220,.28)';
+        ctx.stroke();
+        ctx.font = `${Math.floor(it.r * 0.92)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'rgba(255,255,255,.98)';
+        ctx.fillText(RED_SKULL.emoji, it.x, it.y + 1);
+        return;
+      }
+
       if(it.isSkull){
         ctx.beginPath();
         ctx.fillStyle = OBSTACLE.fill;
@@ -1043,6 +1337,7 @@
     }
 
     function drawGhostNext(){
+      if(frenzy.active) return;
       const shape = SHAPES[state.nextLevel];
       const r = shape.radius;
       const x = clamp(state.dropX, r + 4, state.width - r - 4);
@@ -1068,20 +1363,17 @@
       for(let i = 0; i < ordered.length; i++) drawPiece(ordered[i]);
     }
 
-    function loop(ts){
-      const delta = Math.min(30, ts - state.lastTick || 16.7);
-      state.lastTick = ts;
-      updatePhysics(delta / 16.7);
-      draw();
-      requestAnimationFrame(loop);
-    }
-
     function endGame(){
       if(state.gameOver) return;
       state.gameOver = true;
+      frenzy.active = false;
+      frenzyOverlay.classList.remove('show');
+      frenzyCanvas.style.opacity = '0';
+      frenzyCanvas.style.pointerEvents = 'none';
       gameOverOverlay.classList.add('show');
       const skullCount = state.items.filter(it => it.isSkull).length;
-      gameOverText.textContent = `Điểm của bạn: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'} • Đầu lâu: ${skullCount}`;
+      const redCount = state.items.filter(it => it.isRedSkull).length;
+      gameOverText.textContent = `Điểm: ${Math.floor(state.score).toLocaleString('vi-VN')} • Cấp cao nhất: ${SHAPES[state.highest]?.emoji || '💗'} • Đầu lâu: ${skullCount} • Đầu lâu đỏ: ${redCount}`;
       showToast('💥 Khu vườn đã quá đầy.');
       updateHud();
     }
@@ -1092,10 +1384,401 @@
       aimLine.style.left = state.dropX + 'px';
     }
 
-    boardWrap.addEventListener('pointermove', (e)=> setAimFromClientX(e.clientX), { passive: true });
+    function weightedFruitPick(){
+      const total = FRUITS.reduce((s,f)=> s + f.weight, 0);
+      let r = Math.random() * total;
+      for(const f of FRUITS){
+        r -= f.weight;
+        if(r <= 0) return f;
+      }
+      return FRUITS[0];
+    }
+
+    function getFrenzyTarget(phase){
+      if(phase <= 1) return 1500;
+      if(phase === 2) return 2200;
+      if(phase === 3) return 3000;
+      return 3000 + (phase - 3) * 700;
+    }
+
+    function getFrenzyDuration(phase){
+      if(phase <= 1) return 12;
+      if(phase === 2) return 11;
+      return 10;
+    }
+
+    function getFrenzyPenaltyCount(phase){
+      if(phase <= 1) return 4;
+      if(phase === 2) return 5;
+      return 6;
+    }
+
+    function startFruitFrenzy(thresholdHit){
+      if(state.gameOver) return;
+      frenzy.active = true;
+      frenzy.intro = true;
+      frenzy.failed = false;
+      frenzy.failByBomb = false;
+      frenzy.cleanedRedSkulls = 0;
+      frenzy.phase = Math.max(1, Math.round(thresholdHit / EVENT_THRESHOLD));
+      frenzy.target = getFrenzyTarget(frenzy.phase);
+      frenzy.duration = getFrenzyDuration(frenzy.phase);
+      frenzy.timeLeft = frenzy.duration;
+      frenzy.score = 0;
+      frenzy.fruits = [];
+      frenzy.slashTrail = [];
+      frenzy.pointerDown = false;
+      frenzy.lastSpawnAt = now();
+      frenzy.nextSpawnIn = 320;
+      frenzy.introEndAt = now() + 1200;
+      frenzy.resultEndAt = 0;
+
+      frenzyPhaseText.textContent = '#' + frenzy.phase;
+      frenzyTargetText.textContent = frenzy.target.toLocaleString('vi-VN');
+      frenzyTimeText.textContent = frenzy.timeLeft.toFixed(1);
+      frenzyTitle.textContent = 'Fruit Frenzy';
+      frenzyDesc1.textContent = `Mốc ${thresholdHit.toLocaleString('vi-VN')} điểm đã kích hoạt minigame.`;
+      frenzyDesc2.textContent = countRedSkulls() > 0
+        ? `Thắng để thanh tẩy ${countRedSkulls()} đầu lâu đỏ và nhận +1000 điểm mỗi cái.`
+        : 'Vuốt thật nhanh để chém trái cây và lấy điểm thưởng.';
+      frenzyBottomHint.textContent = 'Vuốt trên màn hình để chém trái cây • tránh bom';
+
+      frenzyOverlay.classList.add('show');
+      frenzyCanvas.style.opacity = '1';
+      frenzyCanvas.style.pointerEvents = 'auto';
+      frenzyBanner.classList.remove('hide');
+      aimLine.style.opacity = '0';
+      nextBubble.style.opacity = '0';
+      showToast('🍉 Fruit Frenzy bắt đầu!');
+    }
+
+    function endFruitFrenzy(win){
+      frenzy.intro = false;
+      frenzy.resultEndAt = now() + 1700;
+
+      if(win){
+        frenzyTitle.textContent = frenzy.cleanedRedSkulls > 0 ? 'Redemption Burst!' : 'Frenzy Clear!';
+        frenzyDesc1.textContent = `Bạn nhận ${Math.floor(frenzy.score).toLocaleString('vi-VN')} điểm từ minigame.`;
+        frenzyDesc2.textContent = frenzy.cleanedRedSkulls > 0
+          ? `Thanh tẩy ${frenzy.cleanedRedSkulls} đầu lâu đỏ • +${(frenzy.cleanedRedSkulls * 1000).toLocaleString('vi-VN')} điểm`
+          : 'Quay lại khu vườn và tiếp tục ghép.';
+      }else{
+        frenzyTitle.textContent = frenzy.failByBomb ? 'Boom!' : 'Frenzy Failed';
+        frenzyDesc1.textContent = frenzy.failByBomb
+          ? 'Bạn đã chém trúng bom.'
+          : 'Bạn chưa đạt đủ điểm mục tiêu.';
+        frenzyDesc2.textContent = `${getFrenzyPenaltyCount(frenzy.phase)} mảnh trong vườn đã bị nguyền thành đầu lâu đỏ.`;
+      }
+
+      frenzyBanner.classList.remove('hide');
+    }
+
+    function finishFruitFrenzyAndReturn(){
+      frenzy.active = false;
+      frenzy.intro = false;
+      frenzy.fruits = [];
+      frenzy.slashTrail = [];
+      frenzy.pointerDown = false;
+      frenzyOverlay.classList.remove('show');
+      frenzyCanvas.style.opacity = '0';
+      frenzyCanvas.style.pointerEvents = 'none';
+      aimLine.style.opacity = '0.62';
+      nextBubble.style.opacity = '1';
+      updateHud();
+    }
+
+    function spawnFrenzyObject(){
+      const bombChance = Math.min(0.08 + (frenzy.phase - 1) * 0.03, 0.18);
+      const isBomb = Math.random() < bombChance;
+
+      const baseX = state.width * (0.15 + Math.random() * 0.70);
+      const fromLeft = Math.random() < 0.5;
+      const launchX = fromLeft
+        ? clamp(baseX - Math.random() * 50, 40, state.width - 40)
+        : clamp(baseX + Math.random() * 50, 40, state.width - 40);
+
+      const item = isBomb ? BOMB : weightedFruitPick();
+      const arcHeightBoost = isMobile ? 0.82 : 1;
+
+      const obj = {
+        id: Math.random().toString(36).slice(2),
+        isBomb,
+        emoji: item.emoji,
+        fill: item.fill,
+        r: item.r,
+        score: isBomb ? 0 : item.score,
+        x: launchX,
+        y: state.height + item.r + 6,
+        vx: (fromLeft ? 1 : -1) * (1.1 + Math.random() * 1.4) * (isBomb ? 1 : item.speed),
+        vy: -(8.1 + Math.random() * 2.6) * (isBomb ? 0.95 : item.speed) * arcHeightBoost,
+        gravity: isMobile ? 0.20 : 0.18,
+        rot: Math.random() * Math.PI * 2,
+        vr: (Math.random() - 0.5) * 0.08,
+        alive: true,
+        cut: false
+      };
+      frenzy.fruits.push(obj);
+    }
+
+    function updateFrenzy(dt){
+      if(!frenzy.active || state.gameOver) return;
+
+      if(frenzy.resultEndAt){
+        if(now() >= frenzy.resultEndAt){
+          frenzy.resultEndAt = 0;
+          finishFruitFrenzyAndReturn();
+        }
+        return;
+      }
+
+      if(frenzy.intro){
+        if(now() >= frenzy.introEndAt){
+          frenzy.intro = false;
+          frenzyBanner.classList.add('hide');
+        }
+      }else{
+        frenzy.timeLeft = Math.max(0, frenzy.timeLeft - dt / 1000);
+        frenzyTimeText.textContent = frenzy.timeLeft.toFixed(1);
+
+        if(frenzy.timeLeft <= 0){
+          const win = frenzy.score >= frenzy.target;
+          if(!win){
+            applyRedSkullPenalty(getFrenzyPenaltyCount(frenzy.phase));
+            showToast('💀 Fruit Frenzy thất bại.');
+          }else{
+            rewardFrenzyWin();
+            showToast('🍓 Fruit Frenzy thành công!');
+          }
+          endFruitFrenzy(win);
+          return;
+        }
+
+        if(now() - frenzy.lastSpawnAt >= frenzy.nextSpawnIn){
+          frenzy.lastSpawnAt = now();
+          spawnFrenzyObject();
+
+          const minGap = isMobile ? 220 : 180;
+          const maxGap = isMobile ? 380 : 320;
+          const difficulty = Math.min(frenzy.phase * 14, 90);
+          frenzy.nextSpawnIn = clamp((maxGap - difficulty) + Math.random() * 90, minGap, maxGap);
+        }
+      }
+
+      for(let i = frenzy.fruits.length - 1; i >= 0; i--){
+        const fr = frenzy.fruits[i];
+        fr.vy += fr.gravity * (dt / 16.7);
+        fr.x += fr.vx * (dt / 16.7);
+        fr.y += fr.vy * (dt / 16.7);
+        fr.rot += fr.vr * (dt / 16.7);
+
+        if(fr.y - fr.r > state.height + 40 || fr.x < -80 || fr.x > state.width + 80){
+          frenzy.fruits.splice(i, 1);
+        }
+      }
+
+      const trailLife = isMobile ? 90 : 120;
+      for(let i = frenzy.slashTrail.length - 1; i >= 0; i--){
+        if(now() - frenzy.slashTrail[i].t > trailLife){
+          frenzy.slashTrail.splice(i, 1);
+        }
+      }
+    }
+
+    function drawFrenzy(){
+      fctx.clearRect(0, 0, state.width, state.height);
+      if(!frenzy.active) return;
+
+      fctx.fillStyle = 'rgba(255,255,255,.03)';
+      for(let i = 0; i < frenzy.fruits.length; i++){
+        const fr = frenzy.fruits[i];
+        fctx.save();
+        fctx.translate(fr.x, fr.y);
+        fctx.rotate(fr.rot);
+
+        fctx.beginPath();
+        fctx.fillStyle = fr.fill;
+        fctx.arc(0, 0, fr.r, 0, Math.PI * 2);
+        fctx.fill();
+
+        fctx.lineWidth = 1.5;
+        fctx.strokeStyle = 'rgba(255,255,255,.18)';
+        fctx.stroke();
+
+        fctx.font = `${Math.floor(fr.r * 0.98)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
+        fctx.textAlign = 'center';
+        fctx.textBaseline = 'middle';
+        fctx.fillStyle = 'rgba(255,255,255,.98)';
+        fctx.fillText(fr.emoji, 0, 1);
+        fctx.restore();
+      }
+
+      if(frenzy.slashTrail.length > 1){
+        fctx.lineCap = 'round';
+        fctx.lineJoin = 'round';
+        for(let i = 1; i < frenzy.slashTrail.length; i++){
+          const a = frenzy.slashTrail[i-1];
+          const b = frenzy.slashTrail[i];
+          const age = (now() - b.t) / (isMobile ? 90 : 120);
+          const alpha = clamp(1 - age, 0, 1) * 0.9;
+          if(alpha <= 0) continue;
+          fctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          fctx.lineWidth = lerp(6, 2, age);
+          fctx.beginPath();
+          fctx.moveTo(a.x, a.y);
+          fctx.lineTo(b.x, b.y);
+          fctx.stroke();
+        }
+      }
+
+      const progress = clamp(frenzy.score / frenzy.target, 0, 1);
+      const barW = Math.min(state.width * 0.46, isMobile ? 180 : 220);
+      const barX = state.width * 0.5 - barW * 0.5;
+      const barY = isMobile ? 54 : 58;
+      fctx.fillStyle = 'rgba(255,255,255,.10)';
+      fctx.fillRect(barX, barY, barW, 8);
+      fctx.fillStyle = frenzy.score >= frenzy.target ? 'rgba(123,244,209,.95)' : 'rgba(255,216,107,.95)';
+      fctx.fillRect(barX, barY, barW * progress, 8);
+
+      fctx.font = `700 ${isMobile ? 14 : 15}px ui-sans-serif, system-ui, sans-serif`;
+      fctx.textAlign = 'center';
+      fctx.textBaseline = 'bottom';
+      fctx.fillStyle = 'rgba(255,255,255,.95)';
+      fctx.fillText(`${Math.floor(frenzy.score).toLocaleString('vi-VN')} / ${frenzy.target.toLocaleString('vi-VN')}`, state.width * 0.5, barY - 6);
+    }
+
+    function rewardFrenzyWin(){
+      const rawScore = Math.floor(frenzy.score);
+      addRawScore(rawScore, 'FRENZY +' + rawScore, state.width * 0.5, state.height * 0.35);
+
+      const redSkulls = state.items.filter(it => it.isRedSkull);
+      frenzy.cleanedRedSkulls = redSkulls.length;
+
+      if(redSkulls.length){
+        for(const sk of redSkulls){
+          addFloatingScore(sk.x, sk.y, 1000, '+1000', '#ffd9d9');
+        }
+        state.items = state.items.filter(it => !it.isRedSkull);
+        addRawScore(redSkulls.length * 1000, 'REDEMPTION', state.width * 0.5, state.height * 0.42);
+      }
+    }
+
+    function applyRedSkullPenalty(count){
+      const candidates = state.items.filter(it =>
+        !it.isSkull &&
+        !it.isRedSkull &&
+        !it.isMystery &&
+        typeof it.level === 'number'
+      );
+
+      if(!candidates.length){
+        showToast('💀 Không đủ mảnh để nguyền.');
+        return;
+      }
+
+      const sorted = [...candidates].sort((a,b)=>{
+        const wa = (a.y < state.height * 0.55 ? -800 : 0) + a.level * 70 + a.y * 0.02 + Math.random() * 6;
+        const wb = (b.y < state.height * 0.55 ? -800 : 0) + b.level * 70 + b.y * 0.02 + Math.random() * 6;
+        return wa - wb;
+      });
+
+      const chosen = sorted.slice(0, Math.min(count, sorted.length));
+      const chosenIds = new Set(chosen.map(it => it.id));
+
+      for(const it of state.items){
+        if(chosenIds.has(it.id)){
+          it.isRedSkull = true;
+          it.isSkull = false;
+          it.isMystery = false;
+          it.revealed = true;
+          it.level = -2;
+          it.actualLevel = -2;
+          it.r = RED_SKULL.radius;
+          it.vx *= 0.2;
+          it.vy = -0.3;
+          addFloatingScore(it.x, it.y, 0, 'CURSED', '#ffb5bf');
+        }
+      }
+
+      updateHud();
+    }
+
+    function slashAt(clientX, clientY){
+      if(!frenzy.active || frenzy.intro || frenzy.resultEndAt) return;
+
+      const rect = boardWrap.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      frenzy.slashTrail.push({ x, y, t: now() });
+      if(frenzy.slashTrail.length > (isMobile ? 8 : 10)){
+        frenzy.slashTrail.shift();
+      }
+
+      const hitRadius = isMobile ? 18 : 16;
+      for(let i = frenzy.fruits.length - 1; i >= 0; i--){
+        const fr = frenzy.fruits[i];
+        if(fr.cut) continue;
+        const dx = fr.x - x;
+        const dy = fr.y - y;
+        const dist = Math.hypot(dx, dy);
+
+        if(dist <= fr.r + hitRadius){
+          fr.cut = true;
+
+          if(fr.isBomb){
+            frenzy.failByBomb = true;
+            frenzy.failed = true;
+            frenzy.fruits.splice(i, 1);
+            applyRedSkullPenalty(getFrenzyPenaltyCount(frenzy.phase));
+            endFruitFrenzy(false);
+            showToast('💣 Chém trúng bom!');
+            return;
+          }else{
+            frenzy.score += fr.score;
+            frenzy.fruits.splice(i, 1);
+            addFloatingScore(x, y, fr.score, '+' + fr.score, '#fff3a9');
+            break;
+          }
+        }
+      }
+    }
+
+    function loop(ts){
+      const delta = Math.min(30, ts - state.lastTick || 16.7);
+      state.lastTick = ts;
+
+      updatePhysics(delta / 16.7);
+      updateFrenzy(delta);
+      draw();
+      drawFrenzy();
+
+      requestAnimationFrame(loop);
+    }
+
+    boardWrap.addEventListener('pointermove', (e)=>{
+      if(frenzy.active){
+        slashAt(e.clientX, e.clientY);
+      }else{
+        setAimFromClientX(e.clientX);
+      }
+    }, { passive: true });
+
     boardWrap.addEventListener('pointerdown', (e)=>{
-      setAimFromClientX(e.clientX);
-      dropPiece();
+      if(frenzy.active){
+        frenzy.pointerDown = true;
+        slashAt(e.clientX, e.clientY);
+      }else{
+        setAimFromClientX(e.clientX);
+        dropPiece();
+      }
+    }, { passive: true });
+
+    boardWrap.addEventListener('pointerup', ()=>{
+      frenzy.pointerDown = false;
+    }, { passive: true });
+
+    boardWrap.addEventListener('pointercancel', ()=>{
+      frenzy.pointerDown = false;
     }, { passive: true });
 
     document.getElementById('btnStart').addEventListener('click', resetGame);
