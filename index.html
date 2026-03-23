@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Merge Blossom • Fruit Frenzy Edition</title>
+  <title>Merge Blossom • Parasite Quest Edition</title>
 
   <style>
     :root{
@@ -22,6 +22,9 @@
       --glass: rgba(255,255,255,.10);
       --glass2: rgba(255,255,255,.16);
       --shadow: 0 20px 50px rgba(0,0,0,.45);
+      --toxic:#2aff9b;
+      --toxic2:#0d7e4c;
+      --fire:#ff8a2f;
     }
 
     *{box-sizing:border-box}
@@ -132,7 +135,7 @@
     }
 
     @media (max-width: 900px){
-      .scene{min-height:500px; border-radius:18px}
+      .scene{min-height:520px; border-radius:18px}
     }
 
     .gameHud{
@@ -173,9 +176,73 @@
       line-height:1;
     }
 
+    .questHud{
+      grid-column: 1 / -1;
+      display:none;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:14px;
+      background: rgba(10,8,22,.48);
+      border:1px solid rgba(255,255,255,.12);
+      min-height:48px;
+    }
+
+    .questHud.show{ display:flex; }
+
+    .questIcon{
+      width:28px; height:28px;
+      display:grid;
+      place-items:center;
+      border-radius:10px;
+      background: rgba(255,255,255,.08);
+      font-size:16px;
+      flex:0 0 auto;
+    }
+
+    .questBody{
+      min-width:0;
+      flex:1 1 auto;
+    }
+
+    .questLabel{
+      font-size:10px;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+      opacity:.7;
+      margin-bottom:3px;
+    }
+
+    .questText{
+      font-size:12px;
+      font-weight:800;
+      line-height:1.25;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .questMeta{
+      text-align:right;
+      flex:0 0 auto;
+      min-width:54px;
+    }
+
+    .questTimer{
+      font-size:15px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .questProgress{
+      font-size:11px;
+      opacity:.8;
+      margin-top:3px;
+    }
+
     .boardWrap{
       position:absolute;
-      inset:68px 12px 12px 12px;
+      inset:120px 12px 12px 12px;
       border-radius:18px;
       background:
         linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
@@ -519,9 +586,13 @@
     @media (max-width: 900px){
       .gameHud{ inset:10px 10px auto 10px; grid-template-columns: 1fr; }
       .hudGroup:last-child{ position:absolute; right:0; top:0; }
-      .boardWrap{ inset:62px 10px 10px 10px; }
+      .hudCard{ min-width:72px; padding:7px 8px; }
+      .hudCard .value{ font-size:15px; }
+      .boardWrap{ inset:112px 10px 10px 10px; }
       .sig{font-size:12px; flex-direction:column; align-items:flex-start}
       button{padding:11px 12px}
+      .questText{font-size:11px}
+      .questTimer{font-size:14px}
       .frenzyTop{
         grid-template-columns: 1fr 1fr 1fr;
         inset:8px 8px auto 8px;
@@ -574,21 +645,23 @@
 
           <div class="actions">
             <button id="btnStart">🎮 Chơi mới</button>
-            <button class="ghost" id="btnSkill">✨ Kích nổ ánh sao</button>
+            <button class="ghost" id="btnSkill">✨ Kích hoạt kỹ năng</button>
           </div>
 
           <p class="hint" style="margin-top:12px;">
             Chạm vào bảng bên phải để thả mảnh ghép. Kéo ngang để ngắm vị trí rơi. Ghép tới <b>cấp 9</b>, càng lên cao càng khó giữ không gian. Cứ mỗi <b>10.000 điểm</b> sẽ sinh ra một <b>💀 đầu lâu</b> không nằm trong chuỗi, không thể phá hủy và chỉ dùng để chiếm diện tích.
             <br/><br/>
-            Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → 🌈 → ☀️ → 🌸 → 💎 → 👑</b>
+            Chuỗi tiến hóa: <b>💗 → ⭐ → ❄️ → 🌙 → ☀️ → 🌈 → 🌸 → 💎 → 👑</b>
             <br/>
-            Luật thưởng: combo liên tiếp tăng điểm, cấp càng cao điểm càng lớn. Ghép đôi <b>👑</b> sẽ biến mất và nhận thưởng cực lớn. Khi khu vườn lên quá cao, game kích hoạt <b>Vùng Căng Thẳng</b>: mảnh rơi nhanh hơn, combo tụt nhanh hơn và bạn dễ chết hơn.
+            Sau <b>75.000 điểm</b>, có thể xuất hiện <b>🕷️ ký sinh</b> và <b>🔥 lửa</b>. Nếu 🔥 chạm 🕷️ thì cả hai biến mất ngay. Nếu không chạm trúng, 🔥 tự biến mất sau 5 giây. Nếu 🕷️ đứng cạnh mảnh khác đủ 15 giây, nó sẽ lây nhiễm.
+            <br/><br/>
+            Sau <b>100.000 điểm</b>, mỗi lần dùng skill sẽ <b>nổ mảnh nguy hiểm nhất</b> và <b>bonus xóa thêm 1 đầu lâu</b> nếu có. Đồng thời, cứ mỗi <b>90 giây</b> sẽ có <b>nhiệm vụ phụ</b> với thưởng ngẫu nhiên.
             <br/><br/>
             Từ <b>50.000 điểm</b>, cứ mỗi mốc <b>50.000</b> sẽ kích hoạt <b>Fruit Frenzy</b>. Nếu thắng, bạn nhận điểm thưởng lớn, được <b>+1 kỹ năng</b>, và có thể thanh tẩy <b>đầu lâu đỏ</b>. Nếu thua hoặc chém trúng bom, một số mảnh trong vườn sẽ bị nguyền thành <b>đầu lâu đỏ</b>.
           </p>
 
           <div class="sig">
-            <span>Bản tối ưu cho điện thoại yếu • Fruit Frenzy cùng layout • đã vá bug Game Over oan</span>
+            <span>Bản mobile tối ưu • Parasite + Fire + Quest • giữ nhẹ cho máy Samsung cũ</span>
             <span>Best: <b id="bestScoreText">0</b></span>
           </div>
         </section>
@@ -610,6 +683,7 @@
                   <div class="value" id="levelText">0</div>
                 </div>
               </div>
+
               <div class="hudGroup">
                 <div class="hudCard">
                   <div class="label">Kỹ năng</div>
@@ -618,6 +692,18 @@
                 <div class="hudCard">
                   <div class="label">💀 Đỏ</div>
                   <div class="value" id="redSkullText">0</div>
+                </div>
+              </div>
+
+              <div class="questHud" id="questHud">
+                <div class="questIcon" id="questIcon">🎯</div>
+                <div class="questBody">
+                  <div class="questLabel">Nhiệm vụ phụ</div>
+                  <div class="questText" id="questText">---</div>
+                </div>
+                <div class="questMeta">
+                  <div class="questTimer" id="questTimer">0</div>
+                  <div class="questProgress" id="questProgress">0/0</div>
                 </div>
               </div>
             </div>
@@ -685,15 +771,30 @@
   <script>
     const storyLines = [
       'Chào mừng Babi đến với Merge Blossom.',
-      'Trò chơi này được làm ra để giúp em giết thời gian và giảm stress.',
       'Mỗi 50.000 điểm sẽ có Fruit Frenzy để kiếm thưởng lớn.',
-      'Thắng minigame sẽ nhận thêm 1 kỹ năng.',
+      'Sau 75.000 điểm sẽ bắt đầu có 🕷️ ký sinh và 🔥 lửa.',
+      'Sau 100.000 điểm, skill sẽ bonus xóa thêm 1 đầu lâu.',
+      'Cứ 90 giây lại có nhiệm vụ phụ để kiếm thưởng.',
       'Chúc em chơi dui dẻ 😘.'
     ];
 
     const isMobile = matchMedia('(max-width: 900px)').matches || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const DPR = Math.min(window.devicePixelRatio || 1, isMobile ? 1.15 : 1.5);
+
+    function loadBestScore(){
+      try{
+        return Number(localStorage.getItem('merge-blossom-best') || 0);
+      }catch{
+        return 0;
+      }
+    }
+
+    function saveBestScore(v){
+      try{
+        localStorage.setItem('merge-blossom-best', String(Math.floor(v)));
+      }catch{}
+    }
 
     const typedEl = document.getElementById('typed');
     const toast = document.getElementById('toast');
@@ -716,6 +817,12 @@
     const gameOverOverlay = document.getElementById('gameOver');
     const gameOverText = document.getElementById('gameOverText');
 
+    const questHud = document.getElementById('questHud');
+    const questIcon = document.getElementById('questIcon');
+    const questText = document.getElementById('questText');
+    const questTimer = document.getElementById('questTimer');
+    const questProgress = document.getElementById('questProgress');
+
     const frenzyOverlay = document.getElementById('frenzyOverlay');
     const frenzyBanner = document.getElementById('frenzyBanner');
     const frenzyPhaseText = document.getElementById('frenzyPhaseText');
@@ -733,23 +840,26 @@
       toastText.textContent = msg;
       toast.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1450);
+      toastTimer = setTimeout(()=> toast.classList.remove('show'), 1500);
     }
 
     const SHAPES = [
-      { emoji:'💗', name:'Tim non', fill:'#ff67c8', score:10, radius:isMobile?18:19 },
+      { emoji:'💗', name:'Tim non', fill:'#ff67c8', score:10,  radius:isMobile?18:19 },
       { emoji:'⭐', name:'Sao mộng', fill:'#ffd76a', score:24, radius:isMobile?22:24 },
       { emoji:'❄️', name:'Băng sương', fill:'#9be9ff', score:46, radius:isMobile?26:29 },
       { emoji:'🌙', name:'Trăng mịn', fill:'#9d8cff', score:82, radius:isMobile?30:34 },
-      { emoji:'🌈', name:'Cầu vồng', fill:'#73d8ff', score:140, radius:isMobile?34:39 },
-      { emoji:'☀️', name:'Thái dương', fill:'#ffb16b', score:230, radius:isMobile?38:44 },
+      { emoji:'☀️', name:'Thái dương', fill:'#ffb16b', score:140, radius:isMobile?34:39 },
+      { emoji:'🌈', name:'Cầu vồng', fill:'#73d8ff', score:230, radius:isMobile?38:44 },
       { emoji:'🌸', name:'Hoa nở', fill:'#ff8ed4', score:360, radius:isMobile?42:49 },
       { emoji:'💎', name:'Tinh thạch', fill:'#89f2e1', score:560, radius:isMobile?46:54 },
       { emoji:'👑', name:'Vương miện', fill:'#ffe07e', score:860, radius:isMobile?50:59 }
     ];
 
+    const MAX_LEVEL = SHAPES.length - 1;
     const OBSTACLE = { emoji:'💀', fill:'#b7bcc8', radius:isMobile?24:28 };
     const RED_SKULL = { emoji:'💀', fill:'#ff445d', radius:isMobile?24:28 };
+    const PARASITE = { emoji:'🕷️', fill:'rgba(42,255,155,.82)', radius:isMobile?24:27 };
+    const FIRE = { emoji:'🔥', fill:'rgba(255,138,47,.95)', radius:isMobile?20:23 };
 
     const FRUITS = [
       { emoji:'🍒', fill:'#ff6387', score:80,  r:isMobile?16:18, weight:22, speed:1.18 },
@@ -761,8 +871,18 @@
     ];
     const BOMB = { emoji:'💣', fill:'#444a58', r:isMobile?20:22 };
 
-    const MAX_LEVEL = SHAPES.length - 1;
     const EVENT_THRESHOLD = 50000;
+    const QUEST_INTERVAL_MS = 90000;
+    const QUEST_UNLOCK_SCORE = 100000;
+
+    const QUESTS = [
+      { type:'ice_combo', icon:'❄️', label:'Ghép 3 ❄️ liên tiếp', target:3, time:22 },
+      { type:'rainbow', icon:'🌈', label:'Tạo 1 🌈 trong 15s', target:1, time:15 },
+      { type:'sun', icon:'☀️', label:'Tạo 1 ☀️ trong 30s', target:1, time:30 },
+      { type:'combo5', icon:'⚡', label:'Đạt combo x5', target:5, time:25 },
+      { type:'clear_high', icon:'🌸', label:'Tạo / xóa 2 mảnh cấp ≥ 🌸', target:2, time:28 },
+      { type:'survive', icon:'🛡️', label:'Sống sót 20s không Game Over', target:1, time:20 }
+    ];
 
     const state = {
       width: 0,
@@ -771,11 +891,12 @@
       dropX: 0,
       nextLevel: 0,
       nextIsMystery: false,
+      nextSpecial: null,
       score: 0,
-      best: Number(localStorage.getItem('merge-blossom-best') || 0),
+      best: loadBestScore(),
       highest: 0,
       combo: 1,
-      comboDecayAt: 0,
+      comboDecayAt: Infinity,
       skills: 1,
       gameOver: false,
       blockedUntil: 0,
@@ -786,6 +907,19 @@
       dangerLevel: 0,
       nextEventScore: EVENT_THRESHOLD,
       pendingEventScore: null
+    };
+
+    const quest = {
+      active: false,
+      nextAt: 0,
+      type: null,
+      label: '',
+      icon: '🎯',
+      progress: 0,
+      target: 0,
+      startAt: 0,
+      endAt: 0,
+      meta: null
     };
 
     const frenzy = {
@@ -817,7 +951,7 @@
     const frictionCollision = 0.92;
     const safeLineRatio = 0.18;
     const collisionPasses = isMobile ? 2 : 3;
-    const maxItems = isMobile ? 44 : 58;
+    const maxItems = isMobile ? 46 : 58;
     const cellSize = isMobile ? 72 : 84;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
@@ -839,9 +973,29 @@
       return Math.random() < rate;
     }
 
+    function shouldSpawnParasite(){
+      return state.score >= 75000 && Math.random() < 0.07;
+    }
+
+    function shouldSpawnFire(){
+      return state.score >= 75000 && Math.random() < 0.09;
+    }
+
     function pickNextPiece(){
       state.nextLevel = randLevel();
       state.nextIsMystery = shouldMysterySpawn();
+      state.nextSpecial = null;
+
+      if(state.score >= 75000){
+        const roll = Math.random();
+        if(roll < 0.07){
+          state.nextSpecial = 'parasite';
+          state.nextIsMystery = false;
+        }else if(roll < 0.16){
+          state.nextSpecial = 'fire';
+          state.nextIsMystery = false;
+        }
+      }
     }
 
     function resizeGame(){
@@ -869,6 +1023,7 @@
       const s = SHAPES[level];
       return {
         id: Math.random().toString(36).slice(2),
+        kind: 'normal',
         level,
         actualLevel: level,
         x, y,
@@ -880,20 +1035,62 @@
         isMystery: false,
         revealed: true,
         isSkull: false,
-        isRedSkull: false
+        isRedSkull: false,
+        parasiteStartedAt: 0
       };
     }
 
     function makeMysteryItem(level, x, y){
       const item = makeItem(level, x, y);
-      item.actualLevel = level;
-      item.level = level;
-      item.r = SHAPES[level].radius;
+      item.kind = 'normal';
       item.isMystery = true;
       item.revealed = false;
       item.createdAt = now();
       item.revealAt = now() + 5000;
       return item;
+    }
+
+    function makeParasite(x, y){
+      return {
+        id: 'parasite_' + Math.random().toString(36).slice(2),
+        kind: 'parasite',
+        level: null,
+        actualLevel: null,
+        x, y,
+        vx: 0,
+        vy: 1.8,
+        r: PARASITE.radius,
+        merged: false,
+        settled: false,
+        isMystery: false,
+        revealed: true,
+        isSkull: false,
+        isRedSkull: false,
+        infectAfter: now() + 15000,
+        parasiteStartedAt: 0,
+        parasiteTargetId: null
+      };
+    }
+
+    function makeFire(x, y){
+      return {
+        id: 'fire_' + Math.random().toString(36).slice(2),
+        kind: 'fire',
+        level: null,
+        actualLevel: null,
+        x, y,
+        vx: 0,
+        vy: 2.0,
+        r: FIRE.radius,
+        merged: false,
+        settled: false,
+        isMystery: false,
+        revealed: true,
+        isSkull: false,
+        isRedSkull: false,
+        expireAt: now() + 5000,
+        parasiteStartedAt: 0
+      };
     }
 
     function countRedSkulls(){
@@ -909,7 +1106,37 @@
       skillText.textContent = '✨ ' + state.skills;
       redSkullText.textContent = countRedSkulls();
       bestScoreText.textContent = Math.floor(state.best).toLocaleString('vi-VN');
-      nextIconEl.textContent = state.nextIsMystery ? '❓' : SHAPES[state.nextLevel].emoji;
+
+      if(state.nextSpecial === 'parasite') nextIconEl.textContent = '🕷️';
+      else if(state.nextSpecial === 'fire') nextIconEl.textContent = '🔥';
+      else nextIconEl.textContent = state.nextIsMystery ? '❓' : SHAPES[state.nextLevel].emoji;
+    }
+
+    function resetQuest(){
+      quest.active = false;
+      quest.type = null;
+      quest.label = '';
+      quest.icon = '🎯';
+      quest.progress = 0;
+      quest.target = 0;
+      quest.startAt = 0;
+      quest.endAt = 0;
+      quest.meta = null;
+      quest.nextAt = now() + QUEST_INTERVAL_MS;
+      updateQuestUI();
+    }
+
+    function updateQuestUI(){
+      if(!quest.active){
+        questHud.classList.remove('show');
+        return;
+      }
+      questHud.classList.add('show');
+      questIcon.textContent = quest.icon;
+      questText.textContent = quest.label;
+      questProgress.textContent = `${quest.progress}/${quest.target}`;
+      const sec = Math.max(0, Math.ceil((quest.endAt - now()) / 1000));
+      questTimer.textContent = sec + 's';
     }
 
     function resetGame(){
@@ -917,6 +1144,7 @@
       state.score = 0;
       state.highest = 0;
       state.combo = 1;
+      state.comboDecayAt = Infinity;
       state.skills = 1;
       state.gameOver = false;
       state.lineExceededAt = null;
@@ -935,6 +1163,8 @@
       frenzy.slashTrail = [];
       frenzy.pointerDown = false;
       frenzy.resultEndAt = 0;
+
+      resetQuest();
 
       pickNextPiece();
       aimLine.style.left = state.dropX + 'px';
@@ -969,13 +1199,100 @@
       }
     }
 
+    function markQuestMerge(newLevel){
+      if(!quest.active) return;
+
+      if(quest.type === 'rainbow' && newLevel === 5){
+        quest.progress = 1;
+      }else if(quest.type === 'sun' && newLevel === 4){
+        quest.progress = 1;
+      }else if(quest.type === 'ice_combo'){
+        if(newLevel >= 2){
+          quest.progress += 1;
+        }else{
+          quest.progress = 0;
+        }
+      }else if(quest.type === 'clear_high' && newLevel >= 6){
+        quest.progress += 1;
+      }
+    }
+
+    function checkQuestCompletion(){
+      if(!quest.active) return;
+
+      if(now() >= quest.endAt){
+        if(quest.type === 'survive'){
+          quest.progress = 1;
+        }
+        if(quest.progress >= quest.target){
+          completeQuest();
+        }else{
+          showToast('⌛ Nhiệm vụ phụ thất bại.');
+          resetQuest();
+        }
+        return;
+      }
+
+      if(quest.type === 'combo5'){
+        quest.progress = Math.max(quest.progress, state.combo);
+      }
+
+      if(quest.progress >= quest.target){
+        completeQuest();
+      }
+    }
+
+    function startQuest(){
+      const q = QUESTS[Math.floor(Math.random() * QUESTS.length)];
+      quest.active = true;
+      quest.type = q.type;
+      quest.label = q.label;
+      quest.icon = q.icon;
+      quest.progress = 0;
+      quest.target = q.target;
+      quest.startAt = now();
+      quest.endAt = now() + q.time * 1000;
+      quest.meta = null;
+
+      if(q.type === 'survive'){
+        quest.progress = 0;
+      }
+
+      updateQuestUI();
+      showToast('🎯 Nhiệm vụ mới: ' + q.label);
+    }
+
+    function completeQuest(){
+      const r = Math.random();
+      if(r < 0.25){
+        state.skills = Math.min(9, state.skills + 1);
+        showToast('✨ Thưởng nhiệm vụ: +1 kỹ năng');
+      }else if(r < 0.75){
+        const skull = getWorstSkullTarget();
+        if(skull){
+          state.items = state.items.filter(it => it.id !== skull.id);
+          addFloatingScore(skull.x, skull.y, 0, 'PURIFY', '#ffd9d9');
+          showToast('💀 Thưởng nhiệm vụ: thanh tẩy 1 đầu lâu');
+        }else{
+          addRawScore(3000, 'QUEST +3000', state.width * 0.5, state.height * 0.25);
+          showToast('💰 Không có đầu lâu, đổi thành +3000 điểm');
+        }
+      }else{
+        addRawScore(3000, 'QUEST +3000', state.width * 0.5, state.height * 0.25);
+        showToast('💰 Thưởng nhiệm vụ: +3000 điểm');
+      }
+
+      updateHud();
+      resetQuest();
+    }
+
     function awardScore(x, y, base, message){
       const points = Math.floor(base * state.combo);
       state.score += points;
 
       if(state.score > state.best){
         state.best = state.score;
-        localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
+        saveBestScore(state.best);
       }
 
       state.combo = Math.min(9, state.combo + 1);
@@ -992,7 +1309,7 @@
 
       if(state.score > state.best){
         state.best = state.score;
-        localStorage.setItem('merge-blossom-best', String(Math.floor(state.best)));
+        saveBestScore(state.best);
       }
 
       if(typeof x === 'number' && typeof y === 'number'){
@@ -1009,16 +1326,28 @@
       if(now() < state.blockedUntil) return;
       if(state.items.length >= maxItems) return;
 
+      let item;
       const level = state.nextLevel;
-      const r = SHAPES[level].radius;
-      const x = clamp(state.dropX, r + 4, state.width - r - 4);
 
-      let item = state.nextIsMystery
-        ? makeMysteryItem(level, x, r + 8)
-        : makeItem(level, x, r + 8);
+      if(state.nextSpecial === 'parasite'){
+        const r = PARASITE.radius;
+        const x = clamp(state.dropX, r + 4, state.width - r - 4);
+        item = makeParasite(x, r + 8);
+      }else if(state.nextSpecial === 'fire'){
+        const r = FIRE.radius;
+        const x = clamp(state.dropX, r + 4, state.width - r - 4);
+        item = makeFire(x, r + 8);
+      }else{
+        const r = SHAPES[level].radius;
+        const x = clamp(state.dropX, r + 4, state.width - r - 4);
+        item = state.nextIsMystery
+          ? makeMysteryItem(level, x, r + 8)
+          : makeItem(level, x, r + 8);
+      }
 
       item.vy = state.dangerLevel >= 2 ? 2.8 : 2.1;
       state.items.push(item);
+
       pickNextPiece();
       const cooldown = state.dangerLevel >= 2 ? (isMobile ? 120 : 105) : (isMobile ? 165 : 140);
       state.blockedUntil = now() + cooldown;
@@ -1026,6 +1355,7 @@
     }
 
     function canMerge(a, b){
+      if(a.kind !== 'normal' || b.kind !== 'normal') return false;
       if(a.isMystery || b.isMystery) return false;
       if(a.isSkull || b.isSkull || a.isRedSkull || b.isRedSkull) return false;
       if(a.level !== b.level) return false;
@@ -1046,6 +1376,7 @@
         const boom = SHAPES[level].score * 4.5;
         awardScore(mx, my, boom, 'CROWN +' + Math.floor(boom * state.combo));
         if(state.skills < 3) state.skills += 1;
+        markQuestMerge(level);
         showToast('👑 Ghép vương miện thành công!');
         return null;
       }
@@ -1056,12 +1387,16 @@
       next.vx = (a.vx + b.vx) * 0.10;
       next.vy = -1.8;
       awardScore(mx, my, SHAPES[newLevel].score, SHAPES[newLevel].emoji + ' +' + Math.floor(SHAPES[newLevel].score * state.combo));
+
+      markQuestMerge(newLevel);
+
       if(newLevel >= 5 && Math.random() < 0.18 && state.skills < 3) state.skills += 1;
       return next;
     }
 
     function getSkillTarget(){
       const candidates = state.items.filter(it =>
+        it.kind === 'normal' &&
         !it.isSkull &&
         !it.isRedSkull &&
         !it.isMystery &&
@@ -1072,7 +1407,6 @@
       if(!candidates.length) return null;
 
       const safeY = state.height * safeLineRatio;
-
       let best = candidates[0];
       let bestScore = -Infinity;
 
@@ -1093,6 +1427,27 @@
       return best;
     }
 
+    function getWorstSkullTarget(){
+      const skulls = state.items.filter(it => it.isSkull || it.isRedSkull);
+      if(!skulls.length) return null;
+
+      const safeY = state.height * safeLineRatio;
+      let best = skulls[0];
+      let bestScore = -Infinity;
+
+      for(const it of skulls){
+        const top = it.y - it.r;
+        const dangerProximity = Math.max(0, safeY + 100 - top);
+        const centerPressure = (state.height - it.y) * 0.16;
+        const score = dangerProximity * 9 + centerPressure + it.r * 2;
+        if(score > bestScore){
+          bestScore = score;
+          best = it;
+        }
+      }
+      return best;
+    }
+
     function useSkill(){
       if(state.gameOver || frenzy.active) return;
       if(state.skills <= 0){
@@ -1109,11 +1464,23 @@
       state.skills -= 1;
       state.items = state.items.filter(it => it.id !== target.id);
 
-      const bonus = Math.floor(90 + target.r * 1.2 + Math.max(0, target.level) * 35);
+      const bonus = Math.floor(90 + target.r * 1.2 + Math.max(0, target.level || 0) * 35);
       addRawScore(bonus, 'STAR BURST', target.x, target.y);
 
+      if(state.score >= 100000){
+        const skullTarget = getWorstSkullTarget();
+        if(skullTarget){
+          state.items = state.items.filter(it => it.id !== skullTarget.id);
+          addFloatingScore(skullTarget.x, skullTarget.y, 0, 'PURIFY', '#ffd9d9');
+          showToast('✨ Skill cường hóa: nổ mảnh + xóa 1 đầu lâu!');
+        }else{
+          showToast('✨ Skill cường hóa: không có đầu lâu để xóa.');
+        }
+      }else{
+        showToast(`✨ Kích nổ ${SHAPES[target.level]?.emoji || 'mảnh'} nguy hiểm nhất!`);
+      }
+
       updateHud();
-      showToast(`✨ Kích nổ ${SHAPES[target.level]?.emoji || 'mảnh'} nguy hiểm nhất!`);
     }
 
     function buildSpatialGrid(items){
@@ -1140,6 +1507,7 @@
       const x = clamp(margin + Math.random() * (state.width - margin * 2), margin, state.width - margin);
       const skull = {
         id: 'skull_' + Math.random().toString(36).slice(2),
+        kind: 'skull',
         isSkull: true,
         isRedSkull: false,
         level: -1,
@@ -1149,7 +1517,8 @@
         vy: 1.4,
         r: OBSTACLE.radius,
         merged: false,
-        settled: false
+        settled: false,
+        parasiteStartedAt: 0
       };
       state.items.push(skull);
       showToast('💀 Đầu lâu xuất hiện!');
@@ -1191,6 +1560,63 @@
       }
     }
 
+    function infectTarget(parasite, other){
+      if(!other || other.merged) return;
+
+      if(other.kind === 'normal' && !other.isMystery && typeof other.level === 'number' && other.level > 0){
+        other.level -= 1;
+        other.actualLevel = other.level;
+        other.r = SHAPES[other.level].radius;
+        addFloatingScore(other.x, other.y, 0, 'INFECT', '#9fffd4');
+      }else{
+        other.kind = 'redSkull';
+        other.isRedSkull = true;
+        other.isSkull = false;
+        other.level = -2;
+        other.actualLevel = -2;
+        other.r = RED_SKULL.radius;
+        addFloatingScore(other.x, other.y, 0, 'CURSED', '#ffb5bf');
+      }
+
+      parasite.merged = true;
+      showToast('🕷️ Ký sinh đã lây nhiễm!');
+      updateHud();
+    }
+
+    function updateParasites(){
+      for(const it of state.items){
+        if(it.kind !== 'parasite' || it.merged) continue;
+
+        let nearest = null;
+        let bestDist = Infinity;
+
+        for(const other of state.items){
+          if(other === it || other.merged) continue;
+          if(other.kind === 'fire' || other.kind === 'parasite') continue;
+          const dx = other.x - it.x;
+          const dy = other.y - it.y;
+          const dist = Math.hypot(dx, dy);
+          if(dist < it.r + other.r + 8 && dist < bestDist){
+            bestDist = dist;
+            nearest = other;
+          }
+        }
+
+        if(nearest){
+          if(it.parasiteTargetId !== nearest.id){
+            it.parasiteTargetId = nearest.id;
+            it.parasiteStartedAt = now();
+          }
+          if(now() >= it.infectAfter && now() - it.parasiteStartedAt >= 15000){
+            infectTarget(it, nearest);
+          }
+        }else{
+          it.parasiteTargetId = null;
+          it.parasiteStartedAt = 0;
+        }
+      }
+    }
+
     function updatePhysics(step = 1){
       if(frenzy.active) return;
 
@@ -1227,6 +1653,11 @@
           }
           it.vx *= frictionGround;
         }
+
+        if(it.kind === 'fire' && now() >= it.expireAt){
+          it.merged = true;
+          addFloatingScore(it.x, it.y, 0, 'FADE', '#ffd0a3');
+        }
       }
 
       const spawned = [];
@@ -1252,6 +1683,17 @@
               const minDist = a.r + b.r;
 
               if(dist < minDist){
+                if(
+                  (a.kind === 'fire' && b.kind === 'parasite') ||
+                  (a.kind === 'parasite' && b.kind === 'fire')
+                ){
+                  a.merged = true;
+                  b.merged = true;
+                  addFloatingScore((a.x+b.x)/2, (a.y+b.y)/2, 0, 'PURGE', '#ffd39e');
+                  showToast('🔥 Thanh tẩy ký sinh thành công!');
+                  continue;
+                }
+
                 const overlap = minDist - dist;
                 const nx = dx / dist;
                 const ny = dy / dist;
@@ -1292,8 +1734,7 @@
                   }
                 }
 
-                const blockMerge = a.isSkull || a.isRedSkull || b.isSkull || b.isRedSkull;
-                if(!blockMerge && canMerge(a, b)){
+                if(canMerge(a, b)){
                   const created = mergePair(a, b);
                   if(created) spawned.push(created);
                 }
@@ -1315,6 +1756,9 @@
         if(Math.abs(it.vx) < 0.02) it.vx = 0;
         if(Math.abs(it.vy) < 0.02) it.vy = 0;
       }
+
+      updateParasites();
+      state.items = state.items.filter(it => !it.merged);
 
       updateDangerState();
 
@@ -1341,6 +1785,45 @@
     }
 
     function drawPiece(it){
+      if(it.kind === 'parasite'){
+        ctx.beginPath();
+        ctx.fillStyle = PARASITE.fill;
+        ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(190,255,225,.36)';
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0,0,0,.16)';
+        ctx.lineWidth = 4;
+        ctx.arc(it.x, it.y, it.r + 2.5, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.font = `${Math.floor(it.r * 0.96)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🕷️', it.x, it.y + 1);
+        return;
+      }
+
+      if(it.kind === 'fire'){
+        ctx.beginPath();
+        ctx.fillStyle = FIRE.fill;
+        ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 1.6;
+        ctx.strokeStyle = 'rgba(255,233,200,.32)';
+        ctx.stroke();
+
+        ctx.font = `${Math.floor(it.r * 0.98)}px Apple Color Emoji, Segoe UI Emoji, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🔥', it.x, it.y + 1);
+        return;
+      }
+
       if(it.isRedSkull){
         ctx.beginPath();
         ctx.fillStyle = RED_SKULL.fill;
@@ -1391,8 +1874,20 @@
 
     function drawGhostNext(){
       if(frenzy.active) return;
-      const shape = SHAPES[state.nextLevel];
-      const r = shape.radius;
+
+      let r, symbol;
+      if(state.nextSpecial === 'parasite'){
+        r = PARASITE.radius;
+        symbol = '🕷️';
+      }else if(state.nextSpecial === 'fire'){
+        r = FIRE.radius;
+        symbol = '🔥';
+      }else{
+        const shape = SHAPES[state.nextLevel];
+        r = shape.radius;
+        symbol = state.nextIsMystery ? '❓' : shape.emoji;
+      }
+
       const x = clamp(state.dropX, r + 4, state.width - r - 4);
       const y = r + 10;
       ctx.save();
@@ -1405,7 +1900,7 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.fillText(state.nextIsMystery ? '❓' : shape.emoji, x, y + 1);
+      ctx.fillText(symbol, x, y + 1);
       ctx.restore();
     }
 
@@ -1731,6 +2226,7 @@
 
     function applyRedSkullPenalty(count){
       const candidates = state.items.filter(it =>
+        it.kind === 'normal' &&
         !it.isSkull &&
         !it.isRedSkull &&
         !it.isMystery &&
@@ -1755,6 +2251,7 @@
         if(chosenIds.has(it.id)){
           const oldR = it.r;
 
+          it.kind = 'redSkull';
           it.isRedSkull = true;
           it.isSkull = false;
           it.isMystery = false;
@@ -1828,17 +2325,35 @@
         startFruitFrenzy(thresholdHit);
       }
 
+      if(!state.gameOver && !frenzy.active && state.score >= QUEST_UNLOCK_SCORE){
+        if(!quest.nextAt) quest.nextAt = now() + QUEST_INTERVAL_MS;
+        if(!quest.active && now() >= quest.nextAt){
+          startQuest();
+          quest.nextAt = now() + QUEST_INTERVAL_MS;
+        }
+      }
+
       updatePhysics(delta / 16.7);
       updateFrenzy(delta);
       draw();
       drawFrenzy();
+
+      if(quest.active){
+        if(quest.type === 'combo5'){
+          quest.progress = Math.max(quest.progress, state.combo);
+        }
+        checkQuestCompletion();
+        updateQuestUI();
+      }
 
       requestAnimationFrame(loop);
     }
 
     boardWrap.addEventListener('pointermove', (e)=>{
       if(frenzy.active){
-        slashAt(e.clientX, e.clientY);
+        if(frenzy.pointerDown){
+          slashAt(e.clientX, e.clientY);
+        }
       }else{
         setAimFromClientX(e.clientX);
       }
@@ -1859,6 +2374,10 @@
     }, { passive: true });
 
     boardWrap.addEventListener('pointercancel', ()=>{
+      frenzy.pointerDown = false;
+    }, { passive: true });
+
+    boardWrap.addEventListener('pointerleave', ()=>{
       frenzy.pointerDown = false;
     }, { passive: true });
 
