@@ -873,7 +873,7 @@
 
     const EVENT_THRESHOLD = 50000;
     const QUEST_INTERVAL_MS = 90000;
-    const QUEST_UNLOCK_SCORE = 125000;
+    const QUEST_UNLOCK_SCORE = 105000;
 
     const QUESTS = [
       { type:'ice_combo', icon:'❄️', label:'Ghép 3 ❄️ liên tiếp', target:3, time:22 },
@@ -969,16 +969,16 @@
 
     function shouldMysterySpawn(){
       if(state.score < EVENT_THRESHOLD) return false;
-      const rate = state.dangerLevel >= 2 ? 0.35 : 0.24;
+      const rate = state.dangerLevel >= 2 ? 0.35 : 0.25;
       return Math.random() < rate;
     }
 
     function shouldSpawnParasite(){
-      return state.score >= 75000 && Math.random() < 0.07;
+      return state.score >= 75000 && Math.random() < 0.05;
     }
 
     function shouldSpawnFire(){
-      return state.score >= 75000 && Math.random() < 0.09;
+      return state.score >= 75000 && Math.random() < 0.15;
     }
 
     function pickNextPiece(){
@@ -988,10 +988,10 @@
 
       if(state.score >= 75000){
         const roll = Math.random();
-        if(roll < 0.07){
+        if(roll < 0.05){
           state.nextSpecial = 'parasite';
           state.nextIsMystery = false;
-        }else if(roll < 0.16){
+        }else if(roll < 0.15){
           state.nextSpecial = 'fire';
           state.nextIsMystery = false;
         }
@@ -1691,6 +1691,23 @@
                   b.merged = true;
                   addFloatingScore((a.x+b.x)/2, (a.y+b.y)/2, 0, 'PURGE', '#ffd39e');
                   showToast('🔥 Thanh tẩy ký sinh thành công!');
+                  continue;
+                }
+                
+                const hasLivingParasite = state.items.some(it => it.kind === 'parasite' && !it.merged);
+                
+                if(
+                  !hasLivingParasite &&
+                  (
+                    (a.kind === 'fire' && b.isRedSkull) ||
+                    (b.kind === 'fire' && a.isRedSkull)
+                  )
+                ){
+                  a.merged = true;
+                  b.merged = true;
+                  addFloatingScore((a.x+b.x)/2, (a.y+b.y)/2, 0, 'BURN', '#ffb3b3');
+                  showToast('🔥 Không còn nhện, lửa thiêu 1 đầu lâu đỏ!');
+                  updateHud();
                   continue;
                 }
 
